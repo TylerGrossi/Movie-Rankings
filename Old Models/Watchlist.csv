@@ -1,0 +1,310 @@
+Movie,Year,Runtime,Actor,Actor 2,Actor 3,Actor 4,Director,Genre1,Genre2,Genre3,IMDb,RT,Created
+Friday Night Lights,2004,118,Billy Bob Thornton,Jay Hernandez,Derek Luke,Lucas Black,Peter Berg,Action, Drama, Sport,7.2,82.0,2024-01-04
+Bullet Train,2022,127,Brad Pitt,Joey King,Aaron Taylor-Johnson,Brian Tyree Henry,David Leitch,Action, Comedy, Thriller,7.3,69.63468634686348,2024-05-19
+Braveheart,1995,178,Mel Gibson,Sophie Marceau,Patrick McGoohan,Angus Macfadyen,Mel Gibson,Biography, Drama, War,8.3,78.0,2022-06-06
+22 Jump Street,2014,112,Channing Tatum,Jonah Hill,Ice Cube,Unknown,Phil Lord,Action, Comedy, Crime,7.0,85.0,2022-06-09
+Ted 2,2015,115,Mark Wahlberg,Seth MacFarlane,Amanda Seyfried,Unknown,Seth MacFarlane,Comedy,Unknown,Unknown,6.3,45.0,2022-06-09
+Daddy's Home 2,2017,100,Will Ferrell,Mark Wahlberg,Mel Gibson,Unknown,Sean Anders,Comedy,Unknown,Unknown,6.0,21.0,2022-06-09
+Bruce Almighty,2003,101,Jim Carrey,Jennifer Aniston,Morgan Freeman,Unknown,Tom Shadyac,Comedy, Fantasy,Unknown,6.8,48.0,2022-06-09
+The Matrix,1999,136,Keanu Reeves,Laurence Fishburne,Carrie-Anne Moss,Unknown,Lana Wachowski,Action, Sci-Fi,Unknown,8.7,88.0,2022-06-10
+Troy,2004,163,Brad Pitt,Eric Bana,Orlando Bloom,Julian Glover,Wolfgang Petersen,Action, Adventure, Drama,7.3,54.0,2022-06-29
+Blood Diamond,2006,143,Leonardo DiCaprio,Djimon Hounsou,Jennifer Connelly,Kagiso Kuypers,Edward Zwick,Adventure, Drama, Thriller,8.0,63.0,2022-06-29
+The Green Mile,1999,189,Tom Hanks,Michael Clarke Duncan,David Morse,Bonnie Hunt,Frank Darabont,Crime, Drama, Fantasy,8.6,78.0,2022-06-29
+Casablanca,1942,102,Humphrey Bogart,Ingrid Bergman,Paul Henreid,Claude Rains,Michael Curtiz,Drama, Romance, War,8.5,99.0,2022-06-29
+Half Baked,1998,82,Dave Chappelle,Guillermo Diaz,Jim Breuer,Unknown,Tamra Davis,Comedy, Crime,Unknown,6.6,29.0,2022-06-29
+300,2006,117,Gerard Butler,Lena Headey,David Wenham,Dominic West,Zack Snyder,Action, Drama,Unknown,7.6,61.0,2022-06-29
+Long Shot,2019,125,Charlize Theron,Seth Rogan,June Diane Raphael,Unknown,Jonathan Levine,Comedy, Romance,Unknown,6.8,81.0,2022-06-29
+Wild Hogs,2007,100,Tim Allen,Martin Lawrence,John Travolta,Unknown,Walt Becker,Action, Adventure, Comedy,5.9,14.0,2022-06-29
+Blades of Glory,2007,93,Will Ferrell,Jon Heder,Amy Poehler,Unknown,Josh Gordon,Comedy, Sport,Unknown,6.3,70.0,2022-06-29
+Eyes Wide Shut,1999,159,Tom Cruise,Nicole Kidman,Todd Field,Sydney Pollack,Stanley Kubrick,Drama, Mystery, Thriller,7.5,75.0,2022-06-29
+Tropic Thunder,2008,107,Ben Stiller,Jack Black,Robert Downey Jr.,Unknown,Ben Stiller,Action, Comedy, War,7.1,82.0,2022-06-29
+Cocktail,1988,104,Tom Cruise,Byran Brown,Elisabeth Shue,Unknown,Roger Donaldson,Comedy, Drama, Romance,5.9,60.0,2022-06-29
+Blow,2001,124,Johnny Depp,Penelope Cruz,Franka Potente,Rachel Griffiths,Ted Demme,Biography, Crime, Drama,7.5,55.0,2022-06-29
+King Richard,2021,144,Will Smith,Aunjanue Ellis-Taylor,Jon Bernthal,Saniyya Sidney,Reinaldo Marcus Green,Biography, Drama, Sport,7.5,69.63468634686348,2022-06-29
+American Underdog,2021,112,Zachary Levi,Anna Paquin,Hayden Zallar,Unknown,Andrew Erwin,Biography, Drama, Romance,7.1,69.63468634686348,2022-06-29
+Invincible,2006,105,Mark Wahlberg,Greg Kinnear,Elizabeth Banks,Unknown,Ericson Core,Biography, Drama, Sport,7.0,72.0,2022-06-29
+Hoosiers,1986,114,Gene Hackman,Barbara Hershey,Dennis Hopper,Sheb Wooley,David Anspaugh,Drama, Sport,Unknown,7.4,89.0,2022-06-29
+42,2013,128,Chadwick Boseman,T.R. Knight,Harrison Ford,Nicole Beharie,Brian Helgeland,Biography, Drama, Sport,7.5,80.0,2022-06-29
+Little Miss Sunshine,2006,101,Steve Carell,Toni Collette,Greg Kinnear,Unknown,Jonathan Dayton,Comedy, Drama,Unknown,7.8,91.0,2022-06-29
+Cheaper by the Dozen,2003,98,Steve Martin,Bonnie Hunt,Hilary Duff,Unknown,Shawn Levy,Comedy, Family,Unknown,5.9,80.0,2022-06-29
+Dr. Dolittle 3,2006,93,Kristen Wilson,Tara Wilson,Kyla Pratt,Unknown,Rich Thorne,Comedy, Family, Fantasy,4.0,69.63468634686348,2022-06-29
+Doctor Dolittle,1998,85,Eddie Murphy,Peter Boyle,Ossie Davis,Unknown,Betty Thomas,Comedy, Family, Fantasy,5.4,29.0,2022-06-29
+The Bad News Bears,1976,102,Walter Matthau,Tatum O'Neal,Vic Morrow,Joyce Van Patten,Michael Ritchie,Comedy, Drama, Family,7.3,97.0,2022-06-29
+The Notebook,2004,123,Gena Rowlands,James Garner,Rachel McAdams,Ryan Gosling,Nick Cassavetes,Drama, Romance,Unknown,7.8,53.0,2022-06-29
+The Karate Kid,1984,126,Ralph Macchio,Pat Morita,Elisabeth Shue,Martin Kove,John G. Avildsen,Action, Drama, Family,7.3,66.0,2022-06-29
+"McFarland, USA",2015,129,Kevin Costner,Maria Bello,Ramiro Rodriguez,Carlos Pratts,Niki Caro,Biography, Drama, Sport,7.4,69.63468634686348,2022-06-29
+The Replacements,2000,118,Keanu Reeves,Gene Hackman,Brooke Langton,Unknown,Howard Deutch,Comedy, Sport,Unknown,6.6,41.0,2022-06-29
+Apocalypse Now,1979,147,Martin Sheen,Marlon Brando,Robert Duvall,Frederic Forrest,Francis Ford Coppola,Drama, Mystery, War,8.4,98.0,2022-07-01
+Once Upon a Time in America,1984,229,Robert De Niro,James Woods,Elizabeth McGovern,Treat Williams,Sergio Leone,Crime, Drama,Unknown,8.3,87.0,2022-07-01
+Snatch,2000,102,Jason Statham,Brad Pitt,Benicio Del Toro,Dennis Farina,Guy Ritchie,Comedy, Crime,Unknown,8.2,73.0,2022-07-01
+Fargo,1996,98,William H. Macy,Frances McDormand,Steve Buscemi,Unknown,Joel Coen,Crime, Drama, Thriller,8.1,94.0,2022-07-01
+Blade Runner,1982,117,Harrison Ford,Rutger Hauer,Sean Young,Edward James Olmos,Ridley Scott,Action, Drama, Sci-Fi,8.1,90.0,2022-07-01
+The Longest Yard,1974,121,Burt Reynolds,Eddie Albert,Ed Lauter,Unknown,Robert Aldrich,Comedy, Crime, Drama,7.1,79.0,2022-07-03
+"Crazy, Stupid, Love.",2011,118,Steve Carell,Ryan Gosling,Julianne Moore,Emma Stone,Glenn Ficarra,Comedy, Drama, Romance,7.4,79.0,2022-07-06
+Fool's Gold,2008,112,Matthew McConaughey,Kate Hudson,Donald Sutherland,Unknown,Andy Tennant,Action, Adventure, Comedy,5.7,11.0,2022-07-06
+"I Love You, Man",2009,105,Paul Rudd,Jason Segel,Rashida Jones,Unknown,John Hamburg,Comedy, Romance,Unknown,7.0,83.0,2022-07-06
+How to Lose a Guy in 10 Days,2003,116,Kate Hudson,Matthew McConaughey,Adam Goldberg,Unknown,Donald Petrie,Comedy, Romance,Unknown,6.5,42.0,2022-07-06
+Failure to Launch,2006,97,Matthew McConaughey,Sarah Jessica Parker,Kathy Bates,Unknown,Tom Dey,Comedy, Romance,Unknown,5.7,23.0,2022-07-06
+Forgetting Sarah Marshall,2008,111,Kristen Bell,Jason Segel,Paul Rudd,Unknown,Nicholas Stoller,Comedy, Drama, Romance,7.1,83.0,2022-07-06
+The Parent Trap,1998,128,Lindsay Lohan,Dennis Quaid,Natasha Richardson,Unknown,Nancy Meyers,Adventure, Comedy, Drama,6.7,86.0,2022-07-06
+Silence,2016,161,Andrew Garfield,Adam Driver,Liam Neeson,Tadanobu Asano,Martin Scorsese,Drama, History,Unknown,7.2,83.0,2022-07-09
+Due Date,2010,95,Robert Downey Jr.,Zach Galifianakis,Michelle Monaghan,Unknown,Todd Phillips,Comedy, Drama,Unknown,6.5,39.0,2022-07-10
+Big Daddy,1999,93,Adam Sandler,Joey Lauren Adams,Jon Stewart,Unknown,Dennis Dugan,Comedy, Drama,Unknown,6.4,39.0,2022-07-10
+Any Given Sunday,1999,162,Al Pacino,Dennis Quaid,Cameron Diaz,Unknown,Oliver Stone,Drama, Sport,Unknown,6.9,52.0,2022-07-10
+Rocky,1976,120,Sylvester Stallone,Talia Shire,Burt Young,Carl Weathers,John G. Avildsen,Drama, Sport,Unknown,8.1,94.0,2022-07-23
+Friday,1995,91,Ice Cube,Chris Tucker,Nia Long,Tom Lister Jr.,F. Gary Gray,Comedy, Drama,Unknown,7.2,78.0,2022-07-23
+Meet the Parents,2000,108,Ben Stiller,Robert De Niro,Teri Polo,Unknown,Jay Roach,Comedy, Romance,Unknown,7.0,84.0,2022-07-23
+Creed,2015,133,Michael B. Jordan,Sylvester Stallone,Tessa Thompson,Phylicia Rashad,Ryan Coogler,Action, Drama, Sport,7.6,95.0,2022-07-26
+Creed III,2023,116,Michael B. Jordan,Jonathan Majors,Tessa Thompson,Unknown,Michael B. Jordan,Action, Drama, Sport,6.7,69.63468634686348,2022-07-26
+Road House,1989,114,Patrick Swayze,Kelly Lynch,Sam Elliott,Unknown,Rowdy Herrington,Action, Thriller,Unknown,6.7,39.0,2022-08-04
+Captain Phillips,2013,134,Tom Hanks,Barkhad Abdi,Barkhad Abdirahman,Catherine Keener,Paul Greengrass,Action, Biography, Crime,7.8,93.0,2022-08-17
+Jimmy Hollywood,1994,112,Joe Pesci,Christian Slater,Victoria Abril,Unknown,Barry Levinson,Comedy, Crime, Drama,5.3,22.0,2022-08-24
+The Expendables,2010,103,Sylvester Stallone,Jason Statham,Jet Li,Unknown,Sylvester Stallone,Action, Adventure, Thriller,6.4,42.0,2022-10-15
+8 Mile,2002,110,Eminem,Brittany Murphy,Kim Basinger,Mekhi Phifer,Curtis Hanson,Drama, Music,Unknown,7.2,75.0,2022-12-31
+Bad Boys,1995,119,Will Smith,Martin Lawrence,Lisa Boyle,Unknown,Michael Bay,Action, Comedy, Crime,6.8,89.0,2023-02-23
+The Aviator,2004,170,Leonardo DiCaprio,Cate Blanchett,Kate Beckinsale,John C. Reilly,Martin Scorsese,Biography, Drama,Unknown,7.5,86.0,2023-02-23
+The Pursuit of Happyness,2006,117,Will Smith,Thandie Newton,Jaden Smith,Brian Howe,Gabriele Muccino,Biography, Drama,Unknown,8.0,67.0,2023-02-23
+Don't Look Up,2021,138,Leonardo DiCaprio,Jennifer Lawrence,Meryl Streep,Cate Blanchett,Adam McKay,Comedy, Drama, Sci-Fi,7.2,69.63468634686348,2023-02-23
+American Made,2017,115,Tom Cruise,Domhnall Gleeson,Sarah Wright,Unknown,Doug Liman,Action, Comedy, Crime,7.1,86.0,2023-03-30
+Ocean's Thirteen,2007,122,George Clooney,Brad Pitt,Matt Damon,Unknown,Steven Soderbergh,Crime, Thriller,Unknown,6.9,70.0,2023-04-27
+Youngblood,1986,110,Rob Lowe,Cynthia Gibb,Patrick Swayze,Unknown,Peter Markle,Drama, Romance, Sport,6.2,69.63468634686348,2023-05-03
+Men of Honor,2000,129,Cuba Gooding Jr.,Robert De Niro,Charlize Theron,Aunjanue Ellis-Taylor,George Tillman Jr.,Biography, Drama,Unknown,7.2,42.0,2023-05-11
+A Bronx Tale,1993,121,Robert De Niro,Chazz Palminteri,Lillo Brancato,Francis Capra,Robert De Niro,Crime, Drama,Unknown,7.8,97.0,2023-05-19
+Friends with Benefits,2011,109,Mila Kunis,Justin Timberlake,Patricia Clarkson,Unknown,Will Gluck,Comedy, Romance,Unknown,6.5,69.63468634686348,2023-05-19
+Borat,2006,84,Sacha Baron Cohen,Unknown,Unknown,Unknown,Larry Charles,Comedy,Unknown,Unknown,7.4,69.63468634686348,2023-05-19
+The Good Shepherd,2006,167,Matt Damon,Angelina Jolie,Robert De Niro,Unknown,Robert De Niro,Drama, History, Thriller,6.7,55.0,2023-05-19
+The Last Samurai,2003,154,Tom Cruise,Ken Watanabe,Billy Connolly,William Atherton,Edward Zwick,Action, Drama,Unknown,7.8,66.0,2023-05-19
+Mission: Impossible - The Final Reckoning,2025,169,Tom Cruise,Hayley Atwell,Ving Rhames,Simon Pegg,Christopher McQuarrie,Action, Adventure, Thriller,7.4,69.63468634686348,2023-05-19
+About My Father,2023,90,Robert De Niro,Sebastian Maniscalco,Leslie Bibb,Unknown,Laura Terruso,Comedy,Unknown,Unknown,5.8,69.63468634686348,2023-05-19
+The Gambler,2014,111,Mark Wahlberg,Jessica Lange,John Goodman,Unknown,Rupert Wyatt,Crime, Drama, Thriller,6.0,43.0,2023-05-20
+Killers of the Flower Moon,2023,206,Leonardo DiCaprio,Robert De Niro,Lily Gladstone,Jesse Plemons,Martin Scorsese,Crime, Drama, History,7.6,69.63468634686348,2023-05-20
+Risky Business,1983,99,Tom Cruise,Rebecca De Mornay,Joe Pantoliano,Unknown,Paul Brickman,Comedy, Crime, Drama,6.8,92.0,2023-05-20
+All the Right Moves,1983,91,Tom Cruise,Lea Thompson,Craig T. Nelson,Unknown,Michael Chapman,Drama, Romance, Sport,6.0,61.0,2023-05-20
+Jack Reacher: Never Go Back,2016,118,Tom Cruise,Cobie Smulders,Aldis Hodge,Unknown,Edward Zwick,Action, Thriller,Unknown,6.2,37.0,2023-05-20
+Minority Report,2002,145,Tom Cruise,Colin Farrell,Samantha Morton,Max von Sydow,Steven Spielberg,Action, Crime, Mystery,7.6,90.0,2023-05-20
+Born on the Fourth of July,1989,145,Tom Cruise,Bryan Larkin,Raymond J. Barry,Caroline Kava,Oliver Stone,Biography, Drama, War,7.2,85.0,2023-05-20
+Oblivion,2013,124,Tom Cruise,Morgan Freeman,Andrea Riseborough,Unknown,Joseph Kosinski,Action, Adventure, Sci-Fi,7.0,53.0,2023-05-20
+War of the Worlds,2005,117,Tom Cruise,Dakota Fanning,Tim Robbins,Unknown,Steven Spielberg,Action, Adventure, Sci-Fi,6.6,75.0,2023-05-20
+Vanilla Sky,2001,136,Tom Cruise,Penelope Cruz,Cameron Diaz,Unknown,Cameron Crowe,Fantasy, Mystery, Romance,6.9,42.0,2023-05-20
+2 Guns,2013,109,Denzel Washington,Mark Wahlberg,Paula Patton,Unknown,Baltasar Kormákur,Action, Comedy, Crime,6.7,64.0,2023-05-21
+Gangs of New York,2002,167,Leonardo DiCaprio,Cameron Diaz,Daniel Day-Lewis,Jim Broadbent,Martin Scorsese,Crime, Drama,Unknown,7.5,73.0,2023-05-21
+Rush Hour 2,2001,90,Jackie Chan,Chris Tucker,John Lone,Unknown,Brett Ratner,Action, Comedy, Crime,6.7,52.0,2023-05-21
+Rush Hour 3,2007,91,Jackie Chan,Chris Tucker,Max von Sydow,Unknown,Brett Ratner,Action, Comedy, Crime,6.2,18.0,2023-05-21
+Men in Black,1997,98,Tommy Lee Jones,Will Smith,Linda Fiorentino,Vincent D'Onofrio,Barry Sonnenfeld,Action, Adventure, Comedy,7.3,92.0,2023-05-21
+Men in Black II,2002,88,Tommy Lee Jones,Will Smith,Rip Torn,Unknown,Barry Sonnenfeld,Action, Adventure, Comedy,6.2,39.0,2023-05-21
+Men in Black 3,2012,106,Tommy Lee Jones,Will Smith,Josh Brolin,Unknown,Barry Sonnenfeld,Action, Adventure, Comedy,6.8,69.63468634686348,2023-05-21
+The Intern,2015,121,Robert De Niro,Anne Hathaway, ,Unknown,Nancy Meyers,Comedy, Drama,Unknown,7.1,60.0,2023-05-22
+The Bucket List,2007,97,Jack Nicholson,Morgan Freeman,Sean Hayes,Beverly Todd,Rob Reiner,Adventure, Comedy, Drama,7.3,41.0,2023-05-23
+Invictus,2009,134,Morgan Freeman,Matt Damon,Tony Kgoroge,Patrick Mofokeng,Clint Eastwood,Biography, Drama, History,7.3,77.0,2023-05-23
+Ronin,1998,122,Robert De Niro,Jean Reno,Natascha McElhone,Stellan Skarsgård,John Frankenheimer,Action, Crime, Thriller,7.2,68.0,2023-05-23
+Magnolia,1999,188,Tom Cruise,Jason Robards,Julianne Moore,Philip Seymour Hoffman,Paul Thomas Anderson,Drama,Unknown,Unknown,8.0,83.0,2023-05-23
+The Revenant,2015,156,Leonardo DiCaprio,Tom Hardy,Will Poulter,Domhnall Gleeson,Alejandro G. Iñárritu,Adventure, Drama, Western,8.0,78.0,2023-05-23
+American Hustle,2013,138,Christian Bale,Amy Adams,Bradley Cooper,Jennifer Lawrence,David O. Russell,Crime, Drama,Unknown,7.2,92.0,2023-05-23
+The Prestige,2006,130,Christian Bale,Hugh Jackman,Scarlett Johansson,Michael Caine,Christopher Nolan,Drama, Mystery, Sci-Fi,8.5,76.0,2023-05-24
+American Gangster,2007,157,Denzel Washington,Russell Crowe,Chiwetel Ejiofor,Josh Brolin,Ridley Scott,Biography, Crime, Drama,7.8,80.0,2023-05-24
+The Martian,2015,144,Matt Damon,Jessica Chastain,Kristen Wiig,Kate Mara,Ridley Scott,Adventure, Drama, Sci-Fi,8.0,91.0,2023-05-25
+The Rainmaker,1997,135,Matt Damon,Danny DeVito,Claire Danes,Jon Voight,Francis Ford Coppola,Crime, Drama, Thriller,7.2,82.0,2023-05-25
+Yes Man,2008,104,Jim Carrey,Zooey Deschanel,Bradley Cooper,Unknown,Peyton Reed,Comedy, Romance,Unknown,6.8,46.0,2023-05-27
+Hoffa,1992,140,Jack Nicholson,Danny DeVito,Armand Assante,Unknown,Danny DeVito,Biography, Crime, Drama,6.6,52.0,2023-05-29
+School Ties,1992,106,Brendan Fraser,Matt Damon,Chris O'Donnell,Unknown,Robert Mandel,Drama,Unknown,Unknown,6.9,60.0,2023-05-29
+The Last Duel,2021,152,Matt Damon,Adam Driver,Jodie Comer,Harriet Walter,Ridley Scott,Drama, History, Thriller,7.3,69.63468634686348,2023-05-29
+Chasing Amy,1997,113,Ben Affleck,Joey Lauren Adams,Ethan Suplee,Scott Mosier,Kevin Smith,Comedy, Drama, Romance,7.2,87.0,2023-05-29
+Dogma,1999,130,Ben Affleck,Matt Damon,Linda Fiorentino,Bud Cort,Kevin Smith,Adventure, Comedy, Drama,7.3,69.63468634686348,2023-05-29
+Evan Almighty,2007,96,Steve Carell,Morgan Freeman,Lauren Graham,Unknown,Tom Shadyac,Comedy, Family, Fantasy,5.4,23.0,2023-05-29
+Awakenings,1990,121,Robert De Niro,Robin Williams,Julie Kavner,Ruth Nelson,Penny Marshall,Biography, Drama,Unknown,7.8,88.0,2023-05-30
+Ace Ventura: Pet Detective,1994,86,Jim Carrey,Courteney Cox,Sean Young,Unknown,Tom Shadyac,Comedy,Unknown,Unknown,6.9,49.0,2023-05-30
+"Me, Myself & Irene",2000,116,Jim Carrey,Renee Zellweger,Anthony Anderson,Unknown,Bobby Farrelly,Comedy,Unknown,Unknown,6.6,47.0,2023-05-30
+Scent of a Woman,1992,156,Al Pacino,Chris O'Donnell,James Rebhorn,Gabrielle Anwar,Martin Brest,Drama,Unknown,Unknown,8.0,89.0,2023-05-30
+American Psycho,2000,102,Christian Bale,Justin Theroux,Josh Lucas,Bill Sage,Mary Harron,Crime, Drama, Horror,7.6,69.0,2023-05-30
+Sleepers,1996,147,Robert De Niro,Kevin Bacon,Brad Pitt,Jason Patric,Barry Levinson,Crime, Drama, Thriller,7.5,69.63468634686348,2023-05-30
+Get Smart,2008,110,Steve Carell,Anne Hathaway,Alan Arkin,Unknown,Peter Segal,Action, Adventure, Comedy,6.5,50.0,2023-05-30
+Marley & Me,2008,115,Owen Wilson,Jennifer Aniston,Eric Dane,Unknown,David Frankel,Drama, Family,Unknown,7.0,62.0,2023-05-30
+The Terminal,2004,128,Catherine Zeta-Jones,Catherine Zeta-Jones,Chi McBride,Stanley Tucci,Steven Spielberg,Comedy, Drama, Romance,7.4,61.0,2023-05-30
+Limitless,2011,105,Anna Friel,Anna Friel,Abbie Cornish,Robert De Niro,Neil Burger,Sci-Fi, Thriller,Unknown,7.4,69.0,2023-05-30
+The Informant!,2009,108,Matt Damon,Tony Hale,Patton Oswalt,Unknown,Steven Soderbergh,Biography, Comedy, Crime,6.5,79.0,2023-06-02
+Bloodsport,1988,92,Jean_Clause Van Damme,Donald Gibb,Leah Ayres,Unknown,Newt Arnold,Action, Biography, Drama,6.8,40.0,2023-06-02
+Dr. No,1962,110,Ursula Andress,Ursula Andress,Bernard Lee,Joseph Wiseman,Terence Young,Action, Adventure, Thriller,7.2,95.0,2023-06-12
+From Russia with Love,1963,115,Robert Shaw,Robert Shaw,Lotte Lenya,Daniela Bianchi,Terence Young,Action, Adventure, Thriller,7.3,69.63468634686348,2023-06-12
+Goldfinger,1964,110,Sean Connery,Gert Frobe,Honor Blackman,Shirley Eaton,Guy Hamilton,Action, Adventure, Comedy,7.7,99.0,2023-06-12
+Thunderball,1965,130,Sean Connery,Claudine Auger,Adolfo Celi,Unknown,Terence Young,Action, Adventure, Thriller,6.9,86.0,2023-06-12
+You Only Live Twice,1967,117,Sean Connery,Akiko Wakabayashi,Mie Hama,Unknown,Lewis Gilbert,Action, Adventure, Thriller,6.8,73.0,2023-06-12
+On Her Majesty's Secret Service,1969,142,George Lazenby,Diana Rigg,Telly Salavas,Unknown,Peter R. Hunt,Action, Adventure, Thriller,6.7,81.0,2023-06-12
+Diamonds Are Forever,1971,120,Sean Connery,Jill St. John,Charles Gray,Unknown,Guy Hamilton,Action, Adventure, Thriller,6.5,64.0,2023-06-12
+Live and Let Die,1973,121,Roger Moore,Yaphet Kotto,Jane Seymour,Unknown,Guy Hamilton,Action, Adventure, Thriller,6.7,66.0,2023-06-12
+The Spy Who Loved Me,1977,125,Roger Moore,Barbara Bach,Curd Jurgens,Unknown,Lewis Gilbert,Action, Adventure, Thriller,7.0,80.0,2023-06-12
+Moonraker,1979,126,Roger Moore,Lois Chiles,Michael Lonsdale,Unknown,Lewis Gilbert,Action, Adventure, Sci-Fi,6.3,60.0,2023-06-12
+For Your Eyes Only,1981,127,Roger Moore,Carole Bouquet,Topol,Unknown,John Glen,Action, Adventure, Thriller,6.7,71.0,2023-06-12
+Octopussy,1983,131,Roger Moore,Maud Adams,Louis Jourdan,Unknown,John Glen,Action, Adventure, Thriller,6.5,43.0,2023-06-12
+A View to a Kill,1985,131,Roger Moore,Christopher Walken,Tanya Roberts,Unknown,John Glen,Action, Adventure, Thriller,6.3,38.0,2023-06-12
+The Living Daylights,1987,130,Timothy Dalton,Maryam d'Abo,Jeroen Krabbe,Unknown,John Glen,Action, Adventure, Thriller,6.7,73.0,2023-06-12
+Licence to Kill,1989,133,Timothy Dalton,Robert Davi,Carey Lowell,Unknown,John Glen,Action, Adventure, Thriller,6.7,69.63468634686348,2023-06-12
+GoldenEye,1995,130,Pierce Brosnan,Sean Bean,Izabella Scorupco,Famke Janssen,Martin Campbell,Action, Adventure, Thriller,7.2,78.0,2023-06-12
+Tomorrow Never Dies,1997,119,Pierce Brosnan,Jonathan Pryce,Michelle Yeoh,Unknown,Roger Spottiswoode,Action, Adventure, Thriller,6.5,57.0,2023-06-12
+The World Is Not Enough,1999,128,Pierce Brosnan,Sophie Marceau,Robert Carlyle,Unknown,Michael Apted,Action, Adventure, Thriller,6.4,52.0,2023-06-12
+Die Another Day,2002,133,Pierce Brosnan,Halle Berry,Rosamund Pike,Unknown,Lee Tamahori,Action, Adventure, Thriller,6.1,57.0,2023-06-12
+Quantum of Solace,2008,106,Daniel Craig,Olga Kurylenko,Mathieu Amalric,Unknown,Marc Forster,Action, Adventure, Mystery,6.5,65.0,2023-06-12
+Spectre,2015,148,Daniel Craig,Christopher Waltz,Leo Seydoux,Unknown,Sam Mendes,Action, Adventure, Thriller,6.8,63.0,2023-06-12
+No Time to Die,2021,163,Daniel Craig,Ana de Armas,Rami Malek,Léa Seydoux,Cary Joji Fukunaga,Action, Adventure, Thriller,7.3,69.63468634686348,2023-06-12
+John Wick: Chapter 3 - Parabellum,2019,130,Keanu Reeves,Halle Berry,Ian McShane,Laurence Fishburne,Chad Stahelski,Action, Crime, Drama,7.4,90.0,2023-06-12
+John Wick: Chapter 4,2023,169,Keanu Reeves,Laurence Fishburne,George Georgiou,Lance Reddick,Chad Stahelski,Action, Crime, Thriller,7.6,69.63468634686348,2023-06-12
+Man on Fire,2004,146,Denzel Washington,Christopher Walken,Dakota Fanning,Radha Mitchell,Tony Scott,Action, Crime, Drama,7.7,38.0,2023-06-12
+National Treasure,2004,131,Nicholas Cage,Diane Kruger,Justin Bartha,Unknown,Jon Turteltaub,Action, Adventure, Mystery,6.9,46.0,2023-06-13
+Meet the Fockers,2004,115,Ben Stiller,Robert De Niro,Blythe Danner,Unknown,Jay Roach,Comedy, Romance,Unknown,6.4,39.0,2023-06-16
+The Gentlemen,2019,113,Matthew McConaughey,Charlie Hunnam,Michelle Dockery,Jeremy Strong,Guy Ritchie,Action, Crime,Unknown,7.8,75.0,2023-06-18
+From Dusk Till Dawn,1996,108,Harvey Keitel,George Clooney,Juliette Lewis,Quentin Tarantino,Robert Rodriguez,Action, Crime, Horror,7.2,62.0,2023-06-20
+One Flew Over the Cuckoo's Nest,1975,133,Jack Nicholson,Louise Fletcher,Michael Berryman,Peter Brocco,Milos Forman,Drama,Unknown,Unknown,8.7,94.0,2023-06-21
+Death Proof,2007,127,Kurt Russell,Zoe Bell,Rosario Dawson,Unknown,Quentin Tarantino,Drama, Thriller,Unknown,7.0,64.0,2023-06-23
+Jackie Brown,1997,154,Pam Grier,Samuel L. Jackson,Robert Forster,Bridget Fonda,Quentin Tarantino,Crime, Drama, Thriller,7.5,87.0,2023-06-23
+Tin Cup,1996,135,Kevin Costner,Rene Russo,Don Johnson,Unknown,Ron Shelton,Comedy, Drama, Romance,6.4,71.0,2023-06-23
+Jack Reacher,2012,130,Tom Cruise,Rosamund Pike,Richard Jenkins,Unknown,Christopher McQuarrie,Action, Thriller,Unknown,7.0,64.0,2023-06-26
+Rudy,1993,114,Jon Favreau,Jon Favreau,Ned Beatty,Greta Lind,David Anspaugh,Biography, Drama, Sport,7.5,78.0,2023-06-26
+Coach Carter,2005,136,Rick Gonzalez,Rick Gonzalez,Robert Ri'chard,Rob Brown,Thomas Carter,Biography, Drama, Sport,7.3,64.0,2023-06-26
+A Beautiful Mind,2001,135,Russell Crowe,Ed Harris,Jennifer Connelly,Christopher Plummer,Ron Howard,Biography, Drama, Mystery,8.2,74.0,2023-06-27
+Sully,2016,96,Aaron Eckhart,Aaron Eckhart,Laura Linney,Valerie Mahaffey,Clint Eastwood,Biography, Drama,Unknown,7.4,85.0,2023-06-27
+Straight Outta Compton,2015,147,O'Shea Jackson Jr.,Corey Hawkins,Jason Mitchell,Neil Brown Jr.,F. Gary Gray,Biography, Drama, History,7.8,89.0,2023-06-27
+Saving Mr. Banks,2013,125,Emma Thompson,Tom Hanks,Annie Rose Buckley,Unknown,John Lee Hancock,Biography, Comedy, Drama,7.5,79.0,2023-06-27
+Apollo 13,1995,140,Tom Hanks,Bill Paxton,Kevin Bacon,Gary Sinise,Ron Howard,Adventure, Drama, History,7.7,96.0,2023-06-28
+Cast Away,2000,143,Tom Hanks,Helen Hunt,Paul Sanchez,Lari White,Robert Zemeckis,Adventure, Drama, Romance,7.8,88.0,2023-06-28
+Weekend at Bernie's,1989,97,Andrew McCarthy,Jonathan Silverman,Catherine Mary Stewart,Unknown,Ted Kotcheff,Adventure, Comedy, Crime,6.4,54.0,2023-06-29
+Citizen Kane,1941,119,Orson Welles,Joseph Cotten,Dorothy Comingore,Agnes Moorehead,Orson Welles,Drama, Mystery,Unknown,8.3,100.0,2023-06-29
+Blade Runner 2049,2017,164,Harrison Ford,Ryan Gosling,Ana de Armas,Dave Bautista,Denis Villeneuve,Action, Drama, Mystery,8.0,88.0,2023-06-29
+2001: A Space Odyssey,1968,149,Keir Dullea,Gary Lockwood,William Sylvester,Daniel Richter,Stanley Kubrick,Adventure, Sci-Fi,Unknown,8.3,92.0,2023-06-29
+There Will Be Blood,2007,158,Daniel Day-Lewis,Paul Dano,Ciaran Hinds,Martin Stringer,Paul Thomas Anderson,Drama,Unknown,Unknown,8.2,92.0,2023-06-29
+Raiders of the Lost Ark,1981,115,Harrison Ford,Karen Allen,Paul Freeman,John Rhys-Davies,Steven Spielberg,Action, Adventure,Unknown,8.4,95.0,2023-06-29
+"The Good, the Bad and the Ugly",1966,178,Clint Eastwood,Eli Wallach,Lee Van Cleef,Unknown,Sergio Leone,Adventure, Drama, Western,8.8,97.0,2023-06-29
+Dumb and Dumber To,2014,109,Jim Carrey,Jeff Daniels,Rob Riggle,Unknown,Bobby Farrelly,Comedy,Unknown,Unknown,5.6,30.0,2023-06-29
+Zodiac,2007,157,Jake Gyllenhaal,Robert Downey Jr.,Mark Ruffalo,Anthony Edwards,David Fincher,Crime, Drama, Mystery,7.7,89.0,2023-06-29
+The Deer Hunter,1978,183,Robert De Niro,Christopher Walken,John Cazale,John Savage,Michael Cimino,Drama, War,Unknown,8.1,93.0,2023-07-03
+The Great Escape,1963,172,Steve McQueen,James Garner,Richard Attenborough,Charles Bronson,John Sturges,Adventure, Drama, Thriller,8.2,94.0,2023-07-04
+Serpico,1973,130,Al Pacino,John Randolph,Jack Kehoe,Biff McGuire,Sidney Lumet,Biography, Crime, Drama,7.7,90.0,2023-07-04
+The Devil's Advocate,1997,144,Keanu Reeves,Al Pacino,Charlize Theron,Jeffrey Jones,Taylor Hackford,Drama, Fantasy, Mystery,7.5,63.0,2023-07-04
+Gone Baby Gone,2007,114,Morgan Freeman,Ed Harris,Casey Affleck,Michelle Monaghan,Ben Affleck,Crime, Drama, Mystery,7.6,94.0,2023-07-04
+Million Dollar Baby,2004,132,Hilary Swank,Clint Eastwood,Morgan Freeman,Jay Baruchel,Clint Eastwood,Drama, Sport,Unknown,8.1,91.0,2023-07-04
+Unforgiven,1992,130,Clint Eastwood,Gene Hackman,Morgan Freeman,Richard Harris,Clint Eastwood,Drama, Western,Unknown,8.2,96.0,2023-07-04
+Glory,1989,122,Matthew Broderick,Denzel Washington,Cary Elwes,Morgan Freeman,Edward Zwick,Biography, Drama, History,7.8,93.0,2023-07-04
+White Chicks,2004,109,Marlon Wayans,Shawn Mayans,Busy Phillips,Unknown,Keenen Ivory Wayans,Comedy, Crime,Unknown,5.9,15.0,2023-07-06
+The Break-Up,2006,106,Jennifer Aniston,Vince Vaughn,Jon Favreau,Unknown,Peyton Reed,Comedy, Drama, Romance,5.8,34.0,2023-07-06
+The Patriot,2000,165,Mel Gibson,Heath Ledger,Joely Richardson,Jason Isaacs,Roland Emmerich,Action, Drama, History,7.2,61.0,2023-07-06
+Starsky & Hutch,2004,101,Ben Stiller,Owen Wilson,Snoop Dogg,Unknown,Todd Phillips,Comedy, Crime,Unknown,6.1,62.0,2023-07-07
+Bottle Rocket,1996,91,Luke Wilson,Owen Wilson,Ned Dowd,Unknown,Wes Anderson,Comedy, Crime, Drama,6.9,85.0,2023-07-07
+He Got Game,1998,136,Denzel Washington,Milla Jovovich,Ray Allen,Unknown,Spike Lee,Drama, Sport,Unknown,6.9,81.0,2023-07-08
+Ava,2020,96,Jessica Chastain,John Malkovich,Common,Unknown,Tate Taylor,Action, Crime, Drama,5.5,69.63468634686348,2023-07-08
+The Man with the Golden Gun,1974,125,Roger Moore,Christopher Lee,Britt Ekland,Unknown,Guy Hamilton,Action, Adventure, Thriller,6.7,41.0,2023-07-09
+Never Say Never Again,1983,134,Sean Connery,Kim Basinger,Klaus Maria Brandauer,Unknown,Irvin Kershner,Action, Adventure, Thriller,6.1,67.0,2023-07-09
+Over the Top,1987,93,Sylvester Stallone,Robert Loggia,Susan Blakely,Unknown,Menahem Golan,Action, Drama, Sport,5.8,30.0,2023-07-10
+The Killing,1956,84,Sterling Hayden,Coleen Gray,Vince Edwards,Jay C. Flippen,Stanley Kubrick,Crime, Drama, Film-Noir,7.9,98.0,2023-07-10
+Locke,2013,85,Tom Hardy,Olivia Colman,Ruth Wilson,Unknown,Steven Knight,Drama,Unknown,Unknown,7.1,91.0,2023-07-10
+North by Northwest,1959,136,Cary Grant,Eva Marie Saint,James Mason,Jessie Royce Landis,Alfred Hitchcock,Adventure, Drama, Mystery,8.3,99.0,2023-07-10
+The Elephant Man,1980,124,Anthony Hopkins,John Hurt,Anne Bancroft,John Gielgud,David Lynch,Biography, Drama,Unknown,8.2,92.0,2023-07-10
+The Northman,2022,137,Alexander Skarsgard,Nicole Kidman,Claes Bang,Unknown,Robert Eggers,Action, Adventure, Drama,7.0,69.63468634686348,2023-07-10
+Nightcrawler,2014,117,Jake Gyllenhaal,Rene Russo,Bill Paxton,Riz Ahmed,Dan Gilroy,Crime, Drama, Thriller,7.8,95.0,2023-07-10
+Demolition,2015,101,Jake Gyllenhaal,Naomi Watts,Chris Cooper,Unknown,Jean-Marc Vallée,Comedy, Drama,Unknown,7.0,53.0,2023-07-10
+Nightmare Alley,2021,150,Joan Blondell,Joan Blondell,Coleen Gray,Helen Walker,Guillermo del Toro,Crime, Drama, Thriller,7.0,100.0,2023-07-10
+This Is England,2006,101,Thomas Turgoose,Stephen Graham,Jo Hartley,Andrew Shim,Shane Meadows,Crime, Drama,Unknown,7.7,92.0,2023-07-10
+Drive,2011,100,Ryan Gosling,Carey Mulligan,Bryan Cranston,Albert Brooks,Nicolas Winding Refn,Action, Drama,Unknown,7.8,92.0,2023-07-10
+Arrival,2016,116,Amy Adams,Jeremy Renner,Forest Whitaker,Michael Stuhlbarg,Denis Villeneuve,Drama, Mystery, Sci-Fi,7.9,94.0,2023-07-10
+Barry Lyndon,1975,185,Ryan O'Neal,Marisa Berenson,Patrick Magee,Hardy Krüger,Stanley Kubrick,Adventure, Drama, War,8.1,91.0,2023-07-10
+Eternal Sunshine of the Spotless Mind,2004,108,Jim Carrey,Kate Winslet,Tom Wilkinson,Gerry Robert Byrne,Michel Gondry,Drama, Romance, Sci-Fi,8.3,93.0,2023-07-10
+The Machinist,2004,101,Christian Bale,Jennifer Jason Leigh,Aitana Sanchez-Gijon,Unknown,Brad Anderson,Drama, Thriller,Unknown,7.6,77.0,2023-07-10
+The King of Comedy,1982,109,Robert De Niro,Jerry Lewis,Diahnne Abbott,Sandra Bernhard,Martin Scorsese,Comedy, Crime, Drama,7.8,89.0,2023-07-10
+The Conversation,1974,113,Gene Hackman,John Cazale,Allen Garfield,Frederic Forrest,Francis Ford Coppola,Drama, Mystery, Thriller,7.7,96.0,2023-07-10
+Monty Python and the Holy Grail,1975,91,Terry Jones,Graham Chapman,John Cleese,Eric Idle,Terry Gilliam,Adventure, Comedy, Fantasy,8.2,97.0,2023-07-10
+Life of Brian,1979,94,Graham Chapman,John Cleese,Michael Palin,Terry Gilliam,Terry Jones,Comedy,Unknown,Unknown,8.0,69.63468634686348,2023-07-10
+The Game,1997,129,Michael Douglas,Deborah Kara Unger,Sean Penn,James Rebhorn,David Fincher,Drama, Mystery, Thriller,7.7,74.0,2023-07-10
+Gone Girl,2014,149,Ben Affleck,Rosamund Pike,Neil Patrick Harris,Tyler Perry,David Fincher,Drama, Mystery, Thriller,8.1,87.0,2023-07-10
+Mulholland Drive,2001,147,Naomi Watts,Laura Harring,Justin Theroux,Unknown,David Lynch,Drama, Mystery, Thriller,7.9,83.0,2023-07-10
+Paths of Glory,1957,88,Kirk Douglas,Ralph Meeker,Adolphe Menjou,George Macready,Stanley Kubrick,Drama, War,Unknown,8.4,95.0,2023-07-10
+Vertigo,1958,128,James Stewart,Kim Novak,Barbara Bel Geddes,Tom Helmore,Alfred Hitchcock,Mystery, Romance, Thriller,8.2,94.0,2023-07-10
+Flight,2012,138,Nadine Velazquez,Nadine Velazquez,Don Cheadle,John Goodman,Robert Zemeckis,Drama, Thriller,Unknown,7.3,78.0,2023-07-11
+The Great Wall,2016,103,Matt Damon,Tian Jing,Willem Dafoe,Unknown,Yimou Zhang,Action, Adventure, Fantasy,5.9,36.0,2023-07-14
+Tenet,2020,150,John David Washington,Robert Pattinson,Elizabeth Debicki,Juhan Ulfsak,Christopher Nolan,Action, Sci-Fi, Thriller,7.3,69.63468634686348,2023-07-26
+Babylon,2022,189,Brad Pitt,Margot Robbie,Jean Smart,Unknown,Damien Chazelle,Comedy, Drama,Unknown,7.1,100.0,2023-08-03
+Supercop,1992,91,Jackie Chan,Michelle Yeoh,Maggie Cheung,Unknown,Stanley Tong,Action, Comedy, Crime,7.0,96.0,2023-08-07
+Triple Frontier,2019,125,Ben Affleck,Oscar Isaac,Charlie Hunnam,Unknown,J.C. Chandor,Action, Adventure, Thriller,6.5,70.0,2023-08-25
+Black Mass,2015,123,Johnny Depp,Benedict Cumberbatch,Dakota Johnson,Unknown,Scott Cooper,Biography, Crime, Drama,6.8,73.0,2023-08-26
+Blow Out,1981,108,John Travolta,Nancy Allen,John Lithgow,Dennis Franz,Brian De Palma,Crime, Drama, Mystery,7.4,83.0,2023-10-23
+Miracle on 34th Street,1947,96,Edmund Gwenn,Maureen O'Hara,John Payne,Gene Lockhart,George Seaton,Comedy, Drama, Family,7.9,96.0,2023-12-18
+The Boys in the Boat,2023,123,Joel Edgerton,Callum Turner,Peter Guinness,Unknown,George Clooney,Biography, Drama, Sport,7.0,69.63468634686348,2023-12-19
+Bad Santa,2003,92,Billy Bob Thornton,Bernie Mac,Lauren Graham,Unknown,Terry Zwigoff,Comedy, Crime, Drama,7.0,79.0,2023-12-22
+Manchester by the Sea,2016,137,Casey Affleck,Michelle Williams,Kyle Chandler,Lucas Hedges,Kenneth Lonergan,Drama,Unknown,Unknown,7.8,96.0,2023-12-23
+The Mummy,2017,110,Tom Cruise,Sofia Boutella,Annabelle Wallis,Unknown,Alex Kurtzman,Action, Adventure, Fantasy,5.4,16.0,2024-01-17
+What About Bob?,1991,99,Bill Murray,Richard Dreyfuss,Julie Hagerty,Unknown,Frank Oz,Comedy,Unknown,Unknown,7.0,84.0,2024-01-24
+Training Day,2001,122,Denzel Washington,Ethan Hawke,Scott Glenn,Tom Berenger,Antoine Fuqua,Crime, Drama, Thriller,7.8,73.0,2024-01-26
+Act of Valor,2012,110,Alex Veadov,Roselyn Sanchez,Nestor Serrano,Unknown,Mike McCoy,Action, Adventure, Thriller,6.4,27.0,2024-02-03
+Tears of the Sun,2003,121,Bruce Willis,Cole Hauser,Monica Bellucci,Unknown,Antoine Fuqua,Action, Drama, Thriller,6.6,33.0,2024-02-03
+G.I. Jane,1997,125,Demi Moore,Viggo Mortensen,Anne Bancroft,Unknown,Ridley Scott,Action, Drama, War,6.0,51.0,2024-02-03
+The Abyss,1989,140,Ed Harris,Mary Elizabeth Mastrantonio,Michael Biehn,Leo Burmester,James Cameron,Adventure, Drama, Mystery,7.5,69.63468634686348,2024-02-03
+Under Siege,1992,103,Steven Seagal,Gary Busey,Tommy Lee Jones,Unknown,Andrew Davis,Action, Thriller,Unknown,6.5,79.0,2024-02-03
+Without Remorse,2021,109,Michael B. Jordan,Jodie Turner-Smith,Jamie Bell,Unknown,Stefano Sollima,Action, Drama, Thriller,5.8,69.63468634686348,2024-02-03
+Navy Seals,1990,113,Charlie Sheen,Michael Biehn,Joanne Whalley,Unknown,Lewis Teague,Action, Adventure, Thriller,5.6,19.0,2024-02-03
+Rock of Ages,2012,123,Julianne Hough,Diego Boneta,Tom Cruise,Unknown,Adam Shankman,Comedy, Drama, Musical,5.9,43.0,2024-02-03
+Lions for Lambs,2007,92,Tom Cruise,Merly Streep,Robert Redford,Unknown,Robert Redford,Crime, Drama, Mystery,6.2,27.0,2024-02-03
+The Nice Guys,2016,116,Ryan Gosling,Ryan Gosling,Angourie Rice,Matt Bomer,Shane Black,Action, Comedy, Crime,7.4,92.0,2024-02-10
+Cinderella Man,2005,144,Russell Crowe,Renee Zellweger,Craig Bierko,Paul Giamatti,Ron Howard,Biography, Drama, Romance,8.0,80.0,2024-02-10
+American History X,1998,119,Edward Norton,Edward Furlong,Beverly D'Angelo,Jennifer Lien,Tony Kaye,Crime, Drama,Unknown,8.5,83.0,2024-02-10
+The Big Lebowski,1998,117,Ethan Coen,Jeff Bridges,John Goodman,Julianne Moore,Joel Coen,Comedy, Crime,Unknown,8.1,83.0,2024-02-10
+The Outsiders,1983,91,C. Thomas Howell,Matt Dillon,Ralph Macchio,Unknown,Francis Ford Coppola,Crime, Drama,Unknown,7.0,63.0,2024-02-17
+Shooting Stars,2023,116,Marquis Mookie Cook,Wood Harris,Caleb McLaughlin,Unknown,Chris Robinson,Drama, Sport,Unknown,6.5,69.63468634686348,2024-03-07
+Dune: Part Two,2024,166,Timothee Chalamet,Zendaya,Rebecca Ferguson,Javier Bardem,Denis Villeneuve,Action, Adventure, Drama,8.5,69.63468634686348,2024-03-10
+Ready Player One,2018,140,Tye Sheridan,Olivia Cooke,Ben Mendelsohn,Lena Waithe,Steven Spielberg,Action, Adventure, Sci-Fi,7.4,72.0,2024-03-21
+The Holdovers,2023,133,Da'Vine Joy Randolph,Da'Vine Joy Randolph,Dominic Sessa,Carrie Preston,Alexander Payne,Comedy, Drama,Unknown,7.9,69.63468634686348,2024-03-21
+Monkey Man,2024,121,Dev Patel,Sharlto Copley,Pitobash,Unknown,Dev Patel,Action, Crime, Thriller,6.8,69.63468634686348,2024-03-21
+Need for Speed,2014,132,Aaron Paul,Dominic Cooper,Imogen Poots,Unknown,Scott Waugh,Action, Crime, Drama,6.4,69.63468634686348,2024-05-17
+Divergent,2014,139,Shailene Woodley,Theo James,Kate Winslet,Unknown,Neil Burger,Action, Adventure, Drama,6.6,41.0,2024-06-05
+The Hunger Games,2012,142,Jennifer Lawrence,Josh Hutcherson,Liam Hemsworth,Stanley Tucci,Gary Ross,Action, Adventure, Sci-Fi,7.2,84.0,2024-06-05
+The Hunger Games: Catching Fire,2013,146,Jennifer Lawrence,Josh Hutcherson,Liam Hemsworth,Philip Seymour Hoffman,Francis Lawrence,Action, Adventure, Sci-Fi,7.5,90.0,2024-06-05
+The Hunger Games: Mockingjay - Part 1,2014,123,Jennifer Lawrence,Josh Hutcherson,Liam Hemsworth,Unknown,Francis Lawrence,Action, Adventure, Sci-Fi,6.6,69.0,2024-06-05
+The Hunger Games: Mockingjay - Part 2,2015,137,Jennifer Lawrence,Josh Hutcherson,Liam Hemsworth,Unknown,Francis Lawrence,Action, Adventure, Sci-Fi,6.6,69.0,2024-06-05
+The Hunger Games: The Ballad of Songbirds & Snakes,2023,157,Rachel Zegler,Tom Blyth,Viola Davis,Unknown,Francis Lawrence,Action, Adventure, Drama,6.7,69.63468634686348,2024-06-05
+Life is Beautiful,1997,116,Roberto Benigni,Nicoletta Braschi,Giorgio Cantarini,Unknown,Roberto Benigni,Comedy, Drama, Romance,8.6,69.63468634686348,2024-06-16
+Terminator 2: Judgment Day,1991,137,Arnold Schwarzenegger,Linda Hamilton,Edward Furlong,Robert Patrick,James Cameron,Action, Adventure, Sci-Fi,8.6,93.0,2024-06-16
+The Town,2010,125,Ben Affleck,Rebecca Hall,Jon Hamm,Jeremy Renner,Ben Affleck,Crime, Drama, Thriller,7.5,93.0,2024-06-20
+Footloose,1984,107,Kevin Bacon,Lori Singer,John Lithgow,Unknown,Herbert Ross,Drama, Music, Romance,6.6,69.0,2024-06-26
+Maverick,1994,127,Mel Gibson,Jodie Foster,James Garner,Unknown,Richard Donner,Action, Adventure, Comedy,7.0,66.0,2024-06-27
+The Cincinnati Kid,1965,102,Steve McQueen,Ann-Margret,Edward G. Robinson,Karl Malden,Norman Jewison,Drama,Unknown,Unknown,7.2,82.0,2024-06-27
+The Grand,2007,104,Woody Harrelson,David Cross,Dennis Farina,Unknown,Zak Penn,Comedy,Unknown,Unknown,5.9,40.0,2024-06-27
+Shade,2003,101,Joe Nicolo,Carl Mazzocone Sr.,George Tovar,Unknown,Damian Nieman,Crime, Thriller,Unknown,6.3,67.0,2024-06-27
+Deal,2008,86,Burt Reynolds,Bret Harrison,Maria Mason,Unknown,Gil Cates Jr.,Comedy, Drama,Unknown,5.3,3.0,2024-06-27
+Lucky You,2007,124,Eric Bana,Drew Barrymore,Robert Duvall,Unknown,Curtis Hanson,Drama, Romance, Sport,5.9,29.0,2024-06-27
+Crazy Rich Asians,2018,120,Constance Wu,Henry Golding,Michelle Yeoh,Unknown,Jon M. Chu,Comedy, Drama, Romance,6.9,91.0,2024-07-02
+The Way Back,2020,108,Ben Affleck,Al Madrigal,Janina Gavankar,Unknown,Gavin O'Connor,Drama, Sport,Unknown,6.7,84.0,2024-07-04
+Million Dollar Arm,2014,124,Jon Hamm,Aasif Mandvi,Alan Arkin,Unknown,Craig Gillespie,Biography, Drama, Family,7.0,65.0,2024-07-04
+Stand by Me,1986,89,Wil Wheaton,River Phoenix,Corey Feldman,Jerry O'Connell,Rob Reiner,Adventure, Comedy, Drama,8.1,91.0,2024-07-04
+Ferris Bueller's Day Off,1986,103,Matthew Broderick,Alan Ruck,Mia Sara,Jeffrey Jones,John Hughes,Comedy,Unknown,Unknown,7.8,81.0,2024-07-04
+F1: The Movie,2025,155,Brad Pitt,Damon Idris,Javier Bardem,Unknown,Joseph Kosinski,Action, Drama, Sport,7.7,69.63468634686348,2024-07-07
+Jack Ryan,2018,60,John Krasinski,Wendell Pierce,Michael Kay,Unknown,0,Action, Crime, Drama,8.0,69.63468634686348,2024-07-11
+Entourage,2004,28,Kevin Connolly,Adrian Grenier,Kevin Dillon,Unknown,0,Comedy, Drama,Unknown,8.4,33.0,2024-07-17
+Radio,2003,109,Cuba Gooding Jr.,Ed Harris,Debra Winger,Unknown,Michael Tollin,Biography, Drama, Sport,6.9,35.0,2024-07-23
+Night at the Museum,2006,108,Ben Stiller,Carla Gugino,Ricky Gervais ,Unknown,Shawn Levy,Adventure, Comedy, Family,6.5,43.0,2024-08-19
+The Interview,2014,112,James Franco,Seth Rogen,Randall Park,Unknown,Evan Goldberg,Action, Adventure, Comedy,6.5,52.0,2024-08-19
+Old,2021,108,Gael Garcia Bernal,Vicky Krieps,Rufus Sewell,Unknown,M. Night Shyamalan,Drama, Horror, Mystery,5.8,69.63468634686348,2024-08-25
+Beetlejuice,1988,92,Alec Baldwin,Geena Davis,Michael Keaton,Annie McEnroe,Tim Burton,Comedy, Fantasy,Unknown,7.5,85.0,2024-08-25
+Green Book,2018,130,Viggo Mortensen,Mahershala Ali,Linda Cardellini,Sebastian Maniscalco,Peter Farrelly,Biography, Comedy, Drama,8.2,77.0,2024-08-25
+Scary Movie,2000,88,Anna Faris,Jon Abrahams,Marlon Wayans,Unknown,Keenen Ivory Wayans,Comedy,Unknown,Unknown,6.3,53.0,2024-08-25
+We Were Soldiers,2002,138,Mel Gibson,Madeleine Stowe,Greg Kinnear,Sam Elliott,Randall Wallace,Action, Drama, History,7.2,63.0,2024-11-23
+The Peanut Butter Falcon,2019,97,Michael Schwartz,Zack Gottsagen,Ann Owens,Dakota Johnson,Tyler Nilson,Adventure, Comedy, Drama,7.6,96.0,2024-11-26
+Wall Street,1987,126,Charlie Sheen,Michael Douglas,Tamara Tunie,Franklin Cover,Oliver Stone,Crime, Drama,Unknown,7.3,79.0,2025-01-01
+A Star Is Born,2018,136,Lady Gaga,Bradley Cooper,Sam Elliott,Greg Grunberg,Bradley Cooper,Drama, Music, Romance,7.6,100.0,2025-02-10
+Wet Hot American Summer,2001,97,Janeane Garofalo,David Hyde Pierce,Michael Showalter,Unknown,David Wain,Comedy, Romance,Unknown,6.5,38.0,2025-02-10
+Midway,2019,138,Ed Skrein,Patrick Wilson,Woody Harrelson,Unknown,Roland Emmerich,Action, Drama, History,6.7,47.0,2025-03-02
+Field of Dreams,1989,107,Kevin Costner,James Earl Jones,Ray Liotta,Amy Madigan,Phil Alden Robinson,Drama, Family, Fantasy,7.5,87.0,2025-03-03
+Let's Be Cops,2014,104,Jake Johnson,Damon Wayans Jr.,Rob Riggle,Unknown,Luke Greenfield,Action, Comedy, Crime,6.4,18.0,2025-03-22
+Orange County,2002,82,Colin Hanks,Jack Black,Schuyler Fisk,Unknown,Jake Kasdan,Comedy, Drama,Unknown,6.2,46.0,2025-04-02
+Warfare,2025,95,D'Pharaoh Woon-A-Tai,Will Poulter,Cosmo Jarvis,Unknown,Ray Mendoza,Action, Drama, War,7.3,69.63468634686348,2025-04-13
+The Accountant,2016,128,Ben Affleck,Anna Kendrick,J.K. Simmons,Jon Bernthal,Gavin O'Connor,Action, Crime, Drama,7.3,52.0,2025-04-17
+The Accountant 2,2025,132,Ben Affleck,Jon Bernthal,Cynthia Addai-Robinson,Unknown,Gavin O'Connor,Action, Crime, Drama,6.7,69.63468634686348,2025-04-17
+Everything Everywhere All at Once,2022,139,Michelle Yeoh,Stephanie Hsu,Jamie Lee Curtis,Ke Huy Quan,Daniel Kwan,Action, Adventure, Comedy,7.8,69.63468634686348,2025-04-17
+Warrior,2011,140,Tom Hardy,Nick Nolte,Joel Edgerton,Jennifer Morrison,Gavin O'Connor,Action, Drama, Sport,8.1,83.0,2025-05-04
+Mad Max: Fury Road,2015,120,Tom Hardy,Charlize Theron,Nicholas Hoult,Zoe Kravitz,George Miller,Action, Adventure, Sci-Fi,8.1,97.0,2025-05-04
+Before Sunrise,1995,101,Ethan Hawke,Julie Delpy,Andrea Eckert,Hanno Poschl,Richard Linklater,Comedy, Drama, Romance,8.1,100.0,2025-05-04
+Bridge of Spies,2015,142,Tom Hanks,Mark Rylance,Alan Alda,Amy Ryan,Steven Spielberg,Drama, History, Thriller,7.6,90.0,2025-05-04
+All Quiet on the Western Front,2022,148,Felix Kammerer,Albrecht Schuch,Aaron Hilmer,Unknown,Edward Berger,Drama, History, War,7.8,100.0,2025-05-04
+Three Kings,1999,114,George Clooney,Mark Wahlberg,Ice Cube,Unknown,David O. Russell,Action, Adventure, Comedy,7.1,94.0,2025-05-04
+Flags of Our Fathers,2006,135,Ryan Phillippe,Barry Pepper,Joseph Cross,Unknown,Clint Eastwood,Action, Adventure, Drama,7.1,73.0,2025-05-04
+Behind Enemy Lines,2001,106,Gene Hackman,Owen Wilson,Gabriel Macht,Unknown,John Moore,Action, Drama, Thriller,6.4,37.0,2025-05-04
+Overlord,2018,110,Jovan Adepo,Wyatt Russell,Mathilde Ollivier,Unknown,Julius Avery,Action, Horror, Sci-Fi,6.6,81.0,2025-05-04
+12 Strong,2018,130,Chris Hemsworth,Michael Shannon,Michael Pena,Unknown,Nicolai Fuglsig,Action, Drama, History,6.5,50.0,2025-05-04
+The Monuments Men,2014,118,George Clooney,Matt Damon,Bill Murray,Unknown,George Clooney,Biography, Comedy, Drama,6.1,30.0,2025-05-08
+Grand Prix,1966,176,James Garner,Eva Marie Saint,Yves Montand,Unknown,John Frankenheimer,Drama, Sport,Unknown,7.2,100.0,2025-05-24
+Major League II,1994,105,Charlie Sheen,Tom Berenger,Corbin Bernsen,Unknown,David S. Ward,Comedy, Sport,Unknown,5.6,5.0,2025-06-20
+17 Again,2009,102,Zac Efron,Matthew Perry,Leslie Mann,Unknown,Burr Steers,Comedy,Drama,Fantasy,6.4,56.0,2025-06-29

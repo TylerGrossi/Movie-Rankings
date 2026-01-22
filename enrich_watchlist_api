@@ -1,0 +1,408 @@
+"""
+IMDb Watchlist Enricher - FULL VERSION
+======================================
+Pulls data from BOTH OMDb and TMDB APIs.
+
+Requirements:
+    pip install requests pandas
+
+Usage:
+    python enrich_watchlist_full.py
+"""
+
+# ============================================================
+# CONFIGURE THESE VALUES
+# ============================================================
+
+OMDB_API_KEY = "8e631dfe"     # Get at: https://www.omdbapi.com/apikey.aspx
+TMDB_API_KEY = "d5ec5a76fb5942fe50a7e3a72d683e52"     # Get at: https://www.themoviedb.org/settings/api
+INPUT_CSV = "imdb_watchlist.csv"
+OUTPUT_CSV = "Watchlist_Enriched.csv"
+
+# ============================================================
+
+import os
+import re
+import requests
+import pandas as pd
+import time
+from pathlib import Path
+
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+INPUT_CSV = os.path.join(SCRIPT_DIR, INPUT_CSV)
+OUTPUT_CSV = os.path.join(SCRIPT_DIR, OUTPUT_CSV)
+
+
+# ============================================================
+# API FUNCTIONS (same as ratings script)
+# ============================================================
+
+def get_omdb_data(imdb_id: str, api_key: str) -> dict:
+    url = f"http://www.omdbapi.com/?i={imdb_id}&plot=full&apikey={api_key}"
+    try:
+        response = requests.get(url, timeout=10)
+        data = response.json()
+        if data.get("Response") == "True":
+            return data
+        return None
+    except:
+        return None
+
+
+def get_tmdb_id(imdb_id: str, api_key: str) -> int:
+    url = f"https://api.themoviedb.org/3/find/{imdb_id}?api_key={api_key}&external_source=imdb_id"
+    try:
+        response = requests.get(url, timeout=10)
+        data = response.json()
+        if data.get("movie_results"):
+            return data["movie_results"][0]["id"]
+        return None
+    except:
+        return None
+
+
+def get_tmdb_data(tmdb_id: int, api_key: str) -> dict:
+    url = f"https://api.themoviedb.org/3/movie/{tmdb_id}?api_key={api_key}&append_to_response=keywords"
+    try:
+        response = requests.get(url, timeout=10)
+        data = response.json()
+        if "id" in data:
+            return data
+        return None
+    except:
+        return None
+
+
+def extract_rt_score(omdb_data):
+    if not omdb_data or "Ratings" not in omdb_data:
+        return ""
+    for rating in omdb_data["Ratings"]:
+        if rating["Source"] == "Rotten Tomatoes":
+            return rating["Value"].replace("%", "")
+    return ""
+
+
+def extract_metascore(omdb_data):
+    if not omdb_data:
+        return ""
+    score = omdb_data.get("Metascore", "")
+    return "" if score == "N/A" else score
+
+
+def extract_box_office(omdb_data):
+    if not omdb_data:
+        return ""
+    box = omdb_data.get("BoxOffice", "")
+    if box == "N/A" or not box:
+        return ""
+    try:
+        return int(box.replace("$", "").replace(",", ""))
+    except:
+        return ""
+
+
+def extract_imdb_votes(omdb_data):
+    if not omdb_data:
+        return ""
+    votes = omdb_data.get("imdbVotes", "")
+    if votes == "N/A" or not votes:
+        return ""
+    try:
+        return int(votes.replace(",", ""))
+    except:
+        return ""
+
+
+def extract_awards_info(omdb_data):
+    result = {"oscar_wins": 0, "oscar_noms": 0, "total_wins": 0, "total_noms": 0}
+    if not omdb_data:
+        return result
+    awards = omdb_data.get("Awards", "")
+    if awards == "N/A" or not awards:
+        return result
+    
+    m = re.search(r'Won (\d+) Oscar', awards)
+    if m: result["oscar_wins"] = int(m.group(1))
+    m = re.search(r'Nominated for (\d+) Oscar', awards)
+    if m: result["oscar_noms"] = int(m.group(1))
+    m = re.search(r'(\d+) win', awards)
+    if m: result["total_wins"] = int(m.group(1))
+    m = re.search(r'(\d+) nomination', awards)
+    if m: result["total_noms"] = int(m.group(1))
+    return result
+
+
+def extract_actors(omdb_data):
+    if not omdb_data or "Actors" not in omdb_data:
+        return ["", "", "", ""]
+    actors = omdb_data["Actors"]
+    if actors == "N/A":
+        return ["", "", "", ""]
+    actor_list = [a.strip() for a in actors.split(",")]
+    while len(actor_list) < 4:
+        actor_list.append("")
+    return actor_list[:4]
+
+
+def extract_writers(omdb_data):
+    if not omdb_data or "Writer" not in omdb_data:
+        return ["", ""]
+    writers = omdb_data["Writer"]
+    if writers == "N/A":
+        return ["", ""]
+    writer_list = []
+    for w in writers.split(","):
+        clean = re.sub(r'\([^)]*\)', '', w).strip()
+        if clean:
+            writer_list.append(clean)
+    while len(writer_list) < 2:
+        writer_list.append("")
+    return writer_list[:2]
+
+
+def extract_plot(omdb_data):
+    if not omdb_data:
+        return ""
+    plot = omdb_data.get("Plot", "")
+    return "" if plot == "N/A" else plot
+
+
+def extract_keywords(tmdb_data):
+    if not tmdb_data or "keywords" not in tmdb_data:
+        return ""
+    keywords = tmdb_data["keywords"].get("keywords", [])
+    return ", ".join([k["name"] for k in keywords[:10]])
+
+
+def extract_production_companies(tmdb_data):
+    if not tmdb_data or "production_companies" not in tmdb_data:
+        return ["", ""]
+    companies = [c["name"] for c in tmdb_data["production_companies"][:2]]
+    while len(companies) < 2:
+        companies.append("")
+    return companies
+
+
+def extract_tmdb_stats(tmdb_data):
+    result = {"tmdb_popularity": "", "tmdb_vote_avg": "", "tmdb_vote_count": "", "budget": "", "revenue": ""}
+    if not tmdb_data:
+        return result
+    result["tmdb_popularity"] = tmdb_data.get("popularity", "")
+    result["tmdb_vote_avg"] = tmdb_data.get("vote_average", "")
+    result["tmdb_vote_count"] = tmdb_data.get("vote_count", "")
+    budget = tmdb_data.get("budget", 0)
+    result["budget"] = budget if budget > 0 else ""
+    revenue = tmdb_data.get("revenue", 0)
+    result["revenue"] = revenue if revenue > 0 else ""
+    return result
+
+
+def parse_genres(genre_string):
+    if pd.isna(genre_string) or genre_string == "":
+        return ["", "", ""]
+    genres = [g.strip() for g in genre_string.split(",")]
+    while len(genres) < 3:
+        genres.append("")
+    return genres[:3]
+
+
+def get_first_director(directors):
+    if pd.isna(directors) or directors == "":
+        return ""
+    return directors.split(",")[0].strip()
+
+
+# ============================================================
+# MAIN FUNCTION
+# ============================================================
+
+def enrich_watchlist(input_file, omdb_key, tmdb_key, output_file):
+    
+    # Check for existing output to resume
+    existing_data = {}
+    if Path(output_file).exists():
+        print(f"Found existing {output_file} - resuming...")
+        existing_df = pd.read_csv(output_file)
+        for _, row in existing_df.iterrows():
+            if pd.notna(row.get('RT')) and row.get('RT') != '':
+                existing_data[row['IMDb_ID']] = row.to_dict()
+        print(f"  Found {len(existing_data)} cached movies")
+    
+    print(f"\nReading {input_file}...")
+    df = pd.read_csv(input_file)
+    
+    original_count = len(df)
+    if "Title Type" in df.columns:
+        df = df[df["Title Type"] == "Movie"].copy()
+        print(f"Found {len(df)} movies (filtered {original_count - len(df)} TV)")
+    
+    # Initialize columns
+    new_cols = [
+        "RT", "Metascore", "BoxOffice", "IMDb_Votes",
+        "Oscar_Wins", "Oscar_Noms", "Total_Wins", "Total_Noms",
+        "Rated", "Country", "Language",
+        "Actor", "Actor 2", "Actor 3", "Actor 4",
+        "Writer", "Writer 2", "Plot",
+        "Keywords", "Prod_Company", "Prod_Company_2",
+        "TMDB_Popularity", "TMDB_Vote_Avg", "TMDB_Vote_Count",
+        "Budget", "Revenue"
+    ]
+    for col in new_cols:
+        df[col] = ""
+    for col in ["Oscar_Wins", "Oscar_Noms", "Total_Wins", "Total_Noms"]:
+        df[col] = 0
+    
+    total = len(df)
+    skipped = 0
+    
+    for idx, (i, row) in enumerate(df.iterrows()):
+        imdb_id = row["Const"]
+        title = row["Title"]
+        
+        if imdb_id in existing_data:
+            cached = existing_data[imdb_id]
+            for col in new_cols:
+                if col in cached:
+                    df.at[i, col] = cached[col]
+            skipped += 1
+            print(f"[{idx + 1}/{total}] CACHED: {title}")
+            continue
+        
+        print(f"[{idx + 1}/{total}] {title}...")
+        
+        # OMDb
+        omdb_data = get_omdb_data(imdb_id, omdb_key)
+        if omdb_data:
+            df.at[i, "RT"] = extract_rt_score(omdb_data)
+            df.at[i, "Metascore"] = extract_metascore(omdb_data)
+            df.at[i, "BoxOffice"] = extract_box_office(omdb_data)
+            df.at[i, "IMDb_Votes"] = extract_imdb_votes(omdb_data)
+            
+            awards = extract_awards_info(omdb_data)
+            df.at[i, "Oscar_Wins"] = awards["oscar_wins"]
+            df.at[i, "Oscar_Noms"] = awards["oscar_noms"]
+            df.at[i, "Total_Wins"] = awards["total_wins"]
+            df.at[i, "Total_Noms"] = awards["total_noms"]
+            
+            rated = omdb_data.get("Rated", "")
+            df.at[i, "Rated"] = "" if rated == "N/A" else rated
+            country = omdb_data.get("Country", "")
+            df.at[i, "Country"] = "" if country == "N/A" else country.split(",")[0].strip()
+            lang = omdb_data.get("Language", "")
+            df.at[i, "Language"] = "" if lang == "N/A" else lang.split(",")[0].strip()
+            
+            actors = extract_actors(omdb_data)
+            df.at[i, "Actor"] = actors[0]
+            df.at[i, "Actor 2"] = actors[1]
+            df.at[i, "Actor 3"] = actors[2]
+            df.at[i, "Actor 4"] = actors[3]
+            
+            writers = extract_writers(omdb_data)
+            df.at[i, "Writer"] = writers[0]
+            df.at[i, "Writer 2"] = writers[1]
+            
+            df.at[i, "Plot"] = extract_plot(omdb_data)
+            print(f"  OMDb ✓")
+        else:
+            print(f"  OMDb ✗")
+        
+        # TMDB
+        tmdb_id = get_tmdb_id(imdb_id, tmdb_key)
+        if tmdb_id:
+            tmdb_data = get_tmdb_data(tmdb_id, tmdb_key)
+            if tmdb_data:
+                df.at[i, "Keywords"] = extract_keywords(tmdb_data)
+                companies = extract_production_companies(tmdb_data)
+                df.at[i, "Prod_Company"] = companies[0]
+                df.at[i, "Prod_Company_2"] = companies[1]
+                stats = extract_tmdb_stats(tmdb_data)
+                df.at[i, "TMDB_Popularity"] = stats["tmdb_popularity"]
+                df.at[i, "TMDB_Vote_Avg"] = stats["tmdb_vote_avg"]
+                df.at[i, "TMDB_Vote_Count"] = stats["tmdb_vote_count"]
+                df.at[i, "Budget"] = stats["budget"]
+                df.at[i, "Revenue"] = stats["revenue"]
+                print(f"  TMDB ✓")
+            else:
+                print(f"  TMDB ✗")
+        else:
+            print(f"  TMDB ✗")
+        
+        time.sleep(0.15)
+        
+        if (idx + 1) % 25 == 0:
+            print(f"\n  [Saving... {idx + 1}/{total}]\n")
+            _save_output(df, output_file)
+    
+    _save_output(df, output_file)
+    
+    print(f"\n" + "="*50)
+    print("SUMMARY")
+    print("="*50)
+    print(f"  Total: {len(df)}, Cached: {skipped}")
+    print(f"  With RT: {(df['RT'] != '').sum()}")
+    print(f"  With Keywords: {(df['Keywords'] != '').sum()}")
+
+
+def _save_output(df, output_file):
+    df["Genre1"] = df["Genres"].apply(lambda x: parse_genres(x)[0])
+    df["Genre2"] = df["Genres"].apply(lambda x: parse_genres(x)[1])
+    df["Genre3"] = df["Genres"].apply(lambda x: parse_genres(x)[2])
+    df["Director"] = df["Directors"].apply(get_first_director)
+    
+    output_df = pd.DataFrame({
+        "Movie": df["Title"],
+        "IMDb": df["IMDb Rating"],
+        "RT": df["RT"],
+        "Metascore": df["Metascore"],
+        "Runtime": df["Runtime (mins)"],
+        "Year": df["Year"],
+        "Genres": df["Genres"],
+        "Genre1": df["Genre1"],
+        "Genre2": df["Genre2"],
+        "Genre3": df["Genre3"],
+        "Director": df["Director"],
+        "Actor": df["Actor"],
+        "Actor 2": df["Actor 2"],
+        "Actor 3": df["Actor 3"],
+        "Actor 4": df["Actor 4"],
+        "Writer": df["Writer"],
+        "Writer 2": df["Writer 2"],
+        "Plot": df["Plot"],
+        "Rated": df["Rated"],
+        "BoxOffice": df["BoxOffice"],
+        "IMDb_Votes": df["IMDb_Votes"],
+        "Oscar_Wins": df["Oscar_Wins"],
+        "Oscar_Noms": df["Oscar_Noms"],
+        "Total_Wins": df["Total_Wins"],
+        "Total_Noms": df["Total_Noms"],
+        "Country": df["Country"],
+        "Language": df["Language"],
+        "Keywords": df["Keywords"],
+        "Prod_Company": df["Prod_Company"],
+        "Prod_Company_2": df["Prod_Company_2"],
+        "TMDB_Popularity": df["TMDB_Popularity"],
+        "TMDB_Vote_Avg": df["TMDB_Vote_Avg"],
+        "TMDB_Vote_Count": df["TMDB_Vote_Count"],
+        "Budget": df["Budget"],
+        "Revenue": df["Revenue"],
+        "Created": df["Created"],
+        "IMDb_ID": df["Const"]
+    })
+    
+    output_df.to_csv(output_file, index=False)
+    print(f"  ✓ Saved: {output_file}")
+
+
+if __name__ == "__main__":
+    if OMDB_API_KEY == "YOUR_OMDB_KEY_HERE" or TMDB_API_KEY == "YOUR_TMDB_KEY_HERE":
+        print("ERROR: Set both API keys at the top of the script!")
+        print("  OMDb: https://www.omdbapi.com/apikey.aspx")
+        print("  TMDB: https://www.themoviedb.org/settings/api")
+        exit(1)
+    
+    if not Path(INPUT_CSV).exists():
+        print(f"ERROR: {INPUT_CSV} not found")
+        exit(1)
+    
+    enrich_watchlist(INPUT_CSV, OMDB_API_KEY, TMDB_API_KEY, OUTPUT_CSV)

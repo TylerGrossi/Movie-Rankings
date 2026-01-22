@@ -1,0 +1,1209 @@
+"""
+Movie Score Predictor - V5 (Enhanced Personal Scores)
+=====================================================
+New features:
+- Director_Avg_Score (your avg rating for each director)
+- Actor_Avg_Score (your avg rating for lead actor)
+- Actor2_Avg_Score (your avg rating for second actor)
+- Genre1_Avg_Score, Genre2_Avg_Score (your avg rating per genre)
+- Learned keyword weights from YOUR data
+- XGBoost and LightGBM models
+
+Requirements:
+    pip install pandas scikit-learn openpyxl joblib xgboost lightgbm
+
+Usage:
+    python predicted_score_model.py
+"""
+
+# ============================================================
+# CONFIGURE
+# ============================================================
+
+RATINGS_FILE = "Ratings_Enriched.csv"
+WATCHLIST_FILE = "Watchlist_Enriched.csv"
+OUTPUT_FILE = "Predicted_Scores.xlsx"
+MODEL_FILE = "movie_score_predictor.pkl"
+
+# ============================================================
+
+import os
+import re
+import pandas as pd
+import numpy as np
+import joblib
+import warnings
+warnings.filterwarnings('ignore')
+
+from sklearn.model_selection import cross_val_score, KFold
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import GradientBoostingRegressor, RandomForestRegressor
+from sklearn.linear_model import Ridge, BayesianRidge
+from sklearn.neighbors import KNeighborsRegressor
+
+# Try to import XGBoost and LightGBM
+try:
+    import xgboost as xgb
+    HAS_XGBOOST = True
+except ImportError:
+    HAS_XGBOOST = False
+    print("Note: XGBoost not installed. Run: pip install xgboost")
+
+try:
+    import lightgbm as lgb
+    HAS_LIGHTGBM = True
+except ImportError:
+    HAS_LIGHTGBM = False
+    print("Note: LightGBM not installed. Run: pip install lightgbm")
+
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+RATINGS_FILE = os.path.join(SCRIPT_DIR, RATINGS_FILE)
+WATCHLIST_FILE = os.path.join(SCRIPT_DIR, WATCHLIST_FILE)
+OUTPUT_FILE = os.path.join(SCRIPT_DIR, OUTPUT_FILE)
+MODEL_FILE = os.path.join(SCRIPT_DIR, MODEL_FILE)
+
+
+# ============================================================
+# GENRE COMBOS & SUB-GENRES
+# ============================================================
+
+def detect_subgenre(row):
+    """Detect specific sub-genres and genre combinations."""
+    title = str(row.get('Movie', '')).lower()
+    genres = f"{row.get('Genre1', '')} {row.get('Genre2', '')} {row.get('Genre3', '')}".lower()
+    plot = str(row.get('Plot', '')).lower()
+    keywords = str(row.get('Keywords', '')).lower()
+    year = row.get('Year', 2000)
+    
+    subgenres = {}
+    
+    # === EPIC/HISTORICAL WAR ===
+    # Movies like Gladiator, 300, Braveheart, Troy, Kingdom of Heaven
+    epic_war_keywords = ['gladiator', 'sparta', 'roman', 'ancient', 'medieval', 'viking', 
+                         'knight', 'warrior', 'battle', 'kingdom', 'empire', 'conquest',
+                         'troy', 'greek', 'persian', 'sword', 'shield', 'arena']
+    epic_war_titles = ['gladiator', '300', 'braveheart', 'troy', 'kingdom of heaven', 
+                       'last samurai', 'ben-hur', 'spartacus', 'centurion', 'king arthur',
+                       'robin hood', 'alexander', 'apocalypto', 'the eagle', 'pompeii',
+                       'hercules', 'immortals', 'clash of the titans', 'wrath of the titans',
+                       'exodus', 'noah', 'the northman', 'viking', 'outlaw king', '13th warrior']
+    
+    is_epic_war = (
+        any(kw in title for kw in epic_war_titles) or
+        any(kw in keywords for kw in epic_war_keywords) or
+        any(kw in plot for kw in ['ancient rome', 'roman empire', 'gladiator', 'medieval', 'viking', 'sparta'])
+    )
+    subgenres['Is_Epic_War'] = int(is_epic_war)
+    
+    # === ACTION-ADVENTURE-THRILLER ===
+    is_action_adventure_thriller = (
+        ('action' in genres and 'adventure' in genres) or
+        ('action' in genres and 'thriller' in genres) or
+        ('adventure' in genres and 'thriller' in genres)
+    )
+    subgenres['Is_Action_Adventure_Thriller'] = int(is_action_adventure_thriller)
+    
+    # === MILITARY/MODERN WAR ===
+    military_keywords = ['military', 'soldier', 'army', 'navy', 'marine', 'special forces',
+                         'sniper', 'seal', 'delta', 'ranger', 'afghanistan', 'iraq', 'vietnam',
+                         'world war', 'battalion', 'platoon', 'squadron']
+    is_military = (
+        ('war' in genres) or
+        any(kw in keywords for kw in military_keywords) or
+        any(kw in plot for kw in military_keywords)
+    )
+    subgenres['Is_Military'] = int(is_military)
+    
+    # === HEIST/CON ===
+    heist_keywords = ['heist', 'robbery', 'bank robbery', 'con artist', 'thief', 'steal',
+                      'casino', 'vault', 'score', 'crew']
+    heist_titles = ['ocean', 'italian job', 'heat', 'inside man', 'town', 'baby driver',
+                    'logan lucky', 'now you see me', 'focus', 'american hustle', 'sting',
+                    'snatch', 'lock, stock', 'reservoir dogs', 'usual suspects']
+    is_heist = (
+        any(kw in title for kw in heist_titles) or
+        any(kw in keywords for kw in heist_keywords) or
+        any(kw in plot for kw in ['heist', 'robbery', 'steal', 'con artist'])
+    )
+    subgenres['Is_Heist'] = int(is_heist)
+    
+    # === CRIME-DRAMA (Godfather, Goodfellas type) ===
+    crime_drama_keywords = ['mafia', 'mob', 'gangster', 'cartel', 'organized crime', 
+                            'crime boss', 'crime family', 'godfather']
+    is_crime_drama = (
+        ('crime' in genres and 'drama' in genres) or
+        any(kw in keywords for kw in crime_drama_keywords)
+    )
+    subgenres['Is_Crime_Drama'] = int(is_crime_drama)
+    
+    # === SCI-FI ACTION ===
+    is_scifi_action = ('sci-fi' in genres and 'action' in genres)
+    subgenres['Is_SciFi_Action'] = int(is_scifi_action)
+    
+    # === COMEDY-ACTION (Buddy Cop, etc.) ===
+    is_comedy_action = ('comedy' in genres and 'action' in genres)
+    subgenres['Is_Comedy_Action'] = int(is_comedy_action)
+    
+    # === SPORTS DRAMA ===
+    sports_keywords = ['football', 'basketball', 'baseball', 'boxing', 'mma', 'wrestling',
+                       'hockey', 'soccer', 'golf', 'tennis', 'racing', 'coach', 'athlete',
+                       'championship', 'underdog', 'team']
+    is_sports = (
+        ('sport' in genres) or
+        any(kw in keywords for kw in sports_keywords) or
+        any(kw in plot for kw in ['coach', 'championship', 'team', 'player'])
+    )
+    subgenres['Is_Sports_Drama'] = int(is_sports)
+    
+    # === PSYCHOLOGICAL THRILLER ===
+    psych_keywords = ['psychological', 'mind game', 'twist ending', 'unreliable narrator',
+                      'mental illness', 'paranoia', 'obsession']
+    is_psych_thriller = (
+        ('thriller' in genres and any(kw in keywords for kw in psych_keywords)) or
+        any(kw in plot for kw in ['psychological', 'mind', 'paranoi', 'obsess'])
+    )
+    subgenres['Is_Psych_Thriller'] = int(is_psych_thriller)
+    
+    # === REVENGE ===
+    revenge_keywords = ['revenge', 'vengeance', 'avenge', 'payback', 'retribution', 'vigilante']
+    is_revenge = (
+        any(kw in keywords for kw in revenge_keywords) or
+        any(kw in plot for kw in revenge_keywords)
+    )
+    subgenres['Is_Revenge'] = int(is_revenge)
+    
+    # === SURVIVAL ===
+    survival_keywords = ['survival', 'survive', 'stranded', 'wilderness', 'deserted', 
+                         'trapped', 'lost', 'escape']
+    is_survival = any(kw in keywords for kw in survival_keywords) or any(kw in plot for kw in survival_keywords)
+    subgenres['Is_Survival'] = int(is_survival)
+    
+    # === TRUE STORY/BIOPIC ===
+    is_true_story = (
+        ('biography' in genres) or
+        ('based on true story' in keywords) or
+        ('based on a true story' in plot) or
+        ('true story' in keywords)
+    )
+    subgenres['Is_True_Story'] = int(is_true_story)
+    
+    # === HORROR-THRILLER ===
+    is_horror_thriller = ('horror' in genres and 'thriller' in genres)
+    subgenres['Is_Horror_Thriller'] = int(is_horror_thriller)
+    
+    # === ANIMATED FAMILY ===
+    is_animated = ('animation' in genres)
+    subgenres['Is_Animated'] = int(is_animated)
+    
+    # === DYSTOPIAN/POST-APOCALYPTIC ===
+    dystopia_keywords = ['dystopia', 'post-apocalyptic', 'apocalypse', 'wasteland', 
+                         'future', 'totalitarian', 'rebellion']
+    is_dystopia = any(kw in keywords for kw in dystopia_keywords)
+    subgenres['Is_Dystopian'] = int(is_dystopia)
+    
+    # === SUPERHERO ===
+    superhero_keywords = ['superhero', 'superpower', 'dc comics', 'marvel', 'comic book']
+    superhero_titles = ['batman', 'superman', 'spider', 'avengers', 'iron man', 'thor',
+                        'captain america', 'x-men', 'wolverine', 'deadpool', 'hulk',
+                        'wonder woman', 'aquaman', 'justice league', 'guardians of the galaxy']
+    is_superhero = (
+        any(kw in keywords for kw in superhero_keywords) or
+        any(kw in title for kw in superhero_titles)
+    )
+    subgenres['Is_Superhero'] = int(is_superhero)
+    
+    return subgenres
+
+
+# ============================================================
+# FRANCHISE DETECTION
+# ============================================================
+
+def detect_franchise(title):
+    title_lower = title.lower() if pd.notna(title) else ""
+    
+    franchises = {
+        'john wick': 'John Wick', 'mission: impossible': 'Mission Impossible',
+        'mission impossible': 'Mission Impossible', 'fast & furious': 'Fast Furious',
+        'fast and furious': 'Fast Furious', 'furious': 'Fast Furious',
+        'bourne': 'Bourne', 'terminator': 'Terminator', 'die hard': 'Die Hard',
+        'rambo': 'Rambo', 'rocky': 'Rocky', 'creed': 'Rocky',
+        'matrix': 'Matrix', 'mad max': 'Mad Max', 'top gun': 'Top Gun',
+        'star wars': 'Star Wars', 'star trek': 'Star Trek', 'alien': 'Alien',
+        'predator': 'Predator', 'jurassic': 'Jurassic Park',
+        'transformers': 'Transformers', 'x-men': 'X-Men', 'wolverine': 'X-Men',
+        'avengers': 'Marvel', 'iron man': 'Marvel', 'captain america': 'Marvel',
+        'thor': 'Marvel', 'spider-man': 'Spider-Man', 'batman': 'Batman',
+        'dark knight': 'Batman', 'guardians of the galaxy': 'Marvel',
+        'dune': 'Dune', 'lord of the rings': 'LOTR', 'hobbit': 'LOTR',
+        'harry potter': 'Harry Potter', 'hunger games': 'Hunger Games',
+        'pirates of the caribbean': 'Pirates Caribbean', 'men in black': 'MIB',
+        'hangover': 'Hangover', 'jump street': 'Jump Street', 'ted': 'Ted',
+        'toy story': 'Toy Story', 'shrek': 'Shrek', 'godfather': 'Godfather',
+        'ocean\'s': 'Oceans', 'james bond': 'James Bond', 'bond': 'James Bond',
+        '007': 'James Bond', 'skyfall': 'James Bond', 'spectre': 'James Bond',
+        'casino royale': 'James Bond', 'kill bill': 'Kill Bill',
+        'kingsman': 'Kingsman', 'conjuring': 'Conjuring', 'insidious': 'Insidious',
+        'saw': 'Saw', 'scream': 'Scream', 'halloween': 'Halloween',
+        'taken': 'Taken', 'equalizer': 'Equalizer', 'expendables': 'Expendables',
+        'bad boys': 'Bad Boys', 'rush hour': 'Rush Hour', 'lethal weapon': 'Lethal Weapon',
+        'gladiator': 'Gladiator', 'avatar': 'Avatar', 'purge': 'Purge',
+        'planet of the apes': 'Planet Apes', 'night at the museum': 'Night Museum',
+        'despicable me': 'Despicable Me', 'minions': 'Despicable Me',
+        'how to train your dragon': 'HTTYD', 'kung fu panda': 'Kung Fu Panda',
+        'ice age': 'Ice Age', 'madagascar': 'Madagascar', 'shrek': 'Shrek',
+        'incredibles': 'Incredibles', 'finding nemo': 'Finding Nemo', 'finding dory': 'Finding Nemo',
+        'cars': 'Cars', 'monsters, inc': 'Monsters Inc', 'monsters inc': 'Monsters Inc',
+        'quiet place': 'Quiet Place', 'cloverfield': 'Cloverfield', 'paranormal activity': 'Paranormal',
+        'annabelle': 'Conjuring', 'nun': 'Conjuring',
+    }
+    
+    for keyword, franchise in franchises.items():
+        if keyword in title_lower:
+            return franchise
+    return None
+
+
+def detect_sequel_number(title):
+    title_lower = title.lower() if pd.notna(title) else ""
+    
+    roman = {'ii': 2, 'iii': 3, 'iv': 4, 'v': 5, 'vi': 6, 'vii': 7, 'viii': 8}
+    for num_str, num in roman.items():
+        if f' {num_str}' in title_lower or f':{num_str}' in title_lower:
+            return num
+    
+    match = re.search(r'[\s:](\d+)(?:\s|$|:)', title_lower)
+    if match:
+        num = int(match.group(1))
+        if 2 <= num <= 10:
+            return num
+    
+    return 1
+
+
+# ============================================================
+# COMPUTE PERSONAL AVERAGE SCORES
+# ============================================================
+
+def compute_personal_scores(df):
+    """Compute average scores for directors, actors, genres, etc.
+    Uses custom weighting formulas based on movie count.
+    """
+    scores = {}
+    
+    # Overall mean for fallback
+    overall_mean = df['My_Score'].mean()
+    scores['overall_mean'] = overall_mean
+    
+    print(f"\n  Your overall average rating: {overall_mean:.2f}")
+    
+    # Franchise scores
+    df['_Franchise'] = df['Movie'].apply(detect_franchise)
+    scores['franchise'] = df[df['_Franchise'].notna()].groupby('_Franchise')['My_Score'].mean().to_dict()
+    
+    # === DIRECTOR SCORES (custom formula) ===
+    # ≤3 movies: (Score - 1.5) / Movies
+    # 4 movies: (Score + 2.5) / Movies
+    # 5-7 movies: (Score + 6) / Movies
+    # ≥8 movies: (Score + 10) / Movies
+    if 'Director' in df.columns:
+        director_stats = df.groupby('Director')['My_Score'].agg(['sum', 'count'])
+        director_weighted = {}
+        for director, row in director_stats.iterrows():
+            if pd.notna(director) and director != '':
+                total_score = row['sum']
+                count = row['count']
+                
+                if count <= 3:
+                    weighted = (total_score - 1.5) / count
+                elif count == 4:
+                    weighted = (total_score + 2.5) / count
+                elif count <= 7:
+                    weighted = (total_score + 6) / count
+                else:  # >= 8
+                    weighted = (total_score + 10) / count
+                
+                director_weighted[director] = weighted
+        scores['director'] = director_weighted
+        print(f"  Director scores: {len(scores['director'])} directors")
+    
+    # === WRITER SCORES (using director formula) ===
+    if 'Writer' in df.columns:
+        writer_stats = df.groupby('Writer')['My_Score'].agg(['sum', 'count'])
+        writer_weighted = {}
+        for writer, row in writer_stats.iterrows():
+            if pd.notna(writer) and writer != '':
+                total_score = row['sum']
+                count = row['count']
+                
+                if count <= 3:
+                    weighted = (total_score - 1.5) / count
+                elif count == 4:
+                    weighted = (total_score + 2.5) / count
+                elif count <= 7:
+                    weighted = (total_score + 6) / count
+                else:
+                    weighted = (total_score + 10) / count
+                
+                writer_weighted[writer] = weighted
+        scores['writer'] = writer_weighted
+        print(f"  Writer scores: {len(scores['writer'])} writers")
+    
+    # === ACTOR SCORES (custom formula) ===
+    # ≤5 movies: (Score - 2.5) / Movies
+    # 6-7 movies: (Score + 5) / Movies
+    # 8-9 movies: (Score + 7.5) / Movies
+    # ≥10 movies: (Score + 15) / Movies
+    for actor_col, score_key in [('Actor', 'actor'), ('Actor 2', 'actor2'), 
+                                   ('Actor 3', 'actor3'), ('Actor 4', 'actor4')]:
+        if actor_col in df.columns:
+            actor_stats = df.groupby(actor_col)['My_Score'].agg(['sum', 'count'])
+            actor_weighted = {}
+            for actor, row in actor_stats.iterrows():
+                if pd.notna(actor) and actor != '':
+                    total_score = row['sum']
+                    count = row['count']
+                    
+                    if count <= 5:
+                        weighted = (total_score - 2.5) / count
+                    elif count <= 7:
+                        weighted = (total_score + 5) / count
+                    elif count <= 9:
+                        weighted = (total_score + 7.5) / count
+                    else:  # >= 10
+                        weighted = (total_score + 15) / count
+                    
+                    actor_weighted[actor] = weighted
+            scores[score_key] = actor_weighted
+            print(f"  {actor_col} scores: {len(actor_weighted)} actors")
+    
+    # === GENRE SCORES (custom formula) ===
+    # <10 movies: (Score - 1.5) / Movies
+    # 10-19 movies: (Score + 1.5) / Movies
+    # 20-29 movies: (Score + 3) / Movies
+    # ≥30 movies: (Score + 5) / Movies
+    if 'Genre1' in df.columns:
+        genre_stats = df.groupby('Genre1')['My_Score'].agg(['sum', 'count'])
+        genre_weighted = {}
+        for genre, row in genre_stats.iterrows():
+            if pd.notna(genre) and genre != '':
+                total_score = row['sum']
+                count = row['count']
+                
+                if count < 10:
+                    weighted = (total_score - 1.5) / count
+                elif count < 20:
+                    weighted = (total_score + 1.5) / count
+                elif count < 30:
+                    weighted = (total_score + 3) / count
+                else:  # >= 30
+                    weighted = (total_score + 5) / count
+                
+                genre_weighted[genre] = weighted
+        scores['genre1'] = genre_weighted
+        print(f"  Genre1 scores: {len(scores['genre1'])} genres")
+    
+    if 'Genre2' in df.columns:
+        genre2_stats = df[df['Genre2'].notna() & (df['Genre2'] != '')].groupby('Genre2')['My_Score'].agg(['sum', 'count'])
+        genre2_weighted = {}
+        for genre, row in genre2_stats.iterrows():
+            if pd.notna(genre) and genre != '':
+                total_score = row['sum']
+                count = row['count']
+                
+                if count < 10:
+                    weighted = (total_score - 1.5) / count
+                elif count < 20:
+                    weighted = (total_score + 1.5) / count
+                elif count < 30:
+                    weighted = (total_score + 3) / count
+                else:
+                    weighted = (total_score + 5) / count
+                
+                genre2_weighted[genre] = weighted
+        scores['genre2'] = genre2_weighted
+    
+    # Production company scores (using genre formula)
+    if 'Prod_Company' in df.columns:
+        company_stats = df.groupby('Prod_Company')['My_Score'].agg(['sum', 'count'])
+        company_weighted = {}
+        for company, row in company_stats.iterrows():
+            if pd.notna(company) and company != '':
+                total_score = row['sum']
+                count = row['count']
+                
+                if count < 10:
+                    weighted = (total_score - 1.5) / count
+                elif count < 20:
+                    weighted = (total_score + 1.5) / count
+                elif count < 30:
+                    weighted = (total_score + 3) / count
+                else:
+                    weighted = (total_score + 5) / count
+                
+                company_weighted[company] = weighted
+        scores['company'] = company_weighted
+        print(f"  Production company scores: {len(scores['company'])} companies")
+    
+    # Content rating scores
+    if 'Rated' in df.columns:
+        scores['rated'] = df[df['Rated'].notna() & (df['Rated'] != '')].groupby('Rated')['My_Score'].mean().to_dict()
+        print(f"  Content rating scores: {len(scores['rated'])} ratings")
+    
+    # Decade scores
+    df['_Decade'] = (df['Year'] // 10) * 10
+    scores['decade'] = df.groupby('_Decade')['My_Score'].mean().to_dict()
+    
+    return scores
+
+
+def compute_keyword_weights(df):
+    """Learn which keywords correlate with high/low scores from training data."""
+    if 'Keywords' not in df.columns:
+        return {}, {}
+    
+    # Collect all keywords and their associated scores
+    keyword_scores = {}
+    
+    for _, row in df.iterrows():
+        keywords = row.get('Keywords', '')
+        score = row.get('My_Score', None)
+        
+        if pd.isna(keywords) or keywords == '' or pd.isna(score):
+            continue
+        
+        for kw in str(keywords).lower().split(', '):
+            kw = kw.strip()
+            if kw:
+                if kw not in keyword_scores:
+                    keyword_scores[kw] = []
+                keyword_scores[kw].append(score)
+    
+    # Calculate average score per keyword (min 3 occurrences)
+    overall_mean = df['My_Score'].mean()
+    
+    positive_keywords = {}
+    negative_keywords = {}
+    
+    for kw, scores in keyword_scores.items():
+        if len(scores) >= 3:
+            avg = np.mean(scores)
+            diff = avg - overall_mean
+            
+            if diff > 0.3:  # You rate these keywords above average
+                positive_keywords[kw] = diff
+            elif diff < -0.3:  # You rate these keywords below average
+                negative_keywords[kw] = diff
+    
+    # Sort and print top keywords
+    pos_sorted = sorted(positive_keywords.items(), key=lambda x: x[1], reverse=True)[:15]
+    neg_sorted = sorted(negative_keywords.items(), key=lambda x: x[1])[:15]
+    
+    print("\n  Keywords you LIKE (score above average):")
+    for kw, diff in pos_sorted[:10]:
+        print(f"    +{diff:.2f}: {kw}")
+    
+    print("\n  Keywords you DISLIKE (score below average):")
+    for kw, diff in neg_sorted[:10]:
+        print(f"    {diff:.2f}: {kw}")
+    
+    return positive_keywords, negative_keywords
+
+
+# ============================================================
+# KEYWORD & PLOT ANALYSIS
+# ============================================================
+
+def analyze_keywords_learned(keywords_str, positive_kw, negative_kw):
+    """Score keywords based on learned weights."""
+    if pd.isna(keywords_str) or keywords_str == "":
+        return 0, 0, 0
+    
+    kw_lower = str(keywords_str).lower()
+    keywords = [k.strip() for k in kw_lower.split(', ')]
+    
+    pos_score = sum(positive_kw.get(kw, 0) for kw in keywords)
+    neg_score = sum(abs(negative_kw.get(kw, 0)) for kw in keywords)
+    
+    pos_count = sum(1 for kw in keywords if kw in positive_kw)
+    neg_count = sum(1 for kw in keywords if kw in negative_kw)
+    
+    return pos_score, neg_score, pos_count - neg_count
+
+
+def analyze_plot(plot_str):
+    """Extract features from plot text."""
+    if pd.isna(plot_str) or plot_str == "":
+        return {}
+    
+    plot_lower = str(plot_str).lower()
+    
+    features = {
+        'plot_has_war': any(w in plot_lower for w in ['war', 'military', 'soldier', 'army', 'battle', 'troops']),
+        'plot_has_crime': any(w in plot_lower for w in ['crime', 'criminal', 'murder', 'detective', 'police', 'cop', 'fbi', 'cia']),
+        'plot_has_sports': any(w in plot_lower for w in ['football', 'basketball', 'baseball', 'boxing', 'coach', 'championship', 'athlete']),
+        'plot_has_family': any(w in plot_lower for w in ['family', 'father', 'mother', 'son', 'daughter', 'brother', 'sister']),
+        'plot_has_love': any(w in plot_lower for w in ['love', 'romance', 'romantic', 'relationship', 'marry', 'wedding']),
+        'plot_has_revenge': any(w in plot_lower for w in ['revenge', 'avenge', 'vengeance', 'retribution', 'payback']),
+        'plot_has_survival': any(w in plot_lower for w in ['survive', 'survival', 'escape', 'trapped', 'stranded']),
+        'plot_has_heist': any(w in plot_lower for w in ['heist', 'robbery', 'steal', 'thief', 'bank robbery']),
+        'plot_has_conspiracy': any(w in plot_lower for w in ['conspiracy', 'cover-up', 'government', 'secret']),
+    }
+    
+    return {k: int(v) for k, v in features.items()}
+
+
+# ============================================================
+# STUDIO ANALYSIS
+# ============================================================
+
+def analyze_studio(company1, company2, company_scores, overall_mean):
+    """Get studio features including your average score for that studio."""
+    companies = f"{company1}|||{company2}".lower() if pd.notna(company1) else ""
+    
+    # Major studio flags
+    major_studios = ['warner bros', 'universal', 'paramount', 'columbia', 'walt disney',
+                     '20th century', 'lionsgate', 'new line', 'dreamworks', 'legendary']
+    
+    is_major = any(studio in companies for studio in major_studios)
+    is_a24 = 'a24' in companies
+    is_marvel = 'marvel' in companies
+    is_disney = 'disney' in companies or 'pixar' in companies
+    
+    # Get your average score for this company
+    company_score = overall_mean
+    if company1 and company1 in company_scores:
+        company_score = company_scores[company1]
+    
+    return {
+        'is_major_studio': int(is_major),
+        'is_a24': int(is_a24),
+        'is_marvel_studio': int(is_marvel),
+        'is_disney': int(is_disney),
+        'company_avg_score': company_score
+    }
+
+
+# ============================================================
+# FEATURE PREPARATION
+# ============================================================
+
+def prepare_features(df, training_stats=None, personal_scores=None, 
+                    positive_kw=None, negative_kw=None, is_training=True):
+    df = df.copy()
+    
+    overall_mean = personal_scores.get('overall_mean', 7.0) if personal_scores else 7.0
+    
+    # Convert numeric columns
+    num_cols = ['IMDb', 'RT', 'Metascore', 'Runtime', 'Year', 'BoxOffice', 
+                'IMDb_Votes', 'Oscar_Wins', 'Oscar_Noms', 'Total_Wins', 'Total_Noms',
+                'TMDB_Popularity', 'TMDB_Vote_Avg', 'TMDB_Vote_Count', 'Budget', 'Revenue']
+    
+    for col in num_cols:
+        if col in df.columns:
+            df[col] = pd.to_numeric(df[col], errors='coerce')
+    
+    # Calculate medians for missing value imputation
+    if is_training:
+        training_stats = {col: df[col].median() for col in num_cols if col in df.columns}
+    
+    for col in num_cols:
+        if col in df.columns and training_stats and col in training_stats:
+            df[col] = df[col].fillna(training_stats.get(col, 0))
+    
+    # ===== PERSONAL AVERAGE SCORES (THE MOST IMPORTANT FEATURES!) =====
+    
+    # Franchise score
+    df['Franchise'] = df['Movie'].apply(detect_franchise)
+    if personal_scores and 'franchise' in personal_scores:
+        df['Franchise_Avg_Score'] = df['Franchise'].map(personal_scores['franchise']).fillna(overall_mean)
+    else:
+        df['Franchise_Avg_Score'] = overall_mean
+    
+    # Director score
+    if 'Director' in df.columns and personal_scores and 'director' in personal_scores:
+        df['Director_Avg_Score'] = df['Director'].map(personal_scores['director']).fillna(overall_mean)
+    else:
+        df['Director_Avg_Score'] = overall_mean
+    
+    # Writer score
+    if 'Writer' in df.columns and personal_scores and 'writer' in personal_scores:
+        df['Writer_Avg_Score'] = df['Writer'].map(personal_scores['writer']).fillna(overall_mean)
+    else:
+        df['Writer_Avg_Score'] = overall_mean
+    
+    # Actor scores
+    if 'Actor' in df.columns and personal_scores and 'actor' in personal_scores:
+        df['Actor_Avg_Score'] = df['Actor'].map(personal_scores['actor']).fillna(overall_mean)
+    else:
+        df['Actor_Avg_Score'] = overall_mean
+    
+    if 'Actor 2' in df.columns and personal_scores and 'actor2' in personal_scores:
+        df['Actor2_Avg_Score'] = df['Actor 2'].map(personal_scores['actor2']).fillna(overall_mean)
+    else:
+        df['Actor2_Avg_Score'] = overall_mean
+    
+    if 'Actor 3' in df.columns and personal_scores and 'actor3' in personal_scores:
+        df['Actor3_Avg_Score'] = df['Actor 3'].map(personal_scores['actor3']).fillna(overall_mean)
+    else:
+        df['Actor3_Avg_Score'] = overall_mean
+    
+    if 'Actor 4' in df.columns and personal_scores and 'actor4' in personal_scores:
+        df['Actor4_Avg_Score'] = df['Actor 4'].map(personal_scores['actor4']).fillna(overall_mean)
+    else:
+        df['Actor4_Avg_Score'] = overall_mean
+    
+    # Genre scores
+    if 'Genre1' in df.columns and personal_scores and 'genre1' in personal_scores:
+        df['Genre1_Avg_Score'] = df['Genre1'].map(personal_scores['genre1']).fillna(overall_mean)
+    else:
+        df['Genre1_Avg_Score'] = overall_mean
+    
+    if 'Genre2' in df.columns and personal_scores and 'genre2' in personal_scores:
+        df['Genre2_Avg_Score'] = df['Genre2'].map(personal_scores['genre2']).fillna(overall_mean)
+    else:
+        df['Genre2_Avg_Score'] = overall_mean
+    
+    # Decade score
+    df['Decade'] = (df['Year'] // 10) * 10
+    if personal_scores and 'decade' in personal_scores:
+        df['Decade_Avg_Score'] = df['Decade'].map(personal_scores['decade']).fillna(overall_mean)
+    else:
+        df['Decade_Avg_Score'] = overall_mean
+    
+    # Content rating score
+    if 'Rated' in df.columns and personal_scores and 'rated' in personal_scores:
+        df['Rated_Avg_Score'] = df['Rated'].map(personal_scores['rated']).fillna(overall_mean)
+    else:
+        df['Rated_Avg_Score'] = overall_mean
+    
+    # Production company score
+    if 'Prod_Company' in df.columns and personal_scores and 'company' in personal_scores:
+        df['Company_Avg_Score'] = df['Prod_Company'].map(personal_scores['company']).fillna(overall_mean)
+    else:
+        df['Company_Avg_Score'] = overall_mean
+    
+    # ===== COMBINED PERSONAL SCORE (weighted average of all personal scores) =====
+    df['Combined_Personal_Score'] = (
+        df['Franchise_Avg_Score'] * 0.15 +
+        df['Director_Avg_Score'] * 0.20 +
+        df['Writer_Avg_Score'] * 0.15 +
+        df['Actor_Avg_Score'] * 0.15 +
+        df['Genre1_Avg_Score'] * 0.20 +
+        df['Decade_Avg_Score'] * 0.10 +
+        df['Rated_Avg_Score'] * 0.05
+    )
+    
+    # ===== CORE SCORE FEATURES =====
+    df['Critics_Avg'] = (df['IMDb'] * 10 + df['RT'].fillna(0) + df['Metascore'].fillna(0)) / 3
+    df['IMDb_RT_Diff'] = df['IMDb'] * 10 - df['RT'].fillna(df['IMDb'] * 10)
+    df['IMDb_Meta_Diff'] = df['IMDb'] * 10 - df['Metascore'].fillna(df['IMDb'] * 10)
+    df['TMDB_IMDb_Diff'] = df['TMDB_Vote_Avg'].fillna(0) - df['IMDb']
+    
+    # ===== PERSONAL BIAS vs CRITICS (NEW!) =====
+    # Calculate how much YOU differ from critics for various categories
+    # This helps the model understand "you like X more than critics do"
+    if is_training and 'My_Score' in df.columns:
+        # Your score vs IMDb (scaled to 10)
+        df['My_vs_IMDb'] = df['My_Score'] - df['IMDb']
+        # Your score vs RT (scaled to 10)
+        df['My_vs_RT'] = df['My_Score'] - (df['RT'].fillna(df['IMDb']*10) / 10)
+        # Your score vs Metascore (scaled to 10)
+        df['My_vs_Meta'] = df['My_Score'] - (df['Metascore'].fillna(df['IMDb']*10) / 10)
+        # Your score vs critics average
+        df['My_vs_Critics'] = df['My_Score'] - (df['Critics_Avg'] / 10)
+        
+        # Compute personal bias by GENRE (how much you over/under rate each genre vs critics)
+        if personal_scores is not None:
+            genre_bias = df.groupby('Genre1')['My_vs_IMDb'].mean().to_dict()
+            personal_scores['genre_bias'] = genre_bias
+            
+            # Compute personal bias by DIRECTOR
+            director_bias = df.groupby('Director')['My_vs_IMDb'].mean().to_dict()
+            personal_scores['director_bias'] = director_bias
+            
+            # Compute personal bias by content rating
+            rated_bias = df[df['Rated'].notna() & (df['Rated'] != '')].groupby('Rated')['My_vs_IMDb'].mean().to_dict()
+            personal_scores['rated_bias'] = rated_bias
+            
+            # Print insights
+            print("\n  Your bias vs IMDb by genre (+ means you rate higher than critics):")
+            sorted_bias = sorted(genre_bias.items(), key=lambda x: x[1], reverse=True)
+            for genre, bias in sorted_bias[:5]:
+                print(f"    {genre}: {bias:+.2f}")
+            print("  ...")
+            for genre, bias in sorted_bias[-3:]:
+                print(f"    {genre}: {bias:+.2f}")
+    
+    # Apply genre bias scores
+    if personal_scores and 'genre_bias' in personal_scores:
+        df['Genre1_Bias'] = df['Genre1'].map(personal_scores['genre_bias']).fillna(0)
+    else:
+        df['Genre1_Bias'] = 0
+    
+    # Apply director bias scores  
+    if personal_scores and 'director_bias' in personal_scores:
+        df['Director_Bias'] = df['Director'].map(personal_scores['director_bias']).fillna(0)
+    else:
+        df['Director_Bias'] = 0
+    
+    # Apply content rating bias
+    if personal_scores and 'rated_bias' in personal_scores:
+        df['Rated_Bias'] = df['Rated'].map(personal_scores['rated_bias']).fillna(0)
+    else:
+        df['Rated_Bias'] = 0
+    
+    # ===== TIME FEATURES =====
+    df['Age'] = 2025 - df['Year']
+    df['Is_Classic'] = (df['Year'] < 1990).astype(int)
+    df['Is_Modern'] = (df['Year'] >= 2010).astype(int)
+    df['Is_90s'] = ((df['Year'] >= 1990) & (df['Year'] < 2000)).astype(int)
+    df['Is_2000s'] = ((df['Year'] >= 2000) & (df['Year'] < 2010)).astype(int)
+    
+    # ===== RUNTIME =====
+    df['Is_Short'] = (df['Runtime'] < 100).astype(int)
+    df['Is_Long'] = (df['Runtime'] > 150).astype(int)
+    
+    # ===== AWARDS =====
+    df['Has_Oscar'] = ((df['Oscar_Wins'] > 0) | (df['Oscar_Noms'] > 0)).astype(int)
+    df['Awards_Total'] = df['Total_Wins'] + df['Total_Noms']
+    df['Award_Ratio'] = df['Total_Wins'] / (df['Total_Noms'] + 1)
+    
+    # ===== FINANCIAL =====
+    df['BoxOffice_Log'] = np.log1p(df['BoxOffice'].fillna(0))
+    df['Budget_Log'] = np.log1p(df['Budget'].fillna(0))
+    df['Revenue_Log'] = np.log1p(df['Revenue'].fillna(0))
+    df['Is_Blockbuster'] = (df['BoxOffice'] > 100000000).astype(int)
+    df['Is_Big_Budget'] = (df['Budget'] > 100000000).astype(int)
+    df['ROI'] = np.where(df['Budget'] > 0, df['Revenue'] / df['Budget'], 0).clip(0, 20)
+    
+    # ===== POPULARITY =====
+    df['Votes_Log'] = np.log1p(df['IMDb_Votes'].fillna(0))
+    df['TMDB_Pop_Log'] = np.log1p(df['TMDB_Popularity'].fillna(0))
+    df['Is_Popular'] = (df['IMDb_Votes'] > 500000).astype(int)
+    
+    # ===== CONTENT RATING =====
+    rating_map = {'G': 1, 'PG': 2, 'PG-13': 3, 'R': 4, 'NC-17': 5, 'Not Rated': 3, '': 3}
+    df['Rated_Num'] = df['Rated'].fillna('').map(lambda x: rating_map.get(x, 3))
+    df['Is_R_Rated'] = (df['Rated'] == 'R').astype(int)
+    
+    # ===== LANGUAGE/COUNTRY =====
+    df['Is_English'] = (df['Language'].fillna('') == 'English').astype(int)
+    df['Is_USA'] = df['Country'].fillna('').str.contains('United States|USA', na=False).astype(int)
+    
+    # ===== QUALITY INDICATORS =====
+    df['High_IMDb'] = (df['IMDb'] >= 7.5).astype(int)
+    df['High_RT'] = (df['RT'] >= 80).astype(int)
+    df['High_Meta'] = (df['Metascore'] >= 70).astype(int)
+    df['All_Critics_Love'] = ((df['High_IMDb'] == 1) & (df['High_RT'] == 1)).astype(int)
+    
+    # ===== GENRES (binary flags) =====
+    top_genres = ['Action', 'Comedy', 'Drama', 'Thriller', 'Crime', 'Adventure', 
+                  'Sci-Fi', 'Romance', 'Horror', 'Biography', 'War', 'Animation', 'Sport']
+    
+    for genre in top_genres:
+        df[f'Is_{genre}'] = (
+            (df['Genre1'].fillna('') == genre) | 
+            (df['Genre2'].fillna('') == genre) | 
+            (df['Genre3'].fillna('') == genre)
+        ).astype(int)
+    
+    # ===== FRANCHISE/SEQUEL =====
+    df['Sequel_Num'] = df['Movie'].apply(detect_sequel_number)
+    df['Is_Sequel'] = (df['Sequel_Num'] > 1).astype(int)
+    df['Is_Franchise'] = df['Franchise'].notna().astype(int)
+    
+    # ===== LEARNED KEYWORD ANALYSIS =====
+    if 'Keywords' in df.columns and positive_kw and negative_kw:
+        keyword_analysis = df['Keywords'].apply(
+            lambda x: analyze_keywords_learned(x, positive_kw, negative_kw)
+        )
+        df['Keyword_Pos_Score'] = keyword_analysis.apply(lambda x: x[0])
+        df['Keyword_Neg_Score'] = keyword_analysis.apply(lambda x: x[1])
+        df['Keyword_Net_Count'] = keyword_analysis.apply(lambda x: x[2])
+    else:
+        df['Keyword_Pos_Score'] = 0
+        df['Keyword_Neg_Score'] = 0
+        df['Keyword_Net_Count'] = 0
+    
+    # ===== PLOT ANALYSIS =====
+    if 'Plot' in df.columns:
+        plot_features = df['Plot'].apply(analyze_plot)
+        for feat in ['plot_has_war', 'plot_has_crime', 'plot_has_sports', 
+                     'plot_has_family', 'plot_has_love', 'plot_has_revenge', 
+                     'plot_has_survival', 'plot_has_heist', 'plot_has_conspiracy']:
+            df[feat] = plot_features.apply(lambda x: x.get(feat, 0))
+    
+    # ===== STUDIO FLAGS =====
+    if 'Prod_Company' in df.columns:
+        company_scores = personal_scores.get('company', {}) if personal_scores else {}
+        studio_features = df.apply(
+            lambda row: analyze_studio(
+                row.get('Prod_Company', ''), 
+                row.get('Prod_Company_2', ''),
+                company_scores,
+                overall_mean
+            ), 
+            axis=1
+        )
+        for feat in ['is_major_studio', 'is_a24', 'is_marvel_studio', 'is_disney']:
+            df[feat] = studio_features.apply(lambda x: x.get(feat, 0))
+    
+    # ===== SUB-GENRES & GENRE COMBOS =====
+    subgenre_features = df.apply(detect_subgenre, axis=1)
+    subgenre_cols = ['Is_Epic_War', 'Is_Action_Adventure_Thriller', 'Is_Military', 
+                     'Is_Heist', 'Is_Crime_Drama', 'Is_SciFi_Action', 'Is_Comedy_Action',
+                     'Is_Sports_Drama', 'Is_Psych_Thriller', 'Is_Revenge', 'Is_Survival',
+                     'Is_True_Story', 'Is_Horror_Thriller', 'Is_Animated', 'Is_Dystopian',
+                     'Is_Superhero']
+    for col in subgenre_cols:
+        df[col] = subgenre_features.apply(lambda x: x.get(col, 0))
+    
+    # ===== SUB-GENRE AVERAGE SCORES =====
+    # Map your average scores for each sub-genre
+    if is_training and personal_scores is not None:
+        subgenre_scores = {}
+        for col in subgenre_cols:
+            movies_in_subgenre = df[df[col] == 1]
+            if len(movies_in_subgenre) >= 2:
+                subgenre_scores[col] = movies_in_subgenre['My_Score'].mean()
+        personal_scores['subgenres'] = subgenre_scores
+        
+        print(f"\n  Sub-genre scores computed:")
+        for sg, score in sorted(subgenre_scores.items(), key=lambda x: x[1], reverse=True):
+            count = (df[sg] == 1).sum()
+            print(f"    {sg}: {score:.2f} ({count} movies)")
+    
+    # Apply sub-genre scores
+    if personal_scores and 'subgenres' in personal_scores:
+        subgenre_scores = personal_scores['subgenres']
+        for col in subgenre_cols:
+            if col in subgenre_scores:
+                # Add score boost for movies in sub-genres you like
+                df[f'{col}_Score'] = df[col] * subgenre_scores[col]
+            else:
+                df[f'{col}_Score'] = 0
+    
+    return df, training_stats
+
+
+def get_feature_columns():
+    return [
+        # === PERSONAL SCORES (most important!) ===
+        'Franchise_Avg_Score', 'Director_Avg_Score', 'Writer_Avg_Score',
+        'Actor_Avg_Score', 'Actor2_Avg_Score', 'Actor3_Avg_Score', 'Actor4_Avg_Score',
+        'Genre1_Avg_Score', 'Genre2_Avg_Score',
+        'Decade_Avg_Score', 'Rated_Avg_Score', 'Company_Avg_Score',
+        'Combined_Personal_Score',
+        
+        # === PERSONAL BIAS vs CRITICS (NEW!) ===
+        'Genre1_Bias',      # How much you over/under rate this genre vs IMDb
+        'Director_Bias',    # How much you over/under rate this director vs IMDb
+        'Rated_Bias',       # How much you over/under rate this content rating vs IMDb
+        
+        # Core critic scores
+        'IMDb', 'RT', 'Metascore', 'TMDB_Vote_Avg',
+        'Critics_Avg', 'IMDb_RT_Diff', 'IMDb_Meta_Diff', 'TMDB_IMDb_Diff',
+        
+        # Time
+        'Year', 'Age', 'Decade', 'Is_Classic', 'Is_Modern', 'Is_90s', 'Is_2000s',
+        
+        # Runtime
+        'Runtime', 'Is_Short', 'Is_Long',
+        
+        # Awards
+        'Oscar_Wins', 'Oscar_Noms', 'Total_Wins', 'Total_Noms',
+        'Has_Oscar', 'Awards_Total', 'Award_Ratio',
+        
+        # Financial
+        'BoxOffice_Log', 'Budget_Log', 'Revenue_Log', 
+        'Is_Blockbuster', 'Is_Big_Budget', 'ROI',
+        
+        # Popularity
+        'Votes_Log', 'TMDB_Pop_Log', 'Is_Popular',
+        
+        # Content
+        'Rated_Num', 'Is_R_Rated', 'Is_English', 'Is_USA',
+        
+        # Quality
+        'High_IMDb', 'High_RT', 'High_Meta', 'All_Critics_Love',
+        
+        # Franchise
+        'Is_Sequel', 'Is_Franchise', 'Sequel_Num',
+        
+        # Learned keywords
+        'Keyword_Pos_Score', 'Keyword_Neg_Score', 'Keyword_Net_Count',
+        
+        # Plot themes
+        'plot_has_war', 'plot_has_crime', 'plot_has_sports',
+        'plot_has_family', 'plot_has_love', 'plot_has_revenge', 
+        'plot_has_survival', 'plot_has_heist', 'plot_has_conspiracy',
+        
+        # Studio
+        'is_major_studio', 'is_a24', 'is_marvel_studio', 'is_disney',
+        
+        # Basic Genres
+        'Is_Action', 'Is_Comedy', 'Is_Drama', 'Is_Thriller', 'Is_Crime',
+        'Is_Adventure', 'Is_Sci-Fi', 'Is_Romance', 'Is_Horror',
+        'Is_Biography', 'Is_War', 'Is_Animation', 'Is_Sport',
+        
+        # === SUB-GENRES & COMBOS ===
+        'Is_Epic_War', 'Is_Action_Adventure_Thriller', 'Is_Military',
+        'Is_Heist', 'Is_Crime_Drama', 'Is_SciFi_Action', 'Is_Comedy_Action',
+        'Is_Sports_Drama', 'Is_Psych_Thriller', 'Is_Revenge', 'Is_Survival',
+        'Is_True_Story', 'Is_Horror_Thriller', 'Is_Animated', 'Is_Dystopian',
+        'Is_Superhero',
+        
+        # Sub-genre scores (your avg rating for each sub-genre)
+        'Is_Epic_War_Score', 'Is_Action_Adventure_Thriller_Score', 'Is_Military_Score',
+        'Is_Heist_Score', 'Is_Crime_Drama_Score', 'Is_SciFi_Action_Score', 
+        'Is_Comedy_Action_Score', 'Is_Sports_Drama_Score', 'Is_Psych_Thriller_Score',
+        'Is_Revenge_Score', 'Is_Survival_Score', 'Is_True_Story_Score',
+        'Is_Horror_Thriller_Score', 'Is_Animated_Score', 'Is_Dystopian_Score',
+        'Is_Superhero_Score'
+    ]
+
+
+# ============================================================
+# MODEL TRAINING
+# ============================================================
+
+def test_models(X, y):
+    print("\n" + "="*60)
+    print("TESTING MODELS")
+    print("="*60)
+    
+    models = {
+        'Ridge': Ridge(alpha=10.0),
+        'Bayesian Ridge': BayesianRidge(),
+        'KNN (k=10)': KNeighborsRegressor(n_neighbors=10, weights='distance'),
+        'Random Forest': RandomForestRegressor(n_estimators=300, max_depth=10, min_samples_leaf=2, random_state=42),
+        'Gradient Boosting': GradientBoostingRegressor(n_estimators=200, max_depth=5, learning_rate=0.05, random_state=42),
+    }
+    
+    # Add XGBoost if available
+    if HAS_XGBOOST:
+        models['XGBoost'] = xgb.XGBRegressor(
+            n_estimators=200, max_depth=5, learning_rate=0.05, 
+            random_state=42, verbosity=0
+        )
+    
+    # Add LightGBM if available
+    if HAS_LIGHTGBM:
+        models['LightGBM'] = lgb.LGBMRegressor(
+            n_estimators=200, max_depth=5, learning_rate=0.05,
+            random_state=42, verbosity=-1
+        )
+    
+    results = []
+    kfold = KFold(n_splits=5, shuffle=True, random_state=42)
+    
+    for name, model in models.items():
+        try:
+            r2 = cross_val_score(model, X, y, cv=kfold, scoring='r2')
+            mae = -cross_val_score(model, X, y, cv=kfold, scoring='neg_mean_absolute_error')
+            results.append({
+                'name': name, 'model': model, 
+                'r2': r2.mean(), 'r2_std': r2.std(), 
+                'mae': mae.mean()
+            })
+            print(f"  {name:25s} R²={r2.mean():.3f} (+/-{r2.std()*2:.3f})  MAE={mae.mean():.3f}")
+        except Exception as e:
+            print(f"  {name:25s} FAILED: {e}")
+    
+    results.sort(key=lambda x: x['r2'], reverse=True)
+    best = results[0]
+    print(f"\n✓ Best: {best['name']} (R²={best['r2']:.3f}, MAE={best['mae']:.3f})")
+    
+    return best['model'], best['name']
+
+
+def train_model(df):
+    print("\n" + "="*60)
+    print("COMPUTING PERSONAL SCORES")
+    print("="*60)
+    
+    # Compute all personal average scores
+    personal_scores = compute_personal_scores(df)
+    
+    # Learn keyword weights from YOUR data
+    print("\n" + "="*60)
+    print("LEARNING KEYWORD PREFERENCES")
+    print("="*60)
+    positive_kw, negative_kw = compute_keyword_weights(df)
+    
+    # Print some personal score insights
+    print("\n" + "="*60)
+    print("YOUR TOP RATED (by category) - Custom weighted formula")
+    print("="*60)
+    
+    if 'director' in personal_scores:
+        # Show weighted scores
+        sorted_directors = sorted(personal_scores['director'].items(), key=lambda x: x[1], reverse=True)
+        director_counts = df.groupby('Director')['My_Score'].count().to_dict()
+        print("\n  Top Directors (weighted):")
+        for director, weighted in sorted_directors[:10]:
+            count = director_counts.get(director, 0)
+            raw_avg = df[df['Director'] == director]['My_Score'].mean()
+            print(f"    {director}: {weighted:.2f} (raw: {raw_avg:.2f}, {count} movies)")
+    
+    if 'actor' in personal_scores:
+        sorted_actors = sorted(personal_scores['actor'].items(), key=lambda x: x[1], reverse=True)
+        actor_counts = df.groupby('Actor')['My_Score'].count().to_dict()
+        print("\n  Top Actors (weighted):")
+        for actor, weighted in sorted_actors[:10]:
+            count = actor_counts.get(actor, 0)
+            raw_avg = df[df['Actor'] == actor]['My_Score'].mean()
+            print(f"    {actor}: {weighted:.2f} (raw: {raw_avg:.2f}, {count} movies)")
+    
+    if 'genre1' in personal_scores:
+        sorted_genres = sorted(personal_scores['genre1'].items(), key=lambda x: x[1], reverse=True)
+        genre_counts = df.groupby('Genre1')['My_Score'].count().to_dict()
+        print("\n  Top Genres (weighted):")
+        for genre, weighted in sorted_genres[:10]:
+            count = genre_counts.get(genre, 0)
+            raw_avg = df[df['Genre1'] == genre]['My_Score'].mean()
+            print(f"    {genre}: {weighted:.2f} (raw: {raw_avg:.2f}, {count} movies)")
+    
+    # Prepare features
+    print("\n" + "="*60)
+    print("PREPARING FEATURES")
+    print("="*60)
+    
+    df, training_stats = prepare_features(
+        df, is_training=True, 
+        personal_scores=personal_scores,
+        positive_kw=positive_kw,
+        negative_kw=negative_kw
+    )
+    
+    feature_cols = get_feature_columns()
+    feature_cols = [c for c in feature_cols if c in df.columns]
+    
+    print(f"\n  Using {len(feature_cols)} features")
+    
+    X = df[feature_cols].fillna(0)
+    y = df['My_Score']
+    
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
+    
+    best_model, best_name = test_models(X_scaled, y)
+    
+    print(f"\nTraining {best_name} on full data...")
+    best_model.fit(X_scaled, y)
+    
+    # Feature importance
+    if hasattr(best_model, 'feature_importances_'):
+        importance = pd.DataFrame({
+            'feature': feature_cols,
+            'importance': best_model.feature_importances_
+        }).sort_values('importance', ascending=False)
+        
+        print("\nTop 25 Features:")
+        for _, row in importance.head(25).iterrows():
+            print(f"  {row['feature']:30s} {row['importance']:.4f}")
+    
+    model_package = {
+        'model': best_model,
+        'scaler': scaler,
+        'feature_cols': feature_cols,
+        'training_stats': training_stats,
+        'personal_scores': personal_scores,
+        'positive_kw': positive_kw,
+        'negative_kw': negative_kw,
+        'model_name': best_name
+    }
+    
+    joblib.dump(model_package, MODEL_FILE)
+    print(f"\nSaved: {MODEL_FILE}")
+    
+    return model_package
+
+
+def predict_watchlist(model_package, watchlist_df):
+    print("\n" + "="*60)
+    print("PREDICTING WATCHLIST")
+    print("="*60)
+    
+    df, _ = prepare_features(
+        watchlist_df, 
+        training_stats=model_package['training_stats'],
+        personal_scores=model_package['personal_scores'],
+        positive_kw=model_package['positive_kw'],
+        negative_kw=model_package['negative_kw'],
+        is_training=False
+    )
+    
+    # Show some matches
+    print("\nSample predictions using your personal scores:")
+    sample = df.head(10)
+    for _, row in sample.iterrows():
+        movie = row['Movie'][:30]
+        director = row.get('Director', '')[:15]
+        dir_score = row.get('Director_Avg_Score', 0)
+        genre_score = row.get('Genre1_Avg_Score', 0)
+        print(f"  {movie:30s} | Dir: {director:15s} ({dir_score:.1f}) | Genre: {genre_score:.1f}")
+    
+    X = df[model_package['feature_cols']].fillna(0)
+    X_scaled = model_package['scaler'].transform(X)
+    
+    df['Predicted Score'] = model_package['model'].predict(X_scaled)
+    df['Predicted Score'] = df['Predicted Score'].round(2).clip(1, 10)
+    
+    print(f"\nPredicted {len(df)} movies")
+    
+    return df
+
+
+def save_output(df, filepath):
+    output_cols = ['Movie', 'Year', 'Runtime', 'Director', 
+                   'Genre1', 'Genre2', 'Genre3', 'IMDb', 'RT', 'Metascore',
+                   'Rated', 'Oscar_Wins', 'Total_Wins', 'Keywords', 'Predicted Score']
+    output_cols = [c for c in output_cols if c in df.columns]
+    
+    df_out = df[output_cols].sort_values('Predicted Score', ascending=False)
+    df_out.to_excel(filepath, index=False)
+    
+    print(f"\n✓ Saved: {filepath}")
+    
+    print("\n" + "="*60)
+    print("TOP 25 PREDICTIONS")
+    print("="*60)
+    print(df_out[['Movie', 'Predicted Score', 'IMDb', 'RT']].head(25).to_string(index=False))
+    
+    print("\n" + "="*60)
+    print("BOTTOM 15 PREDICTIONS")
+    print("="*60)
+    print(df_out[['Movie', 'Predicted Score', 'IMDb', 'RT']].tail(15).to_string(index=False))
+
+
+def main():
+    if not os.path.exists(RATINGS_FILE):
+        print(f"ERROR: {RATINGS_FILE} not found")
+        return
+    if not os.path.exists(WATCHLIST_FILE):
+        print(f"ERROR: {WATCHLIST_FILE} not found")
+        return
+    
+    print("="*60)
+    print("MOVIE SCORE PREDICTOR V5")
+    print("="*60)
+    
+    print("\nLoading data...")
+    ratings_df = pd.read_csv(RATINGS_FILE)
+    ratings_df = ratings_df[ratings_df['My_Score'].notna() & (ratings_df['My_Score'] != '')]
+    ratings_df['My_Score'] = pd.to_numeric(ratings_df['My_Score'], errors='coerce')
+    ratings_df = ratings_df[ratings_df['My_Score'].notna()]
+    print(f"  {len(ratings_df)} rated movies")
+    
+    watchlist_df = pd.read_csv(WATCHLIST_FILE)
+    print(f"  {len(watchlist_df)} watchlist movies")
+    
+    model_package = train_model(ratings_df)
+    predictions_df = predict_watchlist(model_package, watchlist_df)
+    save_output(predictions_df, OUTPUT_FILE)
+
+
+if __name__ == "__main__":
+    main()
