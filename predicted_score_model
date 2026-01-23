@@ -22,7 +22,7 @@ Usage:
 
 RATINGS_FILE = "Ratings_Enriched.csv"
 WATCHLIST_FILE = "Watchlist_Enriched.csv"
-OUTPUT_FILE = "Predicted_Scores.xlsx"
+OUTPUT_FILE = "Predicted_Scores.csv"
 MODEL_FILE = "movie_score_predictor.pkl"
 
 # ============================================================
@@ -1121,7 +1121,64 @@ def train_model(df):
     return model_package
 
 
-def predict_watchlist(model_package, watchlist_df):
+def calibrate_predictions(predictions, training_scores):
+    """
+    Calibrate predictions to be more conservative.
+    - Compress extreme predictions toward the mean
+    - Apply ceiling penalty (very few movies deserve 9+)
+    """
+    training_mean = np.mean(training_scores)
+    training_std = np.std(training_scores)
+    training_max = np.max(training_scores)
+    
+    # Get percentile thresholds from your actual ratings
+    pct_90 = np.percentile(training_scores, 90)
+    pct_95 = np.percentile(training_scores, 95)
+    pct_99 = np.percentile(training_scores, 99)
+    
+    above_9 = (training_scores >= 9).sum()
+    above_95 = (training_scores >= 9.5).sum()
+    n_train = len(training_scores)
+    
+    print("\n  Your rating distribution:")
+    print(f"    Mean: {training_mean:.2f}, Std: {training_std:.2f}")
+    print(f"    90th percentile: {pct_90:.2f}")
+    print(f"    95th percentile: {pct_95:.2f}")
+    print(f"    Max: {training_max:.2f}")
+    print(f"    Movies rated ≥9: {above_9} ({100*above_9/n_train:.1f}%)")
+    print(f"    Movies rated ≥9.5: {above_95} ({100*above_95/n_train:.1f}%)")
+    
+    calibrated = predictions.copy()
+    
+    # Step 1: Compress predictions toward mean
+    # Formula: new = mean + (pred - mean) * compression_factor
+    # This shrinks extreme values while keeping the ranking
+    compression_factor = 0.85  # Reduce distance from mean by 15%
+    calibrated = training_mean + (calibrated - training_mean) * compression_factor
+    
+    # Step 2: Apply progressive ceiling penalty for scores above 90th percentile
+    # The higher above threshold, the more we pull it down
+    for i, pred in enumerate(calibrated):
+        if pred > pct_90:
+            # How far above 90th percentile?
+            excess = pred - pct_90
+            # Apply diminishing returns - harder to get higher scores
+            # Cap at 95th percentile + small bonus
+            max_allowed = pct_95 + 0.3
+            if pred > max_allowed:
+                calibrated[i] = max_allowed + (pred - max_allowed) * 0.3
+            else:
+                # Gentle compression above 90th
+                calibrated[i] = pct_90 + excess * 0.7
+    
+    # Step 3: Ensure we don't exceed training max (with tiny buffer)
+    hard_ceiling = min(training_max + 0.1, 10.0)
+    calibrated = np.clip(calibrated, 1.0, hard_ceiling)
+    
+    return calibrated
+
+
+def predict_watchlist(model_package, watchlist_df, training_scores):
     print("\n" + "="*60)
     print("PREDICTING WATCHLIST")
     print("="*60)
@@ -1148,8 +1205,27 @@ def predict_watchlist(model_package, watchlist_df):
     X = df[model_package['feature_cols']].fillna(0)
     X_scaled = model_package['scaler'].transform(X)
     
-    df['Predicted Score'] = model_package['model'].predict(X_scaled)
-    df['Predicted Score'] = df['Predicted Score'].round(2).clip(1, 10)
+    # Get raw predictions
+    raw_predictions = model_package['model'].predict(X_scaled)
+    
+    print(f"\n  Raw prediction stats:")
+    print(f"    Min: {raw_predictions.min():.2f}, Max: {raw_predictions.max():.2f}")
+    print(f"    Mean: {raw_predictions.mean():.2f}, Median: {np.median(raw_predictions):.2f}")
+    print(f"    Predicted ≥9: {(raw_predictions >= 9).sum()}")
+    print(f"    Predicted ≥9.5: {(raw_predictions >= 9.5).sum()}")
+    
+    # Calibrate predictions to match your actual distribution
+    print("\n  Calibrating predictions to match your rating distribution...")
+    calibrated = calibrate_predictions(raw_predictions, training_scores)
+    
+    print(f"\n  Calibrated prediction stats:")
+    print(f"    Min: {calibrated.min():.2f}, Max: {calibrated.max():.2f}")
+    print(f"    Mean: {calibrated.mean():.2f}, Median: {np.median(calibrated):.2f}")
+    print(f"    Predicted ≥9: {(calibrated >= 9).sum()}")
+    print(f"    Predicted ≥9.5: {(calibrated >= 9.5).sum()}")
+    
+    df['Predicted Score'] = np.round(calibrated, 2).clip(1, 10)
+    df['Raw_Predicted'] = np.round(raw_predictions, 2).clip(1, 10)
     
     print(f"\nPredicted {len(df)} movies")
     
@@ -1159,23 +1235,26 @@ def predict_watchlist(model_package, watchlist_df):
 def save_output(df, filepath):
     output_cols = ['Movie', 'Year', 'Runtime', 'Director', 
                    'Genre1', 'Genre2', 'Genre3', 'IMDb', 'RT', 'Metascore',
-                   'Rated', 'Oscar_Wins', 'Total_Wins', 'Keywords', 'Predicted Score']
+                   'Rated', 'Oscar_Wins', 'Total_Wins', 'Keywords', 
+                   'Predicted Score', 'Raw_Predicted']
     output_cols = [c for c in output_cols if c in df.columns]
     
     df_out = df[output_cols].sort_values('Predicted Score', ascending=False)
-    df_out.to_excel(filepath, index=False)
+    df_out.to_csv(filepath, index=False)
     
     print(f"\n✓ Saved: {filepath}")
     
     print("\n" + "="*60)
-    print("TOP 25 PREDICTIONS")
+    print("TOP 25 PREDICTIONS (calibrated)")
     print("="*60)
-    print(df_out[['Movie', 'Predicted Score', 'IMDb', 'RT']].head(25).to_string(index=False))
+    display_cols = ['Movie', 'Predicted Score', 'Raw_Predicted', 'IMDb']
+    display_cols = [c for c in display_cols if c in df_out.columns]
+    print(df_out[display_cols].head(25).to_string(index=False))
     
     print("\n" + "="*60)
     print("BOTTOM 15 PREDICTIONS")
     print("="*60)
-    print(df_out[['Movie', 'Predicted Score', 'IMDb', 'RT']].tail(15).to_string(index=False))
+    print(df_out[display_cols].tail(15).to_string(index=False))
 
 
 def main():
@@ -1201,7 +1280,10 @@ def main():
     print(f"  {len(watchlist_df)} watchlist movies")
     
     model_package = train_model(ratings_df)
-    predictions_df = predict_watchlist(model_package, watchlist_df)
+    
+    # Pass training scores for calibration
+    training_scores = ratings_df['My_Score'].values
+    predictions_df = predict_watchlist(model_package, watchlist_df, training_scores)
     save_output(predictions_df, OUTPUT_FILE)
 
 
