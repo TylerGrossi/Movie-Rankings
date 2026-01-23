@@ -974,9 +974,6 @@ def test_models(X, y):
     print("="*60)
     
     models = {
-        'Ridge': Ridge(alpha=10.0),
-        'Bayesian Ridge': BayesianRidge(),
-        'KNN (k=10)': KNeighborsRegressor(n_neighbors=10, weights='distance'),
         'Random Forest': RandomForestRegressor(n_estimators=300, max_depth=10, min_samples_leaf=2, random_state=42),
         'Gradient Boosting': GradientBoostingRegressor(n_estimators=200, max_depth=5, learning_rate=0.05, random_state=42),
     }
@@ -1234,12 +1231,17 @@ def predict_watchlist(model_package, watchlist_df, training_scores):
 
 def save_output(df, filepath):
     output_cols = ['Movie', 'Year', 'Runtime', 'Director', 
+                   'Actor', 'Actor 2', 'Actor 3',
                    'Genre1', 'Genre2', 'Genre3', 'IMDb', 'RT', 'Metascore',
                    'Rated', 'Oscar_Wins', 'Total_Wins', 'Keywords', 
                    'Predicted Score', 'Raw_Predicted']
     output_cols = [c for c in output_cols if c in df.columns]
     
     df_out = df[output_cols].sort_values('Predicted Score', ascending=False)
+    
+    # Add rank column based on predicted score
+    df_out.insert(0, 'Rank', range(1, len(df_out) + 1))
+    
     df_out.to_csv(filepath, index=False)
     
     print(f"\n✓ Saved: {filepath}")
