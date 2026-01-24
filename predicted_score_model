@@ -1234,7 +1234,7 @@ def save_output(df, filepath):
                    'Actor', 'Actor 2', 'Actor 3',
                    'Genre1', 'Genre2', 'Genre3', 'IMDb', 'RT', 'Metascore',
                    'Rated', 'Oscar_Wins', 'Total_Wins', 'Keywords', 
-                   'Predicted Score', 'Raw_Predicted']
+                   'Predicted Score', 'Raw_Predicted', 'Created']
     output_cols = [c for c in output_cols if c in df.columns]
     
     df_out = df[output_cols].sort_values('Predicted Score', ascending=False)
