@@ -458,12 +458,18 @@ def compute_personal_scores(df):
 
 
 def compute_keyword_weights(df):
-    """Learn which keywords correlate with high/low scores from training data."""
+    """Learn which keywords correlate with high/low scores from training data.
+    Uses weighted formula similar to genres:
+    <10 occurrences: (Score - 1.5) / Count
+    10-19 occurrences: (Score + 1.5) / Count
+    20-29 occurrences: (Score + 3) / Count
+    ≥30 occurrences: (Score + 5) / Count
+    """
     if 'Keywords' not in df.columns:
         return {}, {}
     
     # Collect all keywords and their associated scores
-    keyword_scores = {}
+    keyword_data = {}  # {keyword: {'total': sum, 'count': n}}
     
     for _, row in df.iterrows():
         keywords = row.get('Keywords', '')
@@ -475,39 +481,56 @@ def compute_keyword_weights(df):
         for kw in str(keywords).lower().split(', '):
             kw = kw.strip()
             if kw:
-                if kw not in keyword_scores:
-                    keyword_scores[kw] = []
-                keyword_scores[kw].append(score)
+                if kw not in keyword_data:
+                    keyword_data[kw] = {'total': 0, 'count': 0}
+                keyword_data[kw]['total'] += score
+                keyword_data[kw]['count'] += 1
     
-    # Calculate average score per keyword (min 3 occurrences)
+    # Calculate weighted score per keyword (min 3 occurrences)
     overall_mean = df['My_Score'].mean()
     
     positive_keywords = {}
     negative_keywords = {}
     
-    for kw, scores in keyword_scores.items():
-        if len(scores) >= 3:
-            avg = np.mean(scores)
-            diff = avg - overall_mean
+    for kw, data in keyword_data.items():
+        count = data['count']
+        total_score = data['total']
+        
+        if count >= 3:
+            # Apply weighted formula (same as genres)
+            if count < 10:
+                weighted = (total_score - 1.5) / count
+            elif count < 20:
+                weighted = (total_score + 1.5) / count
+            elif count < 30:
+                weighted = (total_score + 3) / count
+            else:  # >= 30
+                weighted = (total_score + 5) / count
+            
+            diff = weighted - overall_mean
             
             if diff > 0.3:  # You rate these keywords above average
-                positive_keywords[kw] = diff
+                positive_keywords[kw] = {'weight': diff, 'count': count, 'weighted_score': weighted}
             elif diff < -0.3:  # You rate these keywords below average
-                negative_keywords[kw] = diff
+                negative_keywords[kw] = {'weight': diff, 'count': count, 'weighted_score': weighted}
     
     # Sort and print top keywords
-    pos_sorted = sorted(positive_keywords.items(), key=lambda x: x[1], reverse=True)[:15]
-    neg_sorted = sorted(negative_keywords.items(), key=lambda x: x[1])[:15]
+    pos_sorted = sorted(positive_keywords.items(), key=lambda x: x[1]['weight'], reverse=True)[:15]
+    neg_sorted = sorted(negative_keywords.items(), key=lambda x: x[1]['weight'])[:15]
     
-    print("\n  Keywords you LIKE (score above average):")
-    for kw, diff in pos_sorted[:10]:
-        print(f"    +{diff:.2f}: {kw}")
+    print("\n  Keywords you LIKE (weighted score above average):")
+    for kw, data in pos_sorted[:10]:
+        print(f"    +{data['weight']:.2f}: {kw} ({data['count']} movies, weighted: {data['weighted_score']:.2f})")
     
-    print("\n  Keywords you DISLIKE (score below average):")
-    for kw, diff in neg_sorted[:10]:
-        print(f"    {diff:.2f}: {kw}")
+    print("\n  Keywords you DISLIKE (weighted score below average):")
+    for kw, data in neg_sorted[:10]:
+        print(f"    {data['weight']:.2f}: {kw} ({data['count']} movies, weighted: {data['weighted_score']:.2f})")
     
-    return positive_keywords, negative_keywords
+    # Convert to simple weight dicts for use in scoring
+    pos_weights = {kw: data['weight'] for kw, data in positive_keywords.items()}
+    neg_weights = {kw: data['weight'] for kw, data in negative_keywords.items()}
+    
+    return pos_weights, neg_weights
 
 
 # ============================================================
@@ -974,6 +997,9 @@ def test_models(X, y):
     print("="*60)
     
     models = {
+        'Ridge': Ridge(alpha=10.0),
+        'Bayesian Ridge': BayesianRidge(),
+        'KNN (k=10)': KNeighborsRegressor(n_neighbors=10, weights='distance'),
         'Random Forest': RandomForestRegressor(n_estimators=300, max_depth=10, min_samples_leaf=2, random_state=42),
         'Gradient Boosting': GradientBoostingRegressor(n_estimators=200, max_depth=5, learning_rate=0.05, random_state=42),
     }
@@ -1127,11 +1153,12 @@ def calibrate_predictions(predictions, training_scores):
     training_mean = np.mean(training_scores)
     training_std = np.std(training_scores)
     training_max = np.max(training_scores)
+    training_min = np.min(training_scores)
     
     # Get percentile thresholds from your actual ratings
+    pct_75 = np.percentile(training_scores, 75)
     pct_90 = np.percentile(training_scores, 90)
     pct_95 = np.percentile(training_scores, 95)
-    pct_99 = np.percentile(training_scores, 99)
     
     above_9 = (training_scores >= 9).sum()
     above_95 = (training_scores >= 9.5).sum()
@@ -1139,6 +1166,7 @@ def calibrate_predictions(predictions, training_scores):
     
     print("\n  Your rating distribution:")
     print(f"    Mean: {training_mean:.2f}, Std: {training_std:.2f}")
+    print(f"    75th percentile: {pct_75:.2f}")
     print(f"    90th percentile: {pct_90:.2f}")
     print(f"    95th percentile: {pct_95:.2f}")
     print(f"    Max: {training_max:.2f}")
@@ -1147,30 +1175,25 @@ def calibrate_predictions(predictions, training_scores):
     
     calibrated = predictions.copy()
     
-    # Step 1: Compress predictions toward mean
-    # Formula: new = mean + (pred - mean) * compression_factor
-    # This shrinks extreme values while keeping the ranking
-    compression_factor = 0.85  # Reduce distance from mean by 15%
+    # Step 1: More aggressive compression toward mean (25% instead of 15%)
+    compression_factor = 0.75
     calibrated = training_mean + (calibrated - training_mean) * compression_factor
     
-    # Step 2: Apply progressive ceiling penalty for scores above 90th percentile
-    # The higher above threshold, the more we pull it down
+    # Step 2: Apply progressive ceiling penalty starting at 75th percentile
     for i, pred in enumerate(calibrated):
-        if pred > pct_90:
-            # How far above 90th percentile?
-            excess = pred - pct_90
-            # Apply diminishing returns - harder to get higher scores
-            # Cap at 95th percentile + small bonus
-            max_allowed = pct_95 + 0.3
-            if pred > max_allowed:
-                calibrated[i] = max_allowed + (pred - max_allowed) * 0.3
+        if pred > pct_75:
+            if pred > pct_90:
+                # Very high predictions get compressed hard
+                excess_90 = pred - pct_90
+                calibrated[i] = pct_90 + excess_90 * 0.4  # Only keep 40% of excess
             else:
-                # Gentle compression above 90th
-                calibrated[i] = pct_90 + excess * 0.7
+                # Between 75th and 90th - moderate compression
+                excess_75 = pred - pct_75
+                calibrated[i] = pct_75 + excess_75 * 0.7  # Keep 70% of excess
     
-    # Step 3: Ensure we don't exceed training max (with tiny buffer)
-    hard_ceiling = min(training_max + 0.1, 10.0)
-    calibrated = np.clip(calibrated, 1.0, hard_ceiling)
+    # Step 3: Hard ceiling at 95th percentile + 0.2 (very few should exceed this)
+    hard_ceiling = min(pct_95 + 0.2, training_max, 10.0)
+    calibrated = np.clip(calibrated, training_min, hard_ceiling)
     
     return calibrated
 
@@ -1231,17 +1254,12 @@ def predict_watchlist(model_package, watchlist_df, training_scores):
 
 def save_output(df, filepath):
     output_cols = ['Movie', 'Year', 'Runtime', 'Director', 
-                   'Actor', 'Actor 2', 'Actor 3',
                    'Genre1', 'Genre2', 'Genre3', 'IMDb', 'RT', 'Metascore',
                    'Rated', 'Oscar_Wins', 'Total_Wins', 'Keywords', 
-                   'Predicted Score', 'Raw_Predicted', 'Created']
+                   'Predicted Score', 'Raw_Predicted']
     output_cols = [c for c in output_cols if c in df.columns]
     
     df_out = df[output_cols].sort_values('Predicted Score', ascending=False)
-    
-    # Add rank column based on predicted score
-    df_out.insert(0, 'Rank', range(1, len(df_out) + 1))
-    
     df_out.to_csv(filepath, index=False)
     
     print(f"\n✓ Saved: {filepath}")
