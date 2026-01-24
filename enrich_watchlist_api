@@ -9,30 +9,26 @@ Requirements:
 Usage:
     python enrich_watchlist_full.py
 """
-
-# ============================================================
-# CONFIGURE THESE VALUES
-# ============================================================
-
-OMDB_API_KEY = "8e631dfe"     # Get at: https://www.omdbapi.com/apikey.aspx
-TMDB_API_KEY = "d5ec5a76fb5942fe50a7e3a72d683e52"     # Get at: https://www.themoviedb.org/settings/api
-INPUT_CSV = "imdb_watchlist.csv"
-OUTPUT_CSV = "Watchlist_Enriched.csv"
-
-# ============================================================
-
 import os
+from dotenv import load_dotenv  # Add this import
+from pathlib import Path
 import re
 import requests
 import pandas as pd
 import time
-from pathlib import Path
+
+# Load variables from .env file
+load_dotenv()
+
+OMDB_API_KEY = os.getenv("OMDB_API_KEY")
+TMDB_API_KEY = os.getenv("TMDB_API_KEY")
+INPUT_CSV = "imdb_watchlist.csv"
+OUTPUT_CSV = "Watchlist_Enriched.csv"
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 INPUT_CSV = os.path.join(SCRIPT_DIR, INPUT_CSV)
 OUTPUT_CSV = os.path.join(SCRIPT_DIR, OUTPUT_CSV)
-
 
 # ============================================================
 # API FUNCTIONS (same as ratings script)

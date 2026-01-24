@@ -22,32 +22,30 @@ Usage:
     2. Get TMDB API key: https://www.themoviedb.org/settings/api (free signup)
     3. Fill in keys below and run: python enrich_ratings_full.py
 """
-
-# ============================================================
-# CONFIGURE THESE VALUES
-# ============================================================
-
-OMDB_API_KEY = "8e631dfe"     # Get at: https://www.omdbapi.com/apikey.aspx
-TMDB_API_KEY = "d5ec5a76fb5942fe50a7e3a72d683e52"     # Get at: https://www.themoviedb.org/settings/api
-INPUT_CSV = "imdb_ratings.csv"
-MOVIE_RANKS_FILE = "Movies Ranks.xlsm"
-OUTPUT_CSV = "Ratings_Enriched.csv"
-
-# ============================================================
-
 import os
+from dotenv import load_dotenv  # Add this import
+from pathlib import Path
 import re
 import requests
 import pandas as pd
 import time
-from pathlib import Path
+
+# Load variables from .env file
+load_dotenv()
+
+# Now we pull from the environment instead of typing them here
+OMDB_API_KEY = os.getenv("OMDB_API_KEY")
+TMDB_API_KEY = os.getenv("TMDB_API_KEY")
+
+INPUT_CSV = "imdb_ratings.csv"
+MOVIE_RANKS_FILE = "Movies Ranks.xlsm"
+OUTPUT_CSV = "Ratings_Enriched.csv"
+# ============================================================
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-
 INPUT_CSV = os.path.join(SCRIPT_DIR, INPUT_CSV)
 MOVIE_RANKS_FILE = os.path.join(SCRIPT_DIR, MOVIE_RANKS_FILE)
 OUTPUT_CSV = os.path.join(SCRIPT_DIR, OUTPUT_CSV)
-
 
 # ============================================================
 # OMDb API FUNCTIONS
