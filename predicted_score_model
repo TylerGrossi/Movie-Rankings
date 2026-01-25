@@ -1176,7 +1176,7 @@ def calibrate_predictions(predictions, training_scores):
     calibrated = predictions.copy()
     
     # Step 1: More aggressive compression toward mean (25% instead of 15%)
-    compression_factor = 0.75
+    compression_factor = 0.85
     calibrated = training_mean + (calibrated - training_mean) * compression_factor
     
     # Step 2: Apply progressive ceiling penalty starting at 75th percentile
@@ -1253,10 +1253,10 @@ def predict_watchlist(model_package, watchlist_df, training_scores):
 
 
 def save_output(df, filepath):
-    output_cols = ['Movie', 'Year', 'Runtime', 'Director', 
+    output_cols = ['Movie', 'Year', 'Runtime', 'Director', 'Actor', 'Actor 2', 'Actor 3',
                    'Genre1', 'Genre2', 'Genre3', 'IMDb', 'RT', 'Metascore',
                    'Rated', 'Oscar_Wins', 'Total_Wins', 'Keywords', 
-                   'Predicted Score', 'Raw_Predicted']
+                   'Predicted Score', 'Raw_Predicted', 'Created']
     output_cols = [c for c in output_cols if c in df.columns]
     
     df_out = df[output_cols].sort_values('Predicted Score', ascending=False)
