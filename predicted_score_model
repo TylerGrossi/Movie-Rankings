@@ -1146,16 +1146,16 @@ def train_model(df):
 
 def calibrate_predictions(predictions, training_scores):
     """
-    Calibrate predictions to be more conservative.
-    - Compress extreme predictions toward the mean
-    - Apply ceiling penalty (very few movies deserve 9+)
+    Calibrate predictions to match YOUR rating distribution (mean + spread).
+    - Variance matching: scale predictions so their std matches your actual ratings.
+    - This avoids the "everything clusters at 8.3-8.7" problem while keeping
+      relative ordering. Optional light ceiling to avoid runaway 10s.
     """
     training_mean = np.mean(training_scores)
     training_std = np.std(training_scores)
     training_max = np.max(training_scores)
     training_min = np.min(training_scores)
     
-    # Get percentile thresholds from your actual ratings
     pct_75 = np.percentile(training_scores, 75)
     pct_90 = np.percentile(training_scores, 90)
     pct_95 = np.percentile(training_scores, 95)
@@ -1166,34 +1166,26 @@ def calibrate_predictions(predictions, training_scores):
     
     print("\n  Your rating distribution:")
     print(f"    Mean: {training_mean:.2f}, Std: {training_std:.2f}")
-    print(f"    75th percentile: {pct_75:.2f}")
-    print(f"    90th percentile: {pct_90:.2f}")
-    print(f"    95th percentile: {pct_95:.2f}")
-    print(f"    Max: {training_max:.2f}")
+    print(f"    75th percentile: {pct_75:.2f}, 90th: {pct_90:.2f}, 95th: {pct_95:.2f}")
+    print(f"    Min: {training_min:.2f}, Max: {training_max:.2f}")
     print(f"    Movies rated ≥9: {above_9} ({100*above_9/n_train:.1f}%)")
     print(f"    Movies rated ≥9.5: {above_95} ({100*above_95/n_train:.1f}%)")
     
-    calibrated = predictions.copy()
+    pred_mean = np.mean(predictions)
+    pred_std = np.std(predictions)
     
-    # Step 1: More aggressive compression toward mean (25% instead of 15%)
-    compression_factor = 0.85
-    calibrated = training_mean + (calibrated - training_mean) * compression_factor
+    # Avoid division by zero if all predictions are identical
+    if pred_std < 1e-6:
+        calibrated = np.full_like(predictions, training_mean)
+    else:
+        # Variance matching: give predictions the same mean and spread as your ratings
+        # So you get a similar mix of 6s, 7s, 8s, 9s instead of everything near 8.3
+        calibrated = training_mean + (predictions - pred_mean) * (training_std / pred_std)
     
-    # Step 2: Apply progressive ceiling penalty starting at 75th percentile
-    for i, pred in enumerate(calibrated):
-        if pred > pct_75:
-            if pred > pct_90:
-                # Very high predictions get compressed hard
-                excess_90 = pred - pct_90
-                calibrated[i] = pct_90 + excess_90 * 0.4  # Only keep 40% of excess
-            else:
-                # Between 75th and 90th - moderate compression
-                excess_75 = pred - pct_75
-                calibrated[i] = pct_75 + excess_75 * 0.7  # Keep 70% of excess
-    
-    # Step 3: Hard ceiling at 95th percentile + 0.2 (very few should exceed this)
-    hard_ceiling = min(pct_95 + 0.2, training_max, 10.0)
-    calibrated = np.clip(calibrated, training_min, hard_ceiling)
+    # Optional: light ceiling so a handful of watchlist items don't all get 9.8+
+    # Only clip above your 95th percentile + 0.3 (so top 5% of predictions can still be high)
+    soft_ceiling = min(pct_95 + 0.3, 10.0)
+    calibrated = np.clip(calibrated, training_min, soft_ceiling)
     
     return calibrated
 
