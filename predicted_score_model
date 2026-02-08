@@ -7,10 +7,10 @@ New features:
 - Actor2_Avg_Score (your avg rating for second actor)
 - Genre1_Avg_Score, Genre2_Avg_Score (your avg rating per genre)
 - Learned keyword weights from YOUR data
-- XGBoost and LightGBM models
+- XGBoost model
 
 Requirements:
-    pip install pandas scikit-learn openpyxl joblib xgboost lightgbm
+    pip install pandas scikit-learn openpyxl joblib xgboost
 
 Usage:
     python predicted_score_model.py
@@ -25,6 +25,10 @@ WATCHLIST_FILE = "Watchlist_Enriched.csv"
 OUTPUT_FILE = "Predicted_Scores.csv"
 MODEL_FILE = "movie_score_predictor.pkl"
 
+# How much to shift predictions toward your rating distribution (0 = raw only, 1 = full calibration).
+# Lower = less dramatic adjustment, scores stay closer to model output.
+CALIBRATION_STRENGTH = 0.4
+
 # ============================================================
 
 import os
@@ -38,23 +42,15 @@ warnings.filterwarnings('ignore')
 from sklearn.model_selection import cross_val_score, KFold
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import GradientBoostingRegressor, RandomForestRegressor
-from sklearn.linear_model import Ridge, BayesianRidge
-from sklearn.neighbors import KNeighborsRegressor
+from sklearn.linear_model import BayesianRidge
 
-# Try to import XGBoost and LightGBM
+# Try to import XGBoost
 try:
     import xgboost as xgb
     HAS_XGBOOST = True
 except ImportError:
     HAS_XGBOOST = False
     print("Note: XGBoost not installed. Run: pip install xgboost")
-
-try:
-    import lightgbm as lgb
-    HAS_LIGHTGBM = True
-except ImportError:
-    HAS_LIGHTGBM = False
-    print("Note: LightGBM not installed. Run: pip install lightgbm")
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 RATINGS_FILE = os.path.join(SCRIPT_DIR, RATINGS_FILE)
@@ -997,25 +993,15 @@ def test_models(X, y):
     print("="*60)
     
     models = {
-        'Ridge': Ridge(alpha=10.0),
         'Bayesian Ridge': BayesianRidge(),
-        'KNN (k=10)': KNeighborsRegressor(n_neighbors=10, weights='distance'),
         'Random Forest': RandomForestRegressor(n_estimators=300, max_depth=10, min_samples_leaf=2, random_state=42),
         'Gradient Boosting': GradientBoostingRegressor(n_estimators=200, max_depth=5, learning_rate=0.05, random_state=42),
     }
     
-    # Add XGBoost if available
     if HAS_XGBOOST:
         models['XGBoost'] = xgb.XGBRegressor(
             n_estimators=200, max_depth=5, learning_rate=0.05, 
             random_state=42, verbosity=0
-        )
-    
-    # Add LightGBM if available
-    if HAS_LIGHTGBM:
-        models['LightGBM'] = lgb.LGBMRegressor(
-            n_estimators=200, max_depth=5, learning_rate=0.05,
-            random_state=42, verbosity=-1
         )
     
     results = []
@@ -1179,15 +1165,17 @@ def calibrate_predictions(predictions, training_scores):
         calibrated = np.full_like(predictions, training_mean)
     else:
         # Variance matching: give predictions the same mean and spread as your ratings
-        # So you get a similar mix of 6s, 7s, 8s, 9s instead of everything near 8.3
         calibrated = training_mean + (predictions - pred_mean) * (training_std / pred_std)
     
-    # Optional: light ceiling so a handful of watchlist items don't all get 9.8+
-    # Only clip above your 95th percentile + 0.3 (so top 5% of predictions can still be high)
+    # Light ceiling so a handful of watchlist items don't all get 9.8+
     soft_ceiling = min(pct_95 + 0.3, 10.0)
     calibrated = np.clip(calibrated, training_min, soft_ceiling)
     
-    return calibrated
+    # Blend with raw predictions so the adjustment isn't too dramatic
+    strength = max(0.0, min(1.0, CALIBRATION_STRENGTH))
+    blended = (1.0 - strength) * predictions + strength * calibrated
+    
+    return blended
 
 
 def predict_watchlist(model_package, watchlist_df, training_scores):
