@@ -1224,8 +1224,8 @@ def predict_watchlist(model_package, watchlist_df, training_scores):
     print(f"    Predicted ≥9: {(calibrated >= 9).sum()}")
     print(f"    Predicted ≥9.5: {(calibrated >= 9.5).sum()}")
     
-    df['Predicted Score'] = np.round(calibrated, 2).clip(1, 10)
-    df['Raw_Predicted'] = np.round(raw_predictions, 2).clip(1, 10)
+    df['Predicted Score'] = np.round(calibrated, 4).clip(1, 10)
+    df['Raw_Predicted'] = np.round(raw_predictions, 4).clip(1, 10)
     
     print(f"\nPredicted {len(df)} movies")
     
