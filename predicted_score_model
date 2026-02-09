@@ -25,9 +25,11 @@ WATCHLIST_FILE = "Watchlist_Enriched.csv"
 OUTPUT_FILE = "Predicted_Scores.csv"
 MODEL_FILE = "movie_score_predictor.pkl"
 
-# How much to shift predictions toward your rating distribution (0 = raw only, 1 = full calibration).
-# Lower = less dramatic adjustment, scores stay closer to model output.
-CALIBRATION_STRENGTH = 0.4
+# How much to apply percentile calibration (0 = raw only, 1 = full).
+CALIBRATION_STRENGTH = 1.0
+# Trim extremes: map predictions to the inner range of your ratings (0.1 = 10th–90th percentile).
+# Keeps distribution shape but avoids overly high highs and low lows.
+CALIBRATION_TRIM = 0.10
 
 # ============================================================
 
@@ -1132,49 +1134,56 @@ def train_model(df):
 
 def calibrate_predictions(predictions, training_scores):
     """
-    Calibrate predictions to match YOUR rating distribution (mean + spread).
-    - Variance matching: scale predictions so their std matches your actual ratings.
-    - This avoids the "everything clusters at 8.3-8.7" problem while keeping
-      relative ordering. Optional light ceiling to avoid runaway 10s.
+    Percentile (quantile) calibration: map prediction ranks to your rating distribution.
+    So the same fraction of predictions that are above 8 (or 9, etc.) as in your
+    actual ratings. Preserves relative ordering of predictions.
     """
+    training_scores = np.asarray(training_scores)
+    predictions = np.asarray(predictions)
+    n_train = len(training_scores)
+    n_pred = len(predictions)
+
+    # Your rating distribution summary
     training_mean = np.mean(training_scores)
     training_std = np.std(training_scores)
-    training_max = np.max(training_scores)
-    training_min = np.min(training_scores)
-    
-    pct_75 = np.percentile(training_scores, 75)
-    pct_90 = np.percentile(training_scores, 90)
-    pct_95 = np.percentile(training_scores, 95)
-    
+    above_8 = (training_scores >= 8).sum()
     above_9 = (training_scores >= 9).sum()
     above_95 = (training_scores >= 9.5).sum()
-    n_train = len(training_scores)
-    
+
     print("\n  Your rating distribution:")
     print(f"    Mean: {training_mean:.2f}, Std: {training_std:.2f}")
-    print(f"    75th percentile: {pct_75:.2f}, 90th: {pct_90:.2f}, 95th: {pct_95:.2f}")
-    print(f"    Min: {training_min:.2f}, Max: {training_max:.2f}")
-    print(f"    Movies rated ≥9: {above_9} ({100*above_9/n_train:.1f}%)")
-    print(f"    Movies rated ≥9.5: {above_95} ({100*above_95/n_train:.1f}%)")
-    
-    pred_mean = np.mean(predictions)
-    pred_std = np.std(predictions)
-    
-    # Avoid division by zero if all predictions are identical
-    if pred_std < 1e-6:
-        calibrated = np.full_like(predictions, training_mean)
+    print(f"    Min: {training_scores.min():.2f}, Max: {training_scores.max():.2f}")
+    print(f"    Rated ≥8: {above_8} ({100*above_8/n_train:.1f}%)")
+    print(f"    Rated ≥9: {above_9} ({100*above_9/n_train:.1f}%)")
+    print(f"    Rated ≥9.5: {above_95} ({100*above_95/n_train:.1f}%)")
+
+    # Percentile calibration: map prediction ranks to your rating distribution
+    sorted_training = np.sort(training_scores)
+    ranks = np.argsort(np.argsort(predictions)).astype(np.float64)
+    if n_pred > 1:
+        percentile_rank = ranks / (n_pred - 1)
     else:
-        # Variance matching: give predictions the same mean and spread as your ratings
-        calibrated = training_mean + (predictions - pred_mean) * (training_std / pred_std)
-    
-    # Light ceiling so a handful of watchlist items don't all get 9.8+
-    soft_ceiling = min(pct_95 + 0.3, 10.0)
-    calibrated = np.clip(calibrated, training_min, soft_ceiling)
-    
-    # Blend with raw predictions so the adjustment isn't too dramatic
+        percentile_rank = np.array([0.5])
+    # Map to inner range of training scores so extremes aren't too extreme
+    trim = max(0.0, min(0.49, CALIBRATION_TRIM))
+    low_pct = trim
+    high_pct = 1.0 - trim
+    # Training scores at low_pct and high_pct percentiles
+    low_idx = int(low_pct * (n_train - 1)) if n_train > 1 else 0
+    high_idx = int(high_pct * (n_train - 1)) if n_train > 1 else (n_train - 1)
+    trimmed_scores = sorted_training[low_idx : high_idx + 1]
+    n_trim = len(trimmed_scores)
+    # Map prediction percentile [0,1] onto [low_pct, high_pct] of training
+    calibrated = np.interp(
+        percentile_rank,
+        np.linspace(0, 1, n_trim),
+        trimmed_scores
+    )
+
+    # Blend with raw so user can soften if desired
     strength = max(0.0, min(1.0, CALIBRATION_STRENGTH))
     blended = (1.0 - strength) * predictions + strength * calibrated
-    
+
     return blended
 
 
@@ -1211,18 +1220,16 @@ def predict_watchlist(model_package, watchlist_df, training_scores):
     print(f"\n  Raw prediction stats:")
     print(f"    Min: {raw_predictions.min():.2f}, Max: {raw_predictions.max():.2f}")
     print(f"    Mean: {raw_predictions.mean():.2f}, Median: {np.median(raw_predictions):.2f}")
-    print(f"    Predicted ≥9: {(raw_predictions >= 9).sum()}")
-    print(f"    Predicted ≥9.5: {(raw_predictions >= 9.5).sum()}")
+    print(f"    Predicted ≥8: {(raw_predictions >= 8).sum()}, ≥9: {(raw_predictions >= 9).sum()}, ≥9.5: {(raw_predictions >= 9.5).sum()}")
     
-    # Calibrate predictions to match your actual distribution
-    print("\n  Calibrating predictions to match your rating distribution...")
+    # Calibrate so % above 8/9/etc. matches your actual rating distribution
+    print("\n  Calibrating (percentile match to your distribution)...")
     calibrated = calibrate_predictions(raw_predictions, training_scores)
     
     print(f"\n  Calibrated prediction stats:")
     print(f"    Min: {calibrated.min():.2f}, Max: {calibrated.max():.2f}")
     print(f"    Mean: {calibrated.mean():.2f}, Median: {np.median(calibrated):.2f}")
-    print(f"    Predicted ≥9: {(calibrated >= 9).sum()}")
-    print(f"    Predicted ≥9.5: {(calibrated >= 9.5).sum()}")
+    print(f"    Predicted ≥8: {(calibrated >= 8).sum()}, ≥9: {(calibrated >= 9).sum()}, ≥9.5: {(calibrated >= 9.5).sum()}")
     
     df['Predicted Score'] = np.round(calibrated, 4).clip(1, 10)
     df['Raw_Predicted'] = np.round(raw_predictions, 4).clip(1, 10)
