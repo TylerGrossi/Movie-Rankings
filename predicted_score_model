@@ -230,7 +230,8 @@ def detect_franchise(title):
         'star wars': 'Star Wars', 'star trek': 'Star Trek', 'alien': 'Alien',
         'predator': 'Predator', 'jurassic': 'Jurassic Park',
         'transformers': 'Transformers', 'x-men': 'X-Men', 'wolverine': 'X-Men',
-        'avengers': 'Marvel', 'iron man': 'Marvel', 'captain america': 'Marvel',
+        'avengers': 'Avengers',  # Team-up/crossover films get their own franchise (scored above Marvel)
+        'iron man': 'Marvel', 'captain america': 'Marvel',
         'thor': 'Marvel', 'spider-man': 'Spider-Man', 'batman': 'Batman',
         'dark knight': 'Batman', 'guardians of the galaxy': 'Marvel',
         'dune': 'Dune', 'lord of the rings': 'LOTR', 'hobbit': 'LOTR',
@@ -298,6 +299,11 @@ def compute_personal_scores(df):
     # Franchise scores
     df['_Franchise'] = df['Movie'].apply(detect_franchise)
     scores['franchise'] = df[df['_Franchise'].notna()].groupby('_Franchise')['My_Score'].mean().to_dict()
+    # Avengers: no rated titles yet, so set score above Marvel (team-up films "combine all of them")
+    marvel_avg = scores['franchise'].get('Marvel', overall_mean)
+    if 'Avengers' not in scores['franchise']:
+        scores['franchise']['Avengers'] = min(marvel_avg + 0.5, 10.0)  # boost above other Marvel
+        print(f"  Avengers franchise (unrated): using Marvel avg + 0.5 = {scores['franchise']['Avengers']:.2f}")
     
     # === DIRECTOR SCORES (custom formula) ===
     # ≤3 movies: (Score - 1.5) / Movies
