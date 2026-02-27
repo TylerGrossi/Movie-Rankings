@@ -24,9 +24,11 @@ RATINGS_FILE = "Ratings_Enriched.csv"
 WATCHLIST_FILE = "Watchlist_Enriched.csv"
 OUTPUT_FILE = "Predicted_Scores.csv"
 MODEL_FILE = "movie_score_predictor.pkl"
+RANKS_FILE = "Movies Ranks.xlsm"  # Director/Actor/Genre scores (more accurate than computed)
 
 # How much to apply percentile calibration (0 = raw only, 1 = full).
-CALIBRATION_STRENGTH = 1.0
+# Lower values preserve more variance from raw predictions (less clustering at 9.00, 8.90, etc.).
+CALIBRATION_STRENGTH = 0.5
 # Trim extremes: map predictions to the inner range of your ratings (0.1 = 10th–90th percentile).
 # Keeps distribution shape but avoids overly high highs and low lows.
 CALIBRATION_TRIM = 0.10
@@ -59,6 +61,49 @@ RATINGS_FILE = os.path.join(SCRIPT_DIR, RATINGS_FILE)
 WATCHLIST_FILE = os.path.join(SCRIPT_DIR, WATCHLIST_FILE)
 OUTPUT_FILE = os.path.join(SCRIPT_DIR, OUTPUT_FILE)
 MODEL_FILE = os.path.join(SCRIPT_DIR, MODEL_FILE)
+RANKS_FILE = os.path.join(SCRIPT_DIR, RANKS_FILE)
+
+
+# ============================================================
+# LOAD RANKS FROM EXCEL (Movies Ranks.xlsm)
+# ============================================================
+
+def load_ranks_from_excel(filepath=None):
+    """Load Director, Actor, and Genre scores from Movies Ranks.xlsm.
+    Returns dict with 'director', 'actor', 'genre1', 'genre2'.
+    Uses 'Rating' column as the weighted score. Raises if file missing or required sheets invalid.
+    """
+    path = filepath or RANKS_FILE
+    if not os.path.exists(path):
+        raise FileNotFoundError(f"Movies Ranks file not found: {path}")
+    xl = pd.ExcelFile(path)
+    ranks = {}
+    # Director Rankings
+    if 'Director Rankings' not in xl.sheet_names:
+        raise ValueError(f"Movies Ranks.xlsm must have 'Director Rankings' sheet. Found: {xl.sheet_names}")
+    df = pd.read_excel(xl, sheet_name='Director Rankings', header=0)
+    if 'Director' not in df.columns or 'Rating' not in df.columns:
+        raise ValueError(f"Director Rankings sheet must have 'Director' and 'Rating' columns. Found: {list(df.columns)}")
+    ranks['director'] = df.dropna(subset=['Director', 'Rating']).set_index('Director')['Rating'].to_dict()
+    # Actor Rankings
+    if 'Actor Rankings' not in xl.sheet_names:
+        raise ValueError(f"Movies Ranks.xlsm must have 'Actor Rankings' sheet. Found: {xl.sheet_names}")
+    df = pd.read_excel(xl, sheet_name='Actor Rankings', header=0)
+    actor_col = 'Best Actors' if 'Best Actors' in df.columns else 'Actor'
+    if actor_col not in df.columns or 'Rating' not in df.columns:
+        raise ValueError(f"Actor Rankings sheet must have '{actor_col}' and 'Rating' columns. Found: {list(df.columns)}")
+    ranks['actor'] = df.dropna(subset=[actor_col, 'Rating']).set_index(actor_col)['Rating'].to_dict()
+    # Genre Rankings
+    if 'Genre Rankings' not in xl.sheet_names:
+        raise ValueError(f"Movies Ranks.xlsm must have 'Genre Rankings' sheet. Found: {xl.sheet_names}")
+    df = pd.read_excel(xl, sheet_name='Genre Rankings', header=0)
+    genre_col = 'Genres' if 'Genres' in df.columns else 'Genre'
+    if genre_col not in df.columns or 'Rating' not in df.columns:
+        raise ValueError(f"Genre Rankings sheet must have '{genre_col}' and 'Rating' columns. Found: {list(df.columns)}")
+    genre_scores = df.dropna(subset=[genre_col, 'Rating']).set_index(genre_col)['Rating'].to_dict()
+    ranks['genre1'] = genre_scores
+    ranks['genre2'] = genre_scores
+    return ranks
 
 
 # ============================================================
@@ -284,9 +329,10 @@ def detect_sequel_number(title):
 # COMPUTE PERSONAL AVERAGE SCORES
 # ============================================================
 
-def compute_personal_scores(df):
+def compute_personal_scores(df, excel_ranks):
     """Compute average scores for directors, actors, genres, etc.
-    Uses custom weighting formulas based on movie count.
+    excel_ranks (from Movies Ranks.xlsm) is required for director/actor/genre scores.
+    Other scores (writer, company, franchise, etc.) still computed from ratings.
     """
     scores = {}
     
@@ -305,31 +351,9 @@ def compute_personal_scores(df):
         scores['franchise']['Avengers'] = min(marvel_avg + 0.5, 10.0)  # boost above other Marvel
         print(f"  Avengers franchise (unrated): using Marvel avg + 0.5 = {scores['franchise']['Avengers']:.2f}")
     
-    # === DIRECTOR SCORES (custom formula) ===
-    # ≤3 movies: (Score - 1.5) / Movies
-    # 4 movies: (Score + 2.5) / Movies
-    # 5-7 movies: (Score + 6) / Movies
-    # ≥8 movies: (Score + 10) / Movies
-    if 'Director' in df.columns:
-        director_stats = df.groupby('Director')['My_Score'].agg(['sum', 'count'])
-        director_weighted = {}
-        for director, row in director_stats.iterrows():
-            if pd.notna(director) and director != '':
-                total_score = row['sum']
-                count = row['count']
-                
-                if count <= 3:
-                    weighted = (total_score - 1.5) / count
-                elif count == 4:
-                    weighted = (total_score + 2.5) / count
-                elif count <= 7:
-                    weighted = (total_score + 6) / count
-                else:  # >= 8
-                    weighted = (total_score + 10) / count
-                
-                director_weighted[director] = weighted
-        scores['director'] = director_weighted
-        print(f"  Director scores: {len(scores['director'])} directors")
+    # === DIRECTOR SCORES (from Movies Ranks.xlsm) ===
+    scores['director'] = excel_ranks['director']
+    print(f"  Director scores: {len(scores['director'])} directors (from Movies Ranks.xlsm)")
     
     # === WRITER SCORES (using director formula) ===
     if 'Writer' in df.columns:
@@ -339,7 +363,6 @@ def compute_personal_scores(df):
             if pd.notna(writer) and writer != '':
                 total_score = row['sum']
                 count = row['count']
-                
                 if count <= 3:
                     weighted = (total_score - 1.5) / count
                 elif count == 4:
@@ -348,84 +371,22 @@ def compute_personal_scores(df):
                     weighted = (total_score + 6) / count
                 else:
                     weighted = (total_score + 10) / count
-                
                 writer_weighted[writer] = weighted
         scores['writer'] = writer_weighted
         print(f"  Writer scores: {len(scores['writer'])} writers")
     
-    # === ACTOR SCORES (custom formula) ===
-    # ≤5 movies: (Score - 2.5) / Movies
-    # 6-7 movies: (Score + 5) / Movies
-    # 8-9 movies: (Score + 7.5) / Movies
-    # ≥10 movies: (Score + 15) / Movies
-    for actor_col, score_key in [('Actor', 'actor'), ('Actor 2', 'actor2'), 
-                                   ('Actor 3', 'actor3'), ('Actor 4', 'actor4')]:
-        if actor_col in df.columns:
-            actor_stats = df.groupby(actor_col)['My_Score'].agg(['sum', 'count'])
-            actor_weighted = {}
-            for actor, row in actor_stats.iterrows():
-                if pd.notna(actor) and actor != '':
-                    total_score = row['sum']
-                    count = row['count']
-                    
-                    if count <= 5:
-                        weighted = (total_score - 2.5) / count
-                    elif count <= 7:
-                        weighted = (total_score + 5) / count
-                    elif count <= 9:
-                        weighted = (total_score + 7.5) / count
-                    else:  # >= 10
-                        weighted = (total_score + 15) / count
-                    
-                    actor_weighted[actor] = weighted
-            scores[score_key] = actor_weighted
-            print(f"  {actor_col} scores: {len(actor_weighted)} actors")
+    # === ACTOR SCORES (from Movies Ranks.xlsm) ===
+    actor_scores = excel_ranks['actor']
+    scores['actor'] = actor_scores
+    scores['actor2'] = actor_scores
+    scores['actor3'] = actor_scores
+    scores['actor4'] = actor_scores
+    print(f"  Actor scores: {len(actor_scores)} actors (from Movies Ranks.xlsm)")
     
-    # === GENRE SCORES (custom formula) ===
-    # <10 movies: (Score - 1.5) / Movies
-    # 10-19 movies: (Score + 1.5) / Movies
-    # 20-29 movies: (Score + 3) / Movies
-    # ≥30 movies: (Score + 5) / Movies
-    if 'Genre1' in df.columns:
-        genre_stats = df.groupby('Genre1')['My_Score'].agg(['sum', 'count'])
-        genre_weighted = {}
-        for genre, row in genre_stats.iterrows():
-            if pd.notna(genre) and genre != '':
-                total_score = row['sum']
-                count = row['count']
-                
-                if count < 10:
-                    weighted = (total_score - 1.5) / count
-                elif count < 20:
-                    weighted = (total_score + 1.5) / count
-                elif count < 30:
-                    weighted = (total_score + 3) / count
-                else:  # >= 30
-                    weighted = (total_score + 5) / count
-                
-                genre_weighted[genre] = weighted
-        scores['genre1'] = genre_weighted
-        print(f"  Genre1 scores: {len(scores['genre1'])} genres")
-    
-    if 'Genre2' in df.columns:
-        genre2_stats = df[df['Genre2'].notna() & (df['Genre2'] != '')].groupby('Genre2')['My_Score'].agg(['sum', 'count'])
-        genre2_weighted = {}
-        for genre, row in genre2_stats.iterrows():
-            if pd.notna(genre) and genre != '':
-                total_score = row['sum']
-                count = row['count']
-                
-                if count < 10:
-                    weighted = (total_score - 1.5) / count
-                elif count < 20:
-                    weighted = (total_score + 1.5) / count
-                elif count < 30:
-                    weighted = (total_score + 3) / count
-                else:
-                    weighted = (total_score + 5) / count
-                
-                genre2_weighted[genre] = weighted
-        scores['genre2'] = genre2_weighted
+    # === GENRE SCORES (from Movies Ranks.xlsm) ===
+    scores['genre1'] = excel_ranks['genre1']
+    scores['genre2'] = excel_ranks.get('genre2', excel_ranks['genre1'])
+    print(f"  Genre scores: {len(scores['genre1'])} genres (from Movies Ranks.xlsm)")
     
     # Production company scores (using genre formula)
     if 'Prod_Company' in df.columns:
@@ -727,59 +688,6 @@ def prepare_features(df, training_stats=None, personal_scores=None,
     df['IMDb_Meta_Diff'] = df['IMDb'] * 10 - df['Metascore'].fillna(df['IMDb'] * 10)
     df['TMDB_IMDb_Diff'] = df['TMDB_Vote_Avg'].fillna(0) - df['IMDb']
     
-    # ===== PERSONAL BIAS vs CRITICS (NEW!) =====
-    # Calculate how much YOU differ from critics for various categories
-    # This helps the model understand "you like X more than critics do"
-    if is_training and 'My_Score' in df.columns:
-        # Your score vs IMDb (scaled to 10)
-        df['My_vs_IMDb'] = df['My_Score'] - df['IMDb']
-        # Your score vs RT (scaled to 10)
-        df['My_vs_RT'] = df['My_Score'] - (df['RT'].fillna(df['IMDb']*10) / 10)
-        # Your score vs Metascore (scaled to 10)
-        df['My_vs_Meta'] = df['My_Score'] - (df['Metascore'].fillna(df['IMDb']*10) / 10)
-        # Your score vs critics average
-        df['My_vs_Critics'] = df['My_Score'] - (df['Critics_Avg'] / 10)
-        
-        # Compute personal bias by GENRE (how much you over/under rate each genre vs critics)
-        if personal_scores is not None:
-            genre_bias = df.groupby('Genre1')['My_vs_IMDb'].mean().to_dict()
-            personal_scores['genre_bias'] = genre_bias
-            
-            # Compute personal bias by DIRECTOR
-            director_bias = df.groupby('Director')['My_vs_IMDb'].mean().to_dict()
-            personal_scores['director_bias'] = director_bias
-            
-            # Compute personal bias by content rating
-            rated_bias = df[df['Rated'].notna() & (df['Rated'] != '')].groupby('Rated')['My_vs_IMDb'].mean().to_dict()
-            personal_scores['rated_bias'] = rated_bias
-            
-            # Print insights
-            print("\n  Your bias vs IMDb by genre (+ means you rate higher than critics):")
-            sorted_bias = sorted(genre_bias.items(), key=lambda x: x[1], reverse=True)
-            for genre, bias in sorted_bias[:5]:
-                print(f"    {genre}: {bias:+.2f}")
-            print("  ...")
-            for genre, bias in sorted_bias[-3:]:
-                print(f"    {genre}: {bias:+.2f}")
-    
-    # Apply genre bias scores
-    if personal_scores and 'genre_bias' in personal_scores:
-        df['Genre1_Bias'] = df['Genre1'].map(personal_scores['genre_bias']).fillna(0)
-    else:
-        df['Genre1_Bias'] = 0
-    
-    # Apply director bias scores  
-    if personal_scores and 'director_bias' in personal_scores:
-        df['Director_Bias'] = df['Director'].map(personal_scores['director_bias']).fillna(0)
-    else:
-        df['Director_Bias'] = 0
-    
-    # Apply content rating bias
-    if personal_scores and 'rated_bias' in personal_scores:
-        df['Rated_Bias'] = df['Rated'].map(personal_scores['rated_bias']).fillna(0)
-    else:
-        df['Rated_Bias'] = 0
-    
     # ===== TIME FEATURES =====
     df['Age'] = 2025 - df['Year']
     df['Is_Classic'] = (df['Year'] < 1990).astype(int)
@@ -923,11 +831,6 @@ def get_feature_columns():
         'Decade_Avg_Score', 'Rated_Avg_Score', 'Company_Avg_Score',
         'Combined_Personal_Score',
         
-        # === PERSONAL BIAS vs CRITICS (NEW!) ===
-        'Genre1_Bias',      # How much you over/under rate this genre vs IMDb
-        'Director_Bias',    # How much you over/under rate this director vs IMDb
-        'Rated_Bias',       # How much you over/under rate this content rating vs IMDb
-        
         # Core critic scores
         'IMDb', 'RT', 'Metascore', 'TMDB_Vote_Avg',
         'Critics_Avg', 'IMDb_RT_Diff', 'IMDb_Meta_Diff', 'TMDB_IMDb_Diff',
@@ -1040,8 +943,12 @@ def train_model(df):
     print("COMPUTING PERSONAL SCORES")
     print("="*60)
     
+    # Load Director/Actor/Genre scores from Movies Ranks.xlsm (required)
+    excel_ranks = load_ranks_from_excel()
+    print(f"  Loaded ranks from {RANKS_FILE}")
+    
     # Compute all personal average scores
-    personal_scores = compute_personal_scores(df)
+    personal_scores = compute_personal_scores(df, excel_ranks=excel_ranks)
     
     # Learn keyword weights from YOUR data
     print("\n" + "="*60)
@@ -1049,38 +956,17 @@ def train_model(df):
     print("="*60)
     positive_kw, negative_kw = compute_keyword_weights(df)
     
-    # Print some personal score insights
+    # Print personal score source
     print("\n" + "="*60)
-    print("YOUR TOP RATED (by category) - Custom weighted formula")
+    print("PERSONAL SCORES SOURCE")
     print("="*60)
-    
-    if 'director' in personal_scores:
-        # Show weighted scores
-        sorted_directors = sorted(personal_scores['director'].items(), key=lambda x: x[1], reverse=True)
-        director_counts = df.groupby('Director')['My_Score'].count().to_dict()
-        print("\n  Top Directors (weighted):")
-        for director, weighted in sorted_directors[:10]:
-            count = director_counts.get(director, 0)
-            raw_avg = df[df['Director'] == director]['My_Score'].mean()
-            print(f"    {director}: {weighted:.2f} (raw: {raw_avg:.2f}, {count} movies)")
-    
-    if 'actor' in personal_scores:
-        sorted_actors = sorted(personal_scores['actor'].items(), key=lambda x: x[1], reverse=True)
-        actor_counts = df.groupby('Actor')['My_Score'].count().to_dict()
-        print("\n  Top Actors (weighted):")
-        for actor, weighted in sorted_actors[:10]:
-            count = actor_counts.get(actor, 0)
-            raw_avg = df[df['Actor'] == actor]['My_Score'].mean()
-            print(f"    {actor}: {weighted:.2f} (raw: {raw_avg:.2f}, {count} movies)")
-    
-    if 'genre1' in personal_scores:
-        sorted_genres = sorted(personal_scores['genre1'].items(), key=lambda x: x[1], reverse=True)
-        genre_counts = df.groupby('Genre1')['My_Score'].count().to_dict()
-        print("\n  Top Genres (weighted):")
-        for genre, weighted in sorted_genres[:10]:
-            count = genre_counts.get(genre, 0)
-            raw_avg = df[df['Genre1'] == genre]['My_Score'].mean()
-            print(f"    {genre}: {weighted:.2f} (raw: {raw_avg:.2f}, {count} movies)")
+    print("  Director/Actor/Genre scores: from Movies Ranks.xlsm")
+    top_d = sorted(personal_scores['director'].items(), key=lambda x: x[1], reverse=True)[:5]
+    print(f"  Top 5 Directors: {', '.join(d for d, _ in top_d)}")
+    top_a = sorted(personal_scores['actor'].items(), key=lambda x: x[1], reverse=True)[:5]
+    print(f"  Top 5 Actors: {', '.join(a for a, _ in top_a)}")
+    top_g = sorted(personal_scores['genre1'].items(), key=lambda x: x[1], reverse=True)[:5]
+    print(f"  Top 5 Genres: {', '.join(g for g, _ in top_g)}")
     
     # Prepare features
     print("\n" + "="*60)
