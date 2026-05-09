@@ -2,10 +2,9 @@
 Movie Score Predictor - V5 (Enhanced Personal Scores)
 =====================================================
 New features:
-- Director_Avg_Score (your avg rating for each director)
-- Actor_Avg_Score (your avg rating for lead actor)
-- Actor2_Avg_Score (your avg rating for second actor)
-- Genre1_Avg_Score, Genre2_Avg_Score (your avg rating per genre)
+- Director_Avg_Score, Writer_Avg_Score, Actor_Avg_Score (lead)
+- Genre1–3 averages from Genre Rankings; Creative_Core_Score (mean of those six pillars); Combined_Personal_Score (60% D/W/A, 40% split across genres)
+- Supporting cast mean still computed for possible future use, not modeled by default feature list
 - Learned keyword weights from YOUR data
 - XGBoost model
 
@@ -70,8 +69,9 @@ RANKS_FILE = os.path.join(SCRIPT_DIR, RANKS_FILE)
 
 def load_ranks_from_excel(filepath=None):
     """Load Director, Actor, and Genre scores from Movies Ranks.xlsm.
-    Returns dict with 'director', 'actor', 'genre1', 'genre2'.
-    Uses 'Rating' column as the weighted score. Raises if file missing or required sheets invalid.
+    Returns dict with 'director', 'actor', 'genre1', 'genre2', 'genre3' (all genre slots use Genre Rankings).
+    Uses 'Rating' for directors/genres; for actors uses a +Rating column (+Rating or '+Rating in the sheet) when present, else 'Rating'.
+    Raises if file missing or required sheets invalid.
     """
     path = filepath or RANKS_FILE
     if not os.path.exists(path):
@@ -92,7 +92,27 @@ def load_ranks_from_excel(filepath=None):
     actor_col = 'Best Actors' if 'Best Actors' in df.columns else 'Actor'
     if actor_col not in df.columns or 'Rating' not in df.columns:
         raise ValueError(f"Actor Rankings sheet must have '{actor_col}' and 'Rating' columns. Found: {list(df.columns)}")
-    ranks['actor'] = df.dropna(subset=[actor_col, 'Rating']).set_index(actor_col)['Rating'].to_dict()
+    plus_col = None
+    for cand in ('+Rating', "'+Rating"):
+        if cand in df.columns:
+            plus_col = cand
+            break
+    if plus_col is None:
+        for c in df.columns:
+            if isinstance(c, str) and c.replace("'", '').strip().lower() == '+rating':
+                plus_col = c
+                break
+    base_rating = pd.to_numeric(df['Rating'], errors='coerce')
+    if plus_col is not None:
+        plus_rating = pd.to_numeric(df[plus_col], errors='coerce')
+        actor_values = plus_rating.where(plus_rating.notna(), base_rating)
+    else:
+        actor_values = base_rating
+    actor_df = df[[actor_col]].copy()
+    actor_df['_score'] = actor_values
+    actor_df = actor_df.dropna(subset=[actor_col])
+    actor_df = actor_df[actor_df['_score'].notna()]
+    ranks['actor'] = actor_df.set_index(actor_col)['_score'].to_dict()
     # Genre Rankings
     if 'Genre Rankings' not in xl.sheet_names:
         raise ValueError(f"Movies Ranks.xlsm must have 'Genre Rankings' sheet. Found: {xl.sheet_names}")
@@ -103,6 +123,7 @@ def load_ranks_from_excel(filepath=None):
     genre_scores = df.dropna(subset=[genre_col, 'Rating']).set_index(genre_col)['Rating'].to_dict()
     ranks['genre1'] = genre_scores
     ranks['genre2'] = genre_scores
+    ranks['genre3'] = genre_scores
     return ranks
 
 
@@ -340,8 +361,6 @@ def compute_personal_scores(df, excel_ranks):
     overall_mean = df['My_Score'].mean()
     scores['overall_mean'] = overall_mean
     
-    print(f"\n  Your overall average rating: {overall_mean:.2f}")
-    
     # Franchise scores
     df['_Franchise'] = df['Movie'].apply(detect_franchise)
     scores['franchise'] = df[df['_Franchise'].notna()].groupby('_Franchise')['My_Score'].mean().to_dict()
@@ -349,11 +368,9 @@ def compute_personal_scores(df, excel_ranks):
     marvel_avg = scores['franchise'].get('Marvel', overall_mean)
     if 'Avengers' not in scores['franchise']:
         scores['franchise']['Avengers'] = min(marvel_avg + 0.5, 10.0)  # boost above other Marvel
-        print(f"  Avengers franchise (unrated): using Marvel avg + 0.5 = {scores['franchise']['Avengers']:.2f}")
     
     # === DIRECTOR SCORES (from Movies Ranks.xlsm) ===
     scores['director'] = excel_ranks['director']
-    print(f"  Director scores: {len(scores['director'])} directors (from Movies Ranks.xlsm)")
     
     # === WRITER SCORES (using director formula) ===
     if 'Writer' in df.columns:
@@ -373,20 +390,15 @@ def compute_personal_scores(df, excel_ranks):
                     weighted = (total_score + 10) / count
                 writer_weighted[writer] = weighted
         scores['writer'] = writer_weighted
-        print(f"  Writer scores: {len(scores['writer'])} writers")
     
     # === ACTOR SCORES (from Movies Ranks.xlsm) ===
     actor_scores = excel_ranks['actor']
     scores['actor'] = actor_scores
-    scores['actor2'] = actor_scores
-    scores['actor3'] = actor_scores
-    scores['actor4'] = actor_scores
-    print(f"  Actor scores: {len(actor_scores)} actors (from Movies Ranks.xlsm)")
     
-    # === GENRE SCORES (from Movies Ranks.xlsm) ===
+    # === GENRE SCORES (from Movies Ranks.xlsm — same lookup for Genre1–3 slots) ===
     scores['genre1'] = excel_ranks['genre1']
     scores['genre2'] = excel_ranks.get('genre2', excel_ranks['genre1'])
-    print(f"  Genre scores: {len(scores['genre1'])} genres (from Movies Ranks.xlsm)")
+    scores['genre3'] = excel_ranks.get('genre3', excel_ranks['genre1'])
     
     # Production company scores (using genre formula)
     if 'Prod_Company' in df.columns:
@@ -408,12 +420,10 @@ def compute_personal_scores(df, excel_ranks):
                 
                 company_weighted[company] = weighted
         scores['company'] = company_weighted
-        print(f"  Production company scores: {len(scores['company'])} companies")
     
     # Content rating scores
     if 'Rated' in df.columns:
         scores['rated'] = df[df['Rated'].notna() & (df['Rated'] != '')].groupby('Rated')['My_Score'].mean().to_dict()
-        print(f"  Content rating scores: {len(scores['rated'])} ratings")
     
     # Decade scores
     df['_Decade'] = (df['Year'] // 10) * 10
@@ -591,11 +601,18 @@ def prepare_features(df, training_stats=None, personal_scores=None,
         if col in df.columns:
             df[col] = pd.to_numeric(df[col], errors='coerce')
     
-    # Calculate medians for missing value imputation
+    # Median imputation for numeric columns (IMDb / RT / Metascore stay NaN when missing)
+    no_impute_cols = {'IMDb', 'RT', 'Metascore'}
     if is_training:
-        training_stats = {col: df[col].median() for col in num_cols if col in df.columns}
+        training_stats = {
+            col: df[col].median()
+            for col in num_cols
+            if col in df.columns and col not in no_impute_cols
+        }
     
     for col in num_cols:
+        if col in no_impute_cols:
+            continue
         if col in df.columns and training_stats and col in training_stats:
             df[col] = df[col].fillna(training_stats.get(col, 0))
     
@@ -620,26 +637,23 @@ def prepare_features(df, training_stats=None, personal_scores=None,
     else:
         df['Writer_Avg_Score'] = overall_mean
     
-    # Actor scores
-    if 'Actor' in df.columns and personal_scores and 'actor' in personal_scores:
-        df['Actor_Avg_Score'] = df['Actor'].map(personal_scores['actor']).fillna(overall_mean)
+    # Actor: lead + mean of supporting billed cast (2–4); same excel map for every slot
+    act_map = (personal_scores or {}).get('actor')
+    if 'Actor' in df.columns and act_map is not None:
+        df['Actor_Avg_Score'] = df['Actor'].map(act_map).fillna(overall_mean)
     else:
         df['Actor_Avg_Score'] = overall_mean
-    
-    if 'Actor 2' in df.columns and personal_scores and 'actor2' in personal_scores:
-        df['Actor2_Avg_Score'] = df['Actor 2'].map(personal_scores['actor2']).fillna(overall_mean)
+
+    if act_map is not None:
+        supp = []
+        for col in ('Actor 2', 'Actor 3', 'Actor 4'):
+            if col in df.columns:
+                supp.append(df[col].map(act_map).fillna(overall_mean))
+            else:
+                supp.append(pd.Series(overall_mean, index=df.index, dtype=float))
+        df['Supporting_Cast_Avg_Score'] = pd.concat(supp, axis=1).mean(axis=1)
     else:
-        df['Actor2_Avg_Score'] = overall_mean
-    
-    if 'Actor 3' in df.columns and personal_scores and 'actor3' in personal_scores:
-        df['Actor3_Avg_Score'] = df['Actor 3'].map(personal_scores['actor3']).fillna(overall_mean)
-    else:
-        df['Actor3_Avg_Score'] = overall_mean
-    
-    if 'Actor 4' in df.columns and personal_scores and 'actor4' in personal_scores:
-        df['Actor4_Avg_Score'] = df['Actor 4'].map(personal_scores['actor4']).fillna(overall_mean)
-    else:
-        df['Actor4_Avg_Score'] = overall_mean
+        df['Supporting_Cast_Avg_Score'] = overall_mean
     
     # Genre scores
     if 'Genre1' in df.columns and personal_scores and 'genre1' in personal_scores:
@@ -651,6 +665,11 @@ def prepare_features(df, training_stats=None, personal_scores=None,
         df['Genre2_Avg_Score'] = df['Genre2'].map(personal_scores['genre2']).fillna(overall_mean)
     else:
         df['Genre2_Avg_Score'] = overall_mean
+    
+    if 'Genre3' in df.columns and personal_scores and 'genre3' in personal_scores:
+        df['Genre3_Avg_Score'] = df['Genre3'].map(personal_scores['genre3']).fillna(overall_mean)
+    else:
+        df['Genre3_Avg_Score'] = overall_mean
     
     # Decade score
     df['Decade'] = (df['Year'] // 10) * 10
@@ -671,21 +690,28 @@ def prepare_features(df, training_stats=None, personal_scores=None,
     else:
         df['Company_Avg_Score'] = overall_mean
     
-    # ===== COMBINED PERSONAL SCORE (weighted average of all personal scores) =====
+    # Single index of director / writer / lead / all three billed genres (equal weight).
+    df['Creative_Core_Score'] = (
+        df['Director_Avg_Score'] + df['Writer_Avg_Score'] + df['Actor_Avg_Score'] +
+        df['Genre1_Avg_Score'] + df['Genre2_Avg_Score'] + df['Genre3_Avg_Score']
+    ) / 6.0
+    
+    # ===== COMBINED PERSONAL SCORE — same pillars, emphasizes director/writer/lead equally, then genres =====
+    g_share = 0.40 / 3.0
     df['Combined_Personal_Score'] = (
-        df['Franchise_Avg_Score'] * 0.15 +
         df['Director_Avg_Score'] * 0.20 +
-        df['Writer_Avg_Score'] * 0.15 +
-        df['Actor_Avg_Score'] * 0.15 +
-        df['Genre1_Avg_Score'] * 0.20 +
-        df['Decade_Avg_Score'] * 0.10 +
-        df['Rated_Avg_Score'] * 0.05
+        df['Writer_Avg_Score'] * 0.20 +
+        df['Actor_Avg_Score'] * 0.20 +
+        df['Genre1_Avg_Score'] * g_share +
+        df['Genre2_Avg_Score'] * g_share +
+        df['Genre3_Avg_Score'] * g_share
     )
     
     # ===== CORE SCORE FEATURES =====
-    df['Critics_Avg'] = (df['IMDb'] * 10 + df['RT'].fillna(0) + df['Metascore'].fillna(0)) / 3
-    df['IMDb_RT_Diff'] = df['IMDb'] * 10 - df['RT'].fillna(df['IMDb'] * 10)
-    df['IMDb_Meta_Diff'] = df['IMDb'] * 10 - df['Metascore'].fillna(df['IMDb'] * 10)
+    imdb100 = df['IMDb'] * 10
+    df['Critics_Avg'] = pd.concat([imdb100, df['RT'], df['Metascore']], axis=1).mean(axis=1, skipna=True)
+    df['IMDb_RT_Diff'] = imdb100 - df['RT']
+    df['IMDb_Meta_Diff'] = imdb100 - df['Metascore']
     df['TMDB_IMDb_Diff'] = df['TMDB_Vote_Avg'].fillna(0) - df['IMDb']
     
     # ===== TIME FEATURES =====
@@ -727,9 +753,9 @@ def prepare_features(df, training_stats=None, personal_scores=None,
     df['Is_USA'] = df['Country'].fillna('').str.contains('United States|USA', na=False).astype(int)
     
     # ===== QUALITY INDICATORS =====
-    df['High_IMDb'] = (df['IMDb'] >= 7.5).astype(int)
-    df['High_RT'] = (df['RT'] >= 80).astype(int)
-    df['High_Meta'] = (df['Metascore'] >= 70).astype(int)
+    df['High_IMDb'] = np.where(df['IMDb'].notna(), (df['IMDb'] >= 7.5).astype(int), 0)
+    df['High_RT'] = np.where(df['RT'].notna(), (df['RT'] >= 80).astype(int), 0)
+    df['High_Meta'] = np.where(df['Metascore'].notna(), (df['Metascore'] >= 70).astype(int), 0)
     df['All_Critics_Love'] = ((df['High_IMDb'] == 1) & (df['High_RT'] == 1)).astype(int)
     
     # ===== GENRES (binary flags) =====
@@ -803,11 +829,6 @@ def prepare_features(df, training_stats=None, personal_scores=None,
             if len(movies_in_subgenre) >= 2:
                 subgenre_scores[col] = movies_in_subgenre['My_Score'].mean()
         personal_scores['subgenres'] = subgenre_scores
-        
-        print(f"\n  Sub-genre scores computed:")
-        for sg, score in sorted(subgenre_scores.items(), key=lambda x: x[1], reverse=True):
-            count = (df[sg] == 1).sum()
-            print(f"    {sg}: {score:.2f} ({count} movies)")
     
     # Apply sub-genre scores
     if personal_scores and 'subgenres' in personal_scores:
@@ -824,26 +845,27 @@ def prepare_features(df, training_stats=None, personal_scores=None,
 
 def get_feature_columns():
     return [
-        # === PERSONAL SCORES (most important!) ===
-        'Franchise_Avg_Score', 'Director_Avg_Score', 'Writer_Avg_Score',
-        'Actor_Avg_Score', 'Actor2_Avg_Score', 'Actor3_Avg_Score', 'Actor4_Avg_Score',
-        'Genre1_Avg_Score', 'Genre2_Avg_Score',
-        'Decade_Avg_Score', 'Rated_Avg_Score', 'Company_Avg_Score',
-        'Combined_Personal_Score',
+        # === Creative core (prioritize in feature order — director/writer/lead + all genres) ===
+        'Director_Avg_Score', 'Writer_Avg_Score', 'Actor_Avg_Score',
+        'Genre1_Avg_Score', 'Genre2_Avg_Score', 'Genre3_Avg_Score',
+        'Creative_Core_Score', 'Combined_Personal_Score',
+        
+        # Other taste / studio context
+        'Franchise_Avg_Score', 'Rated_Avg_Score', 'Company_Avg_Score',
         
         # Core critic scores
         'IMDb', 'RT', 'Metascore', 'TMDB_Vote_Avg',
-        'Critics_Avg', 'IMDb_RT_Diff', 'IMDb_Meta_Diff', 'TMDB_IMDb_Diff',
+        'Critics_Avg',
         
         # Time
-        'Year', 'Age', 'Decade', 'Is_Classic', 'Is_Modern', 'Is_90s', 'Is_2000s',
+        'Year', 'Age', 'Is_Classic', 'Is_Modern',
         
         # Runtime
         'Runtime', 'Is_Short', 'Is_Long',
         
         # Awards
         'Oscar_Wins', 'Oscar_Noms', 'Total_Wins', 'Total_Noms',
-        'Has_Oscar', 'Awards_Total', 'Award_Ratio',
+        'Awards_Total', 'Award_Ratio',
         
         # Financial
         'BoxOffice_Log', 'Budget_Log', 'Revenue_Log', 
@@ -855,19 +877,11 @@ def get_feature_columns():
         # Content
         'Rated_Num', 'Is_R_Rated', 'Is_English', 'Is_USA',
         
-        # Quality
-        'High_IMDb', 'High_RT', 'High_Meta', 'All_Critics_Love',
-        
         # Franchise
         'Is_Sequel', 'Is_Franchise', 'Sequel_Num',
         
         # Learned keywords
         'Keyword_Pos_Score', 'Keyword_Neg_Score', 'Keyword_Net_Count',
-        
-        # Plot themes
-        'plot_has_war', 'plot_has_crime', 'plot_has_sports',
-        'plot_has_family', 'plot_has_love', 'plot_has_revenge', 
-        'plot_has_survival', 'plot_has_heist', 'plot_has_conspiracy',
         
         # Studio
         'is_major_studio', 'is_a24', 'is_marvel_studio', 'is_disney',
@@ -877,20 +891,12 @@ def get_feature_columns():
         'Is_Adventure', 'Is_Sci-Fi', 'Is_Romance', 'Is_Horror',
         'Is_Biography', 'Is_War', 'Is_Animation', 'Is_Sport',
         
-        # === SUB-GENRES & COMBOS ===
+        # Sub-genre pattern flags (binary)
         'Is_Epic_War', 'Is_Action_Adventure_Thriller', 'Is_Military',
         'Is_Heist', 'Is_Crime_Drama', 'Is_SciFi_Action', 'Is_Comedy_Action',
         'Is_Sports_Drama', 'Is_Psych_Thriller', 'Is_Revenge', 'Is_Survival',
         'Is_True_Story', 'Is_Horror_Thriller', 'Is_Animated', 'Is_Dystopian',
         'Is_Superhero',
-        
-        # Sub-genre scores (your avg rating for each sub-genre)
-        'Is_Epic_War_Score', 'Is_Action_Adventure_Thriller_Score', 'Is_Military_Score',
-        'Is_Heist_Score', 'Is_Crime_Drama_Score', 'Is_SciFi_Action_Score', 
-        'Is_Comedy_Action_Score', 'Is_Sports_Drama_Score', 'Is_Psych_Thriller_Score',
-        'Is_Revenge_Score', 'Is_Survival_Score', 'Is_True_Story_Score',
-        'Is_Horror_Thriller_Score', 'Is_Animated_Score', 'Is_Dystopian_Score',
-        'Is_Superhero_Score'
     ]
 
 
@@ -939,13 +945,8 @@ def test_models(X, y):
 
 
 def train_model(df):
-    print("\n" + "="*60)
-    print("COMPUTING PERSONAL SCORES")
-    print("="*60)
-    
     # Load Director/Actor/Genre scores from Movies Ranks.xlsm (required)
     excel_ranks = load_ranks_from_excel()
-    print(f"  Loaded ranks from {RANKS_FILE}")
     
     # Compute all personal average scores
     personal_scores = compute_personal_scores(df, excel_ranks=excel_ranks)
@@ -969,10 +970,6 @@ def train_model(df):
     print(f"  Top 5 Genres: {', '.join(g for g, _ in top_g)}")
     
     # Prepare features
-    print("\n" + "="*60)
-    print("PREPARING FEATURES")
-    print("="*60)
-    
     df, training_stats = prepare_features(
         df, is_training=True, 
         personal_scores=personal_scores,
@@ -982,8 +979,6 @@ def train_model(df):
     
     feature_cols = get_feature_columns()
     feature_cols = [c for c in feature_cols if c in df.columns]
-    
-    print(f"\n  Using {len(feature_cols)} features")
     
     X = df[feature_cols].fillna(0)
     y = df['My_Score']
@@ -1035,20 +1030,6 @@ def calibrate_predictions(predictions, training_scores):
     n_train = len(training_scores)
     n_pred = len(predictions)
 
-    # Your rating distribution summary
-    training_mean = np.mean(training_scores)
-    training_std = np.std(training_scores)
-    above_8 = (training_scores >= 8).sum()
-    above_9 = (training_scores >= 9).sum()
-    above_95 = (training_scores >= 9.5).sum()
-
-    print("\n  Your rating distribution:")
-    print(f"    Mean: {training_mean:.2f}, Std: {training_std:.2f}")
-    print(f"    Min: {training_scores.min():.2f}, Max: {training_scores.max():.2f}")
-    print(f"    Rated ≥8: {above_8} ({100*above_8/n_train:.1f}%)")
-    print(f"    Rated ≥9: {above_9} ({100*above_9/n_train:.1f}%)")
-    print(f"    Rated ≥9.5: {above_95} ({100*above_95/n_train:.1f}%)")
-
     # Percentile calibration: map prediction ranks to your rating distribution
     sorted_training = np.sort(training_scores)
     ranks = np.argsort(np.argsort(predictions)).astype(np.float64)
@@ -1080,10 +1061,6 @@ def calibrate_predictions(predictions, training_scores):
 
 
 def predict_watchlist(model_package, watchlist_df, training_scores):
-    print("\n" + "="*60)
-    print("PREDICTING WATCHLIST")
-    print("="*60)
-    
     df, _ = prepare_features(
         watchlist_df, 
         training_stats=model_package['training_stats'],
@@ -1093,36 +1070,13 @@ def predict_watchlist(model_package, watchlist_df, training_scores):
         is_training=False
     )
     
-    # Show some matches
-    print("\nSample predictions using your personal scores:")
-    sample = df.head(10)
-    for _, row in sample.iterrows():
-        movie = row['Movie'][:30]
-        director = row.get('Director', '')[:15]
-        dir_score = row.get('Director_Avg_Score', 0)
-        genre_score = row.get('Genre1_Avg_Score', 0)
-        print(f"  {movie:30s} | Dir: {director:15s} ({dir_score:.1f}) | Genre: {genre_score:.1f}")
-    
     X = df[model_package['feature_cols']].fillna(0)
     X_scaled = model_package['scaler'].transform(X)
     
     # Get raw predictions
     raw_predictions = model_package['model'].predict(X_scaled)
     
-    print(f"\n  Raw prediction stats:")
-    print(f"    Min: {raw_predictions.min():.2f}, Max: {raw_predictions.max():.2f}")
-    print(f"    Mean: {raw_predictions.mean():.2f}, Median: {np.median(raw_predictions):.2f}")
-    print(f"    Predicted ≥8: {(raw_predictions >= 8).sum()}, ≥9: {(raw_predictions >= 9).sum()}, ≥9.5: {(raw_predictions >= 9.5).sum()}")
-    
-    # Calibrate so % above 8/9/etc. matches your actual rating distribution
-    print("\n  Calibrating (percentile match to your distribution)...")
     calibrated = calibrate_predictions(raw_predictions, training_scores)
-    
-    print(f"\n  Calibrated prediction stats:")
-    print(f"    Min: {calibrated.min():.2f}, Max: {calibrated.max():.2f}")
-    print(f"    Mean: {calibrated.mean():.2f}, Median: {np.median(calibrated):.2f}")
-    print(f"    Predicted ≥8: {(calibrated >= 8).sum()}, ≥9: {(calibrated >= 9).sum()}, ≥9.5: {(calibrated >= 9.5).sum()}")
-    
     df['Predicted Score'] = np.round(calibrated, 4).clip(1, 10)
     df['Raw_Predicted'] = np.round(raw_predictions, 4).clip(1, 10)
     
@@ -1139,7 +1093,7 @@ def save_output(df, filepath):
     output_cols = [c for c in output_cols if c in df.columns]
     
     df_out = df[output_cols].sort_values('Predicted Score', ascending=False)
-    df_out.to_csv(filepath, index=False)
+    df_out.to_csv(filepath, index=False, na_rep='')
     
     print(f"\n✓ Saved: {filepath}")
     
