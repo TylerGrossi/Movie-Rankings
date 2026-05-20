@@ -1,12 +1,12 @@
 """
-Movie Score Predictor - V5 (Enhanced Personal Scores)
+Movie Score Predictor - V6 (Score + Star Percentage)
 =====================================================
 New features:
 - Director_Avg_Score, Writer_Avg_Score, Actor_Avg_Score (lead)
 - Genre1–3 averages from Genre Rankings; Creative_Core_Score (mean of those six pillars); Combined_Personal_Score (60% D/W/A, 40% split across genres)
 - Supporting cast mean still computed for possible future use, not modeled by default feature list
 - Learned keyword weights from YOUR data
-- XGBoost model
+- XGBoost regression for predicted score; separate classifier for Star Percentage (P(My_Score >= 8.0))
 
 Requirements:
     pip install pandas scikit-learn openpyxl joblib xgboost
@@ -32,6 +32,15 @@ CALIBRATION_STRENGTH = 0.5
 # Keeps distribution shape but avoids overly high highs and low lows.
 CALIBRATION_TRIM = 0.10
 
+# Star probability: P(you rate >= this). Yes requires Predicted Score >= this too.
+STAR_THRESHOLD = 8.0
+# Star % rises linearly from score 8→10 (from your data), plus classifier nudge.
+STAR_SCORE_ANCHOR_LO = 8.0
+STAR_SCORE_ANCHOR_HI = 10.0
+STAR_CLF_NUDGE = 0.16          # max swing from classifier vs your base rate
+STAR_PROB_CAP = 0.94
+STAR_PROB_FLOOR = 0.02
+
 # ============================================================
 
 import os
@@ -42,10 +51,14 @@ import joblib
 import warnings
 warnings.filterwarnings('ignore')
 
-from sklearn.model_selection import cross_val_score, KFold
+from sklearn.model_selection import cross_val_score, cross_val_predict, KFold
+from sklearn.isotonic import IsotonicRegression
 from sklearn.preprocessing import StandardScaler
-from sklearn.ensemble import GradientBoostingRegressor, RandomForestRegressor
-from sklearn.linear_model import BayesianRidge
+from sklearn.ensemble import (
+    GradientBoostingRegressor, RandomForestRegressor,
+    GradientBoostingClassifier, RandomForestClassifier,
+)
+from sklearn.linear_model import BayesianRidge, LogisticRegression
 
 # Try to import XGBoost
 try:
@@ -944,6 +957,110 @@ def test_models(X, y):
     return best['model'], best['name']
 
 
+def _empirical_star_rate(scores, y_star, lo, hi, fallback):
+    mask = (scores >= lo) & (scores < hi)
+    if mask.sum() == 0:
+        return fallback
+    return float(np.asarray(y_star, dtype=int)[mask].mean())
+
+
+def fit_star_probability_bundle(score_model, star_model, X_scaled, y_scores, y_star, training_scores):
+    """P(star): linear in Predicted Score (anchors from your ratings) + classifier nudge."""
+    kfold = KFold(n_splits=5, shuffle=True, random_state=42)
+    oof_scores_raw = cross_val_predict(score_model, X_scaled, y_scores, cv=kfold)
+    oof_scores = calibrate_predictions(oof_scores_raw, training_scores)
+    oof_clf = cross_val_predict(
+        star_model, X_scaled, y_star, cv=kfold, method='predict_proba',
+    )[:, 1]
+
+    clf_iso = IsotonicRegression(out_of_bounds='clip')
+    clf_iso.fit(oof_clf, y_star)
+
+    base_rate = float(y_star.mean())
+    p_at_lo = _empirical_star_rate(
+        oof_scores, y_star, STAR_SCORE_ANCHOR_LO - 0.35, STAR_SCORE_ANCHOR_LO + 0.35, base_rate,
+    )
+    p_at_hi = _empirical_star_rate(
+        oof_scores, y_star, STAR_SCORE_ANCHOR_HI - 0.5, 10.5, max(p_at_lo + 0.2, base_rate + 0.25),
+    )
+    p_at_lo = float(np.clip(p_at_lo, STAR_PROB_FLOOR, 0.55))
+    p_at_hi = float(np.clip(p_at_hi, p_at_lo + 0.12, STAR_PROB_CAP - 0.02))
+
+    bundle = {
+        'star_p_at_lo': p_at_lo,
+        'star_p_at_hi': p_at_hi,
+        'star_score_anchor_lo': STAR_SCORE_ANCHOR_LO,
+        'star_score_anchor_hi': STAR_SCORE_ANCHOR_HI,
+        'star_clf_isotonic': clf_iso,
+        'star_base_rate': base_rate,
+        'star_prob_cap': STAR_PROB_CAP,
+        'star_prob_floor': STAR_PROB_FLOOR,
+        'star_clf_nudge': STAR_CLF_NUDGE,
+    }
+    oof_combined = predict_star_proba(oof_scores, oof_clf, bundle)
+    bundle['star_yes_threshold'] = float(np.quantile(oof_combined, 1.0 - base_rate))
+    return bundle
+
+
+def predict_star_proba(predicted_scores, clf_raw_proba, bundle):
+    scores = np.asarray(predicted_scores, dtype=float)
+    span = bundle['star_score_anchor_hi'] - bundle['star_score_anchor_lo']
+    t = (scores - bundle['star_score_anchor_lo']) / span if span > 0 else np.zeros_like(scores)
+    p_score = bundle['star_p_at_lo'] + t * (bundle['star_p_at_hi'] - bundle['star_p_at_lo'])
+    p_clf = bundle['star_clf_isotonic'].predict(np.asarray(clf_raw_proba, dtype=float))
+    nudge = bundle['star_clf_nudge'] * (p_clf - bundle['star_base_rate'])
+    p = p_score + nudge
+    return np.clip(p, bundle['star_prob_floor'], bundle['star_prob_cap'])
+
+
+def test_star_models(X, y_star):
+    """Cross-validate classifiers for P(My_Score >= STAR_THRESHOLD)."""
+    print("\n" + "="*60)
+    print(f"TESTING STAR MODELS (My_Score >= {STAR_THRESHOLD})")
+    print("="*60)
+    n_pos = int(y_star.sum())
+    n_neg = len(y_star) - n_pos
+    pct = 100.0 * n_pos / len(y_star) if len(y_star) else 0
+    print(f"  Training base rate: {n_pos}/{len(y_star)} stars ({pct:.1f}%)")
+
+    pos_weight = n_neg / n_pos if n_pos > 0 else 1.0
+    models = {
+        'Logistic Regression': LogisticRegression(max_iter=2000, random_state=42),
+        'Random Forest': RandomForestClassifier(
+            n_estimators=300, max_depth=10, min_samples_leaf=2,
+            class_weight='balanced', random_state=42,
+        ),
+        'Gradient Boosting': GradientBoostingClassifier(
+            n_estimators=200, max_depth=5, learning_rate=0.05, random_state=42,
+        ),
+    }
+    if HAS_XGBOOST:
+        models['XGBoost'] = xgb.XGBClassifier(
+            n_estimators=200, max_depth=5, learning_rate=0.05,
+            scale_pos_weight=pos_weight, random_state=42, verbosity=0,
+        )
+
+    results = []
+    kfold = KFold(n_splits=5, shuffle=True, random_state=42)
+    for name, model in models.items():
+        try:
+            auc = cross_val_score(model, X, y_star, cv=kfold, scoring='roc_auc')
+            brier = cross_val_score(model, X, y_star, cv=kfold, scoring='neg_brier_score')
+            results.append({
+                'name': name, 'model': model,
+                'auc': auc.mean(), 'auc_std': auc.std(),
+                'brier': -brier.mean(),
+            })
+            print(f"  {name:25s} AUC={auc.mean():.3f} (+/-{auc.std()*2:.3f})  Brier={-brier.mean():.3f}")
+        except Exception as e:
+            print(f"  {name:25s} FAILED: {e}")
+
+    results.sort(key=lambda x: x['auc'], reverse=True)
+    best = results[0]
+    print(f"\n✓ Best star model: {best['name']} (AUC={best['auc']:.3f}, Brier={best['brier']:.3f})")
+    return best['model'], best['name']
+
+
 def train_model(df):
     # Load Director/Actor/Genre scores from Movies Ranks.xlsm (required)
     excel_ranks = load_ranks_from_excel()
@@ -990,6 +1107,35 @@ def train_model(df):
     
     print(f"\nTraining {best_name} on full data...")
     best_model.fit(X_scaled, y)
+
+    y_star = (df['My_Score'] >= STAR_THRESHOLD).astype(int)
+    best_star_model, best_star_name = test_star_models(X_scaled, y_star)
+    print(f"\nTraining {best_star_name} (star) on full data...")
+    best_star_model.fit(X_scaled, y_star)
+
+    training_scores = y.values
+    star_bundle = fit_star_probability_bundle(
+        best_model, best_star_model, X_scaled, y, y_star, training_scores,
+    )
+    train_scores_cal = calibrate_predictions(best_model.predict(X_scaled), training_scores)
+    train_star = predict_star_proba(
+        train_scores_cal, best_star_model.predict_proba(X_scaled)[:, 1], star_bundle,
+    )
+    train_yes = (
+        (train_star >= star_bundle['star_yes_threshold'])
+        & (train_scores_cal >= STAR_THRESHOLD)
+    ).mean() * 100
+    print("\n" + "="*60)
+    print("STAR PROBABILITY CALIBRATION")
+    print("="*60)
+    print(f"  Historical star rate: {star_bundle['star_base_rate']*100:.1f}%")
+    print(
+        f"  Score ramp: {star_bundle['star_p_at_lo']*100:.0f}% @ {STAR_SCORE_ANCHOR_LO} → "
+        f"{star_bundle['star_p_at_hi']*100:.0f}% @ {STAR_SCORE_ANCHOR_HI}  |  "
+        f"classifier nudge ±{STAR_CLF_NUDGE:.0%}"
+    )
+    print(f"  Yes/No: prob >= {star_bundle['star_yes_threshold']:.3f} and Predicted Score >= {STAR_THRESHOLD}")
+    print(f"  Training Star Yes: {train_yes:.1f}%  |  max Star %: {train_star.max()*100:.1f}")
     
     # Feature importance
     if hasattr(best_model, 'feature_importances_'):
@@ -998,19 +1144,32 @@ def train_model(df):
             'importance': best_model.feature_importances_
         }).sort_values('importance', ascending=False)
         
-        print("\nTop 25 Features:")
+        print("\nTop 25 Features (score model):")
         for _, row in importance.head(25).iterrows():
+            print(f"  {row['feature']:30s} {row['importance']:.4f}")
+
+    if hasattr(best_star_model, 'feature_importances_'):
+        star_imp = pd.DataFrame({
+            'feature': feature_cols,
+            'importance': best_star_model.feature_importances_
+        }).sort_values('importance', ascending=False)
+        print("\nTop 15 Features (star model):")
+        for _, row in star_imp.head(15).iterrows():
             print(f"  {row['feature']:30s} {row['importance']:.4f}")
     
     model_package = {
         'model': best_model,
+        'star_model': best_star_model,
         'scaler': scaler,
         'feature_cols': feature_cols,
         'training_stats': training_stats,
         'personal_scores': personal_scores,
         'positive_kw': positive_kw,
         'negative_kw': negative_kw,
-        'model_name': best_name
+        'model_name': best_name,
+        'star_model_name': best_star_name,
+        'star_threshold': STAR_THRESHOLD,
+        **star_bundle,
     }
     
     joblib.dump(model_package, MODEL_FILE)
@@ -1079,8 +1238,24 @@ def predict_watchlist(model_package, watchlist_df, training_scores):
     calibrated = calibrate_predictions(raw_predictions, training_scores)
     df['Predicted Score'] = np.round(calibrated, 4).clip(1, 10)
     df['Raw_Predicted'] = np.round(raw_predictions, 4).clip(1, 10)
+
+    raw_star = model_package['star_model'].predict_proba(X_scaled)[:, 1]
+    star_proba = predict_star_proba(df['Predicted Score'].values, raw_star, model_package)
+    yes_threshold = model_package['star_yes_threshold']
+    df['Star Percentage'] = np.round(star_proba * 100, 1)
+    df['Star'] = np.where(
+        (star_proba >= yes_threshold) & (df['Predicted Score'] >= STAR_THRESHOLD),
+        'Yes', 'No',
+    )
     
     print(f"\nPredicted {len(df)} movies")
+    n_star = (df['Star'] == 'Yes').sum()
+    pct_star = 100.0 * n_star / len(df) if len(df) else 0
+    print(
+        f"  Star Yes: {n_star} ({pct_star:.1f}%)  |  "
+        f"mean Star %: {df['Star Percentage'].mean():.1f}  |  "
+        f"max Star %: {df['Star Percentage'].max():.1f}"
+    )
     
     return df
 
@@ -1089,7 +1264,8 @@ def save_output(df, filepath):
     output_cols = ['Movie', 'Year', 'Runtime', 'Director', 'Actor', 'Actor 2', 'Actor 3',
                    'Genre1', 'Genre2', 'Genre3', 'IMDb', 'RT', 'Metascore',
                    'Rated', 'Oscar_Wins', 'Total_Wins', 'Keywords', 
-                   'Predicted Score', 'Raw_Predicted', 'Created']
+                   'Predicted Score', 'Star Percentage', 'Star',
+                   'Raw_Predicted', 'Created']
     output_cols = [c for c in output_cols if c in df.columns]
     
     df_out = df[output_cols].sort_values('Predicted Score', ascending=False)
@@ -1100,9 +1276,16 @@ def save_output(df, filepath):
     print("\n" + "="*60)
     print("TOP 25 PREDICTIONS (calibrated)")
     print("="*60)
-    display_cols = ['Movie', 'Predicted Score', 'Raw_Predicted', 'IMDb']
+    display_cols = ['Movie', 'Predicted Score', 'Star Percentage', 'Star', 'IMDb']
     display_cols = [c for c in display_cols if c in df_out.columns]
     print(df_out[display_cols].head(25).to_string(index=False))
+
+    if 'Star Percentage' in df_out.columns:
+        print("\n" + "="*60)
+        print("TOP 25 BY STAR PERCENTAGE")
+        print("="*60)
+        star_cols = [c for c in ['Movie', 'Star Percentage', 'Star', 'Predicted Score'] if c in df_out.columns]
+        print(df_out.sort_values('Star Percentage', ascending=False)[star_cols].head(25).to_string(index=False))
     
     print("\n" + "="*60)
     print("BOTTOM 15 PREDICTIONS")
@@ -1119,7 +1302,7 @@ def main():
         return
     
     print("="*60)
-    print("MOVIE SCORE PREDICTOR V5")
+    print("MOVIE SCORE PREDICTOR V6")
     print("="*60)
     
     print("\nLoading data...")
