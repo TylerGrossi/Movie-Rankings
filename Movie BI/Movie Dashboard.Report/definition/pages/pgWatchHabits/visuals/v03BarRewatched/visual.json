@@ -3,10 +3,10 @@
   "name": "v03AvgScoreByLocation",
   "position": {
     "x": 710,
-    "y": 30,
+    "y": 25,
     "z": 2000,
-    "width": 420,
-    "height": 390,
+    "width": 415,
+    "height": 240,
     "tabOrder": 200
   },
   "visual": {

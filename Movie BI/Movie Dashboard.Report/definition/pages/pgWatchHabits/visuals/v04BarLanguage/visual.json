@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "v04AvgScoreByWatchedWith",
   "position": {
-    "x": 320,
-    "y": 440,
+    "x": 945,
+    "y": 280,
     "z": 4000,
-    "width": 530,
-    "height": 430,
+    "width": 625,
+    "height": 240,
     "tabOrder": 400
   },
   "visual": {
@@ -20,13 +20,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Movie Rankings"
+                      "Entity": "Movie_WatchedWith"
                     }
                   },
                   "Property": "Watched With"
                 }
               },
-              "queryRef": "Movie Rankings.Watched With",
+              "queryRef": "Movie_WatchedWith.Watched With",
               "nativeQueryRef": "Watched With",
               "active": true
             }
@@ -41,7 +41,7 @@
                     "Column": {
                       "Expression": {
                         "SourceRef": {
-                          "Entity": "Movie Rankings"
+                          "Entity": "Movie_WatchedWith"
                         }
                       },
                       "Property": "Score"
@@ -50,7 +50,7 @@
                   "Function": 1
                 }
               },
-              "queryRef": "Average(Movie Rankings.Score)",
+              "queryRef": "Average(Movie_WatchedWith.Score)",
               "nativeQueryRef": "Avg Score",
               "displayName": "Avg Score"
             }
@@ -66,7 +66,7 @@
                   "Column": {
                     "Expression": {
                       "SourceRef": {
-                        "Entity": "Movie Rankings"
+                        "Entity": "Movie_WatchedWith"
                       }
                     },
                     "Property": "Score"

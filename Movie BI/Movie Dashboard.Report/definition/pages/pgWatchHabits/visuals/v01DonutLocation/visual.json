@@ -3,10 +3,10 @@
   "name": "v01DonutLocation",
   "position": {
     "x": 320,
-    "y": 30,
+    "y": 25,
     "z": 1000,
     "width": 375,
-    "height": 390,
+    "height": 240,
     "tabOrder": 100
   },
   "visual": {
@@ -85,47 +85,30 @@
       "legend": [
         {
           "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "position": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Right'"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "10D"
-                }
-              }
-            }
+            "show": { "expr": { "Literal": { "Value": "true" } } },
+            "position": { "expr": { "Literal": { "Value": "'BottomCenter'" } } },
+            "fontSize": { "expr": { "Literal": { "Value": "10D" } } },
+            "labelColor": { "solid": { "color": { "expr": { "Literal": { "Value": "'#FFFFFF'" } } } } }
           }
         }
       ],
       "labels": [
         {
           "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "10D"
-                }
-              }
-            }
+            "show": { "expr": { "Literal": { "Value": "true" } } },
+            "labelDisplayUnits": { "expr": { "Literal": { "Value": "0D" } } },
+            "labelPrecision": { "expr": { "Literal": { "Value": "0D" } } },
+            "labelStyle": { "expr": { "Literal": { "Value": "'percentOfTotal'" } } },
+            "fontSize": { "expr": { "Literal": { "Value": "10D" } } },
+            "minFontSize": { "expr": { "Literal": { "Value": "8D" } } },
+            "labelMinPercentOfTotal": { "expr": { "Literal": { "Value": "4D" } } }
+          }
+        }
+      ],
+      "innerRadius": [
+        {
+          "properties": {
+            "value": { "expr": { "Literal": { "Value": "55D" } } }
           }
         }
       ]

@@ -119,3 +119,8 @@ relationship 27bec247-35c0-4906-a2d6-8fdee31f9815
 	fromColumn: 'All Series Mapping'.'Date Watched'
 	toColumn: LocalDateTable_2d87a973-7204-4565-9a1b-942161a0bcc6.Date
 
+relationship a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d
+	crossFilteringBehavior: bothDirections
+	fromColumn: Movie_WatchedWith.Movie
+	toColumn: 'Movie Rankings'.Movie
+

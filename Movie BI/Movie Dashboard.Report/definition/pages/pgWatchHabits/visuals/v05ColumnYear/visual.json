@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "v05ScoreTrend",
   "position": {
-    "x": 865,
-    "y": 440,
+    "x": 1140,
+    "y": 25,
     "z": 5000,
-    "width": 705,
-    "height": 430,
+    "width": 430,
+    "height": 240,
     "tabOrder": 500
   },
   "visual": {
@@ -32,7 +32,7 @@
             }
           ]
         },
-        "ColumnY": {
+        "Y": {
           "projections": [
             {
               "field": {
@@ -56,7 +56,7 @@
             }
           ]
         },
-        "LineY": {
+        "Y2": {
           "projections": [
             {
               "field": {
@@ -127,14 +127,14 @@
             "secStart": {
               "expr": {
                 "Literal": {
-                  "Value": "3D"
+                  "Value": "0D"
                 }
               }
             },
             "secEnd": {
               "expr": {
                 "Literal": {
-                  "Value": "10D"
+                  "Value": "11D"
                 }
               }
             },
@@ -496,28 +496,28 @@
             "top": {
               "expr": {
                 "Literal": {
-                  "Value": "20D"
+                  "Value": "10D"
                 }
               }
             },
             "right": {
               "expr": {
                 "Literal": {
-                  "Value": "20D"
+                  "Value": "15D"
                 }
               }
             },
             "bottom": {
               "expr": {
                 "Literal": {
-                  "Value": "20D"
+                  "Value": "5D"
                 }
               }
             },
             "left": {
               "expr": {
                 "Literal": {
-                  "Value": "20D"
+                  "Value": "5D"
                 }
               }
             }
