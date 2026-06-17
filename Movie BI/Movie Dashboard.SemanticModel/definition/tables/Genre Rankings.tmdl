@@ -1,0 +1,142 @@
+table 'Genre Rankings'
+	lineageTag: 582e4a60-a5fa-4290-ab02-4e7993d4936f
+
+	column Rank
+		dataType: int64
+		formatString: 0
+		lineageTag: 5d0e515a-7ac4-4ecb-9ea4-c6f585d91b98
+		summarizeBy: none
+		sourceColumn: Rank
+
+		annotation SummarizationSetBy = Automatic
+
+	column Genres
+		dataType: string
+		lineageTag: b1fae5e2-7f93-4317-985f-1c28ac2c103b
+		summarizeBy: none
+		sourceColumn: Genres
+
+		annotation SummarizationSetBy = Automatic
+
+	column Score
+		dataType: double
+		formatString: 0.0
+		lineageTag: f1c2379f-93c0-4d00-a4a0-8c0868793e13
+		summarizeBy: sum
+		sourceColumn: Score
+
+		annotation SummarizationSetBy = Automatic
+
+	column Movies
+		dataType: int64
+		formatString: 0
+		lineageTag: 726d0acc-ed34-4fe1-93f3-52fbc378580a
+		summarizeBy: sum
+		sourceColumn: Movies
+
+		annotation SummarizationSetBy = Automatic
+
+	column Rating
+		dataType: double
+		formatString: 0.0
+		lineageTag: 16d54bef-e681-4f33-a3f3-513c679f29aa
+		summarizeBy: sum
+		sourceColumn: Rating
+
+		annotation SummarizationSetBy = Automatic
+
+	column Average
+		dataType: double
+		formatString: 0.0
+		lineageTag: ce1f6769-769a-4d87-b793-91cf12334791
+		summarizeBy: sum
+		sourceColumn: Average
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Top Movie' = ```
+			
+			CALCULATE(
+			    MAX(Movie_Genres[Movie]),
+			    FILTER(
+			        Movie_Genres,
+			        Movie_Genres[Genre] = 'Genre Rankings'[Genres] &&
+			        RANKX(
+			            FILTER(Movie_Genres, Movie_Genres[Genre] = 'Genre Rankings'[Genres]),
+			            Movie_Genres[Score],
+			            ,
+			            DESC,
+			            DENSE
+			        ) = 1
+			    )
+			)
+			
+			```
+		lineageTag: 06d9e67b-e46f-48d2-800b-343994ba79c8
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Top Movie 2' = ```
+			
+			CALCULATE(
+			    MAX(Movie_Genres[Movie]),
+			    FILTER(
+			        Movie_Genres,
+			        Movie_Genres[Genre] = 'Genre Rankings'[Genres] &&
+			        RANKX(
+			            FILTER(Movie_Genres, Movie_Genres[Genre] = 'Genre Rankings'[Genres]),
+			            Movie_Genres[Score],
+			            ,
+			            DESC,
+			            DENSE
+			        ) = 2
+			    )
+			)
+			
+			```
+		lineageTag: 052d2417-6b3f-413b-b41a-2ba126089dd1
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Top Movie 3' = ```
+			
+			CALCULATE(
+			    MAX(Movie_Genres[Movie]),
+			    FILTER(
+			        Movie_Genres,
+			        Movie_Genres[Genre] = 'Genre Rankings'[Genres] &&
+			        RANKX(
+			            FILTER(Movie_Genres, Movie_Genres[Genre] = 'Genre Rankings'[Genres]),
+			            Movie_Genres[Score],
+			            ,
+			            DESC,
+			            DENSE
+			        ) = 3
+			    )
+			)
+			
+			```
+		lineageTag: f7a5e214-4eae-4570-92df-0c3750fdc75d
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Genre Rankings' = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\Owner\Desktop\Tyler\OneDrive\Projects\Movies\Movies Ranks.xlsm"), null, true),
+				    #"Genre Rankings_Sheet" = Source{[Item="Genre Rankings",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Genre Rankings_Sheet", [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"#", Int64.Type}, {"Genres", type text}, {"Score", type number}, {"Movies", Int64.Type}, {"Rating", type number}, {"Average", type number}}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Changed Type",{{"#", "Rank"}}),
+				    #"Removed Blank Rows" = Table.SelectRows(#"Renamed Columns", each not List.IsEmpty(List.RemoveMatchingItems(Record.FieldValues(_), {"", null})))
+				in
+				    #"Removed Blank Rows"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

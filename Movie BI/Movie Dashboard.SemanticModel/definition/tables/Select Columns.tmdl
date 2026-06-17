@@ -1,0 +1,69 @@
+table 'Select Columns'
+	lineageTag: cee984b2-a1ec-48f1-b78a-9a1d2f2f5e1b
+
+	column 'Select Columns'
+		lineageTag: c312cef4-0bd5-4cdc-b27f-bf47b0b67a34
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Select Columns Order'
+
+		relatedColumnDetails
+			groupByColumn: 'Select Columns Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Select Columns Fields'
+		isHidden
+		lineageTag: 07e7243c-78fb-48ad-9753-f8e7b5d72c4b
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Select Columns Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Select Columns Order'
+		isHidden
+		formatString: 0
+		lineageTag: 60af147f-5299-4ace-8403-fe71e8603eb7
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Select Columns' = calculated
+		mode: import
+		source =
+				{
+				    ("Rank", NAMEOF('Movie Rankings'[Rank]), 0),
+				    ("Movie", NAMEOF('Movie Rankings'[Movie]), 1),
+				    ("Score", NAMEOF('Movie Rankings'[Score]), 2),
+				    ("WMS", NAMEOF('Movie Rankings'[WMS]), 3),
+				    ("IMDb", NAMEOF('Movie Rankings'[IMDb]), 4),
+				    ("RT", NAMEOF('Movie Rankings'[RT]), 5),
+				    ("Letterboxd", NAMEOF('Movie Rankings'[Letterboxd]), 6),
+				    ("Critics", NAMEOF('Movie Rankings'[Critics]), 7),
+				    ("+/-", NAMEOF('Movie Rankings'[Score vs Critics]), 8),
+				    ("Year", NAMEOF('Movie Rankings'[Year]), 9),
+				    ("Actor", NAMEOF('Movie Rankings'[Actor]), 10),
+				    ("Actor 2", NAMEOF('Movie Rankings'[Actor 2]), 11),
+				    ("Actor 3", NAMEOF('Movie Rankings'[Actor 3]), 12),
+				    ("Actor 4", NAMEOF('Movie Rankings'[Actor 4]), 13),
+				    ("Director", NAMEOF('Movie Rankings'[Director]), 14),
+				    ("Genre1", NAMEOF('Movie Rankings'[Genre1]), 15),
+				    ("Genre2", NAMEOF('Movie Rankings'[Genre2]), 16),
+				    ("Genre3", NAMEOF('Movie Rankings'[Genre3]), 17),
+				    ("Logged", NAMEOF('Movie Rankings'[Date Watched]), 18),
+				    ("Runtime", NAMEOF('Movie Rankings'[Runtime]), 19),
+				    ("Views", NAMEOF('Movie Rankings'[Times Watched]), 20),
+				    ("Venue", NAMEOF('Movie Rankings'[Watch Location]), 21),
+				    ("Watched With", NAMEOF('Movie Rankings'[Watched With]), 22)
+				}
+
+	annotation PBI_Id = 077823d47104429e9e771f4dcf091df5
+

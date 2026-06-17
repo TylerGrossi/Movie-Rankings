@@ -1,0 +1,36 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["Movie Rankings","Movie_Actors","Movie_Genres","Movie_Directors","Movies to Watch","Movies to Watch Actors","Movies to Watch Genres","Movies to Watch Directors","Actor Rankings","Genre Rankings","Director Rankings"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table 'Movie Rankings'
+ref table DateTableTemplate_07fd4514-2495-4de3-a586-8e36176eeefa
+ref table Movie_Genres
+ref table Movie_Directors
+ref table Movie_Actors
+ref table LocalDateTable_32cda21b-f0aa-424f-8221-511364fe79cb
+ref table LocalDateTable_50666fc8-0b6e-4afa-8cf0-fb636a0d9557
+ref table LocalDateTable_31b55af8-f03b-4e45-878f-f37b08540fd7
+ref table 'Movies to Watch'
+ref table 'Movies to Watch Actors'
+ref table 'Movies to Watch Genres'
+ref table 'Movies to Watch Directors'
+ref table 'Actor Rankings'
+ref table 'Genre Rankings'
+ref table 'Director Rankings'
+ref table 'All Series Mapping'
+ref table LocalDateTable_374a73b4-7b51-4c72-81a3-c037accbe691
+ref table LocalDateTable_2d87a973-7204-4565-9a1b-942161a0bcc6
+ref table 'Select Columns'
+
+ref cultureInfo en-US
+

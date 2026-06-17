@@ -1,0 +1,204 @@
+table 'Movies to Watch Genres'
+	lineageTag: fc4fa733-45a9-4e7e-a803-b310b4a5cde6
+
+	column Movie
+		dataType: string
+		lineageTag: d902a08b-fb36-4532-a096-5716df3c2b9b
+		summarizeBy: none
+		sourceColumn: Movie
+
+		annotation SummarizationSetBy = Automatic
+
+	column IMDb
+		dataType: double
+		lineageTag: 74b94854-1d79-45c0-ba7c-7509978c5323
+		summarizeBy: sum
+		sourceColumn: IMDb
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: 286f389e-8200-4635-af4b-810e1ee2c77a
+		summarizeBy: sum
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column Director
+		dataType: string
+		lineageTag: 7ff5917b-13cc-4ed8-b6b1-2483fdfdcb5e
+		summarizeBy: none
+		sourceColumn: Director
+
+		annotation SummarizationSetBy = Automatic
+
+	column RT
+		dataType: double
+		formatString: 0
+		lineageTag: e3e545c6-8b4f-49db-b047-7a1ad12e4180
+		summarizeBy: sum
+		sourceColumn: RT
+
+		annotation SummarizationSetBy = Automatic
+
+	column Actor
+		dataType: string
+		lineageTag: e1d7c54e-c776-4532-a6f4-e43aef9d1db6
+		summarizeBy: none
+		sourceColumn: Actor
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Actor 2'
+		dataType: string
+		lineageTag: 0c6401d3-3c73-4fa1-9270-2b5e500ca595
+		summarizeBy: none
+		sourceColumn: Actor 2
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Actor 3'
+		dataType: string
+		lineageTag: a4a4050e-0504-4d52-9c5b-12ac4de30b4a
+		summarizeBy: none
+		sourceColumn: Actor 3
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Predicted Score'
+		dataType: double
+		lineageTag: e5c3f200-ddd5-443c-83b6-c33243c409a1
+		summarizeBy: sum
+		sourceColumn: Predicted Score
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Genre
+		dataType: string
+		lineageTag: d2b90155-c00b-4fdd-809f-5bf7fd84354f
+		summarizeBy: none
+		sourceColumn: Genre
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column Runtime
+		dataType: int64
+		formatString: 0
+		lineageTag: 7d8071c4-91c2-4529-9a95-87a18efe6c21
+		summarizeBy: sum
+		sourceColumn: Runtime
+
+		annotation SummarizationSetBy = Automatic
+
+	column Metascore
+		dataType: double
+		lineageTag: 7da3336c-fe89-4dae-b921-93653162f89e
+		summarizeBy: sum
+		sourceColumn: Metascore
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Rated
+		dataType: string
+		lineageTag: 0bad432e-2ddb-4f53-bff3-a192fef8de33
+		summarizeBy: none
+		sourceColumn: Rated
+
+		annotation SummarizationSetBy = Automatic
+
+	column Oscar_Wins
+		dataType: int64
+		formatString: 0
+		lineageTag: 11d83d3e-4350-453a-8645-cb47c82ff0bf
+		summarizeBy: sum
+		sourceColumn: Oscar_Wins
+
+		annotation SummarizationSetBy = Automatic
+
+	column Total_Wins
+		dataType: int64
+		formatString: 0
+		lineageTag: 8346c373-dcf9-4670-b427-bd1f052b096b
+		summarizeBy: sum
+		sourceColumn: Total_Wins
+
+		annotation SummarizationSetBy = Automatic
+
+	column Keywords
+		dataType: string
+		lineageTag: 83123890-5589-4a46-a6f5-dab0d1d04fa4
+		summarizeBy: none
+		sourceColumn: Keywords
+
+		annotation SummarizationSetBy = Automatic
+
+	column Raw_Predicted
+		dataType: double
+		lineageTag: 45a4b4bf-3e93-4e27-98db-87eee27255e9
+		summarizeBy: sum
+		sourceColumn: Raw_Predicted
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Star Percentage'
+		dataType: string
+		lineageTag: 5c688a89-fd01-4a65-98a3-70411a3ce4be
+		summarizeBy: none
+		sourceColumn: Star Percentage
+
+		annotation SummarizationSetBy = Automatic
+
+	column Star
+		dataType: string
+		lineageTag: 551a2226-3159-45bf-8d9c-798ae8e35b27
+		summarizeBy: none
+		sourceColumn: Star
+
+		annotation SummarizationSetBy = Automatic
+
+	column Attribute
+		dataType: string
+		lineageTag: 5afe36b8-957e-4c27-865d-a5af66ed7b0d
+		summarizeBy: none
+		sourceColumn: Attribute
+
+		annotation SummarizationSetBy = Automatic
+
+	column Created
+		dataType: string
+		lineageTag: 54d73547-bf48-4c92-82f0-12f341898492
+		summarizeBy: none
+		sourceColumn: Created
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Movies to Watch Genres' = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(Web.Contents("https://raw.githubusercontent.com/TylerGrossi/Movie-Rankings/refs/heads/main/Predicted_Scores.csv"),[Delimiter=",", Columns=22, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers1" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Promoted Headers1",{{"Movie", type text}, {"Predicted Score", type number}, {"Year", Int64.Type}, {"Runtime", Int64.Type}, {"Actor", type text}, {"Actor 2", type text}, {"Actor 3", type text}, {"Director", type text}, {"Genre1", type text}, {"Genre2", type text}, {"Genre3", type text}, {"IMDb", type number}, {"RT", type number}, {"Raw_Predicted", type number}, {"Total_Wins", Int64.Type}, {"Oscar_Wins", Int64.Type}, {"Metascore", type number}}),
+				    #"Removed Duplicates" = Table.Distinct(#"Changed Type1", {"Movie"}),
+				    #"Unpivoted Only Selected Columns" = Table.Unpivot(#"Removed Duplicates", {"Genre1", "Genre2", "Genre3"}, "Attribute", "Value"),
+				    #"Renamed Columns" = Table.RenameColumns(#"Unpivoted Only Selected Columns",{{"Value", "Genre"}}),
+				    #"Trimmed Text" = Table.TransformColumns(#"Renamed Columns",{{"Genre", Text.Trim, type text}})
+				in
+				    #"Trimmed Text"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

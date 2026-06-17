@@ -1,0 +1,282 @@
+table Movie_Directors
+	lineageTag: e7c2d635-5953-4126-81bf-34a9a7c82bf2
+
+	column Rank
+		dataType: int64
+		formatString: 0
+		lineageTag: d1100324-d60a-4bea-b8cb-023aecf0ad46
+		summarizeBy: sum
+		sourceColumn: Rank
+
+		annotation SummarizationSetBy = Automatic
+
+	column Movie
+		dataType: string
+		lineageTag: 31a634b9-8522-49c0-8145-9be819bccdf9
+		summarizeBy: none
+		sourceColumn: Movie
+
+		annotation SummarizationSetBy = Automatic
+
+	column Score
+		dataType: double
+		lineageTag: b9a402dd-cca7-4599-8ac3-c64c8575bb6b
+		summarizeBy: sum
+		sourceColumn: Score
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: 871d872f-edc3-4789-9fbd-e9ce305ab05c
+		summarizeBy: sum
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column Actor
+		dataType: string
+		lineageTag: 74eb4ad5-a972-46ad-9cf6-59b675569a2f
+		summarizeBy: none
+		sourceColumn: Actor
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Actor 2'
+		dataType: string
+		lineageTag: 9101db40-a2f2-4502-ae34-d85a91fbdfcd
+		summarizeBy: none
+		sourceColumn: Actor 2
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Actor 3'
+		dataType: string
+		lineageTag: 3d40d39b-d5c2-4897-9c3b-18a1330082c9
+		summarizeBy: none
+		sourceColumn: Actor 3
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Actor 4'
+		dataType: string
+		lineageTag: ad2887d5-56dd-4b50-a3d1-5626dff513d6
+		summarizeBy: none
+		sourceColumn: Actor 4
+
+		annotation SummarizationSetBy = Automatic
+
+	column Director
+		dataType: string
+		lineageTag: 18db5524-2787-4c29-9c29-934955fde8ae
+		summarizeBy: none
+		sourceColumn: Director
+		sortByColumn: 'Director Sort Score'
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column Genre1
+		dataType: string
+		lineageTag: 546c918a-9480-4ab3-b2a7-885b14ae3be2
+		summarizeBy: none
+		sourceColumn: Genre1
+
+		annotation SummarizationSetBy = Automatic
+
+	column Genre2
+		dataType: string
+		lineageTag: 6bf197a6-f2df-4d55-b715-c47898998c3e
+		summarizeBy: none
+		sourceColumn: Genre2
+
+		annotation SummarizationSetBy = Automatic
+
+	column Genre3
+		dataType: string
+		lineageTag: 9d339a0c-96d4-4fbc-a4aa-dba446e0a7fa
+		summarizeBy: none
+		sourceColumn: Genre3
+
+		annotation SummarizationSetBy = Automatic
+
+	column IMDb
+		dataType: double
+		lineageTag: 9eb9035e-b819-4954-ba52-f65c1e65671b
+		summarizeBy: sum
+		sourceColumn: IMDb
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column RT
+		dataType: int64
+		formatString: 0
+		lineageTag: 51edc12e-fd02-41b9-9282-5f7aa62777bb
+		summarizeBy: sum
+		sourceColumn: RT
+
+		annotation SummarizationSetBy = Automatic
+
+	column Critics
+		dataType: double
+		lineageTag: 17aab4dc-6ecf-487a-a4dc-35fda3eecaab
+		summarizeBy: sum
+		sourceColumn: Critics
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column All
+		dataType: double
+		lineageTag: afe54896-e22a-4224-8fa0-41313d6b1be6
+		summarizeBy: sum
+		sourceColumn: All
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Date Watched'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 023aaeda-5b69-411d-9380-c317fb80a3cc
+		summarizeBy: none
+		sourceColumn: Date Watched
+
+		variation Variation
+			isDefault
+			relationship: b4ee418a-0ae7-4c45-9ebc-68c74755b104
+			defaultHierarchy: LocalDateTable_31b55af8-f03b-4e45-878f-f37b08540fd7.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Runtime
+		dataType: string
+		lineageTag: f7f65109-90a9-4589-8367-69e6f9b84aa2
+		summarizeBy: none
+		sourceColumn: Runtime
+
+		annotation SummarizationSetBy = Automatic
+
+	column Language
+		dataType: string
+		lineageTag: f34d6bc9-4bf6-481d-93b5-164b27f4ccb4
+		summarizeBy: none
+		sourceColumn: Language
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Watch Location'
+		dataType: string
+		lineageTag: 73e66321-b0be-4143-96ed-b21d9404cef4
+		summarizeBy: none
+		sourceColumn: Watch Location
+
+		annotation SummarizationSetBy = Automatic
+
+	column Letterboxd
+		dataType: string
+		lineageTag: f21fd5f9-4371-4bb9-8a06-733ac5b83faf
+		summarizeBy: none
+		sourceColumn: Letterboxd
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'My IMDb'
+		dataType: string
+		lineageTag: eeba91dc-cd4f-428c-850d-eef2d33e2989
+		summarizeBy: none
+		sourceColumn: My IMDb
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'My LB'
+		dataType: string
+		lineageTag: a57d5a74-1867-41a1-8762-3eb2e199b564
+		summarizeBy: none
+		sourceColumn: My LB
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Watched With'
+		dataType: string
+		lineageTag: 451ee232-d7d8-4d59-b3e1-7fec64f53558
+		summarizeBy: none
+		sourceColumn: Watched With
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Times Watched'
+		dataType: string
+		lineageTag: 567ee029-8f87-4a52-8293-75556e9fc783
+		summarizeBy: none
+		sourceColumn: Times Watched
+
+		annotation SummarizationSetBy = Automatic
+
+	column Series
+		dataType: string
+		lineageTag: 91581dd9-1cc1-4e63-84cc-6406affa331b
+		summarizeBy: none
+		sourceColumn: Series
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Series Order'
+		dataType: string
+		lineageTag: ff44de7a-7a7d-4f98-aa8d-dc84190c77f3
+		summarizeBy: none
+		sourceColumn: Series Order
+
+		annotation SummarizationSetBy = Automatic
+
+	column WMS
+		dataType: string
+		lineageTag: e671ea26-25da-4ded-9c22-473916e1f358
+		summarizeBy: none
+		sourceColumn: WMS
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Director Sort Score'
+		dataType: string
+		lineageTag: 0309fdbf-6d49-4e6e-a8bb-5f581af38fd1
+		summarizeBy: none
+		sourceColumn: Director Sort Score
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Movie_Directors-827e236e-99c7-4754-ba82-3dc301c68054 = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\Owner\Desktop\Tyler\OneDrive\Projects\Movies\Movies Ranks.xlsm"), null, true),
+				    #"Movie Rankings_Sheet" = Source{[Item="Movie Rankings",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Movie Rankings_Sheet", [PromoteAllScalars=true]),
+				    #"Removed Columns" = Table.RemoveColumns(#"Promoted Headers",{"Year_1", "(Multiple Items)"}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Removed Columns",{{"Rank", Int64.Type}, {"Movie", type any}, {"Score", type number}, {"Year", Int64.Type}, {"Actor", type text}, {"Actor 2", type text}, {"Actor 3", type text}, {"Actor 4", type text}, {"Director", type text}, {"Genre1", type text}, {"Genre2", type text}, {"Genre3", type text}, {"IMDb", type number}, {"RT", Int64.Type}, {"Critics", type number}, {"All", type number}, {"Date Watched", type date}}),
+				    #"Filtered Rows" = Table.SelectRows(#"Changed Type", each true),
+				    #"Removed Blank Rows" = Table.SelectRows(#"Filtered Rows", each not List.IsEmpty(List.RemoveMatchingItems(Record.FieldValues(_), {"", null}))),
+				
+				    // New steps below
+				    DirectorRankings = Source{[Item="Director Rankings",Kind="Sheet"]}[Data],
+				    #"DR Promoted Headers" = Table.PromoteHeaders(DirectorRankings, [PromoteAllScalars=true]),
+				    #"DR Selected Columns" = Table.SelectColumns(#"DR Promoted Headers", {"Director", "Rating"}),
+				    #"Merged" = Table.NestedJoin(#"Removed Blank Rows", "Director", #"DR Selected Columns", "Director", "DirectorRankings", JoinKind.LeftOuter),
+				    #"Expanded" = Table.ExpandTableColumn(#"Merged", "DirectorRankings", {"Rating"}, {"Director Sort Score"})
+				in
+				    #"Expanded"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,350 @@
+table 'Movie Rankings'
+	lineageTag: 2e0fd9c6-a13a-47f2-9ef0-9761a132fb15
+
+	measure Avg = CALCULATE(AVERAGE('Movie Rankings'[Score]), ALL())
+		lineageTag: 801654e0-2832-406e-9a75-6a476e5aaca8
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Rank
+		dataType: int64
+		formatString: 0
+		lineageTag: 3db1f0e5-c3ef-4933-a319-cc5da1fbda1e
+		summarizeBy: none
+		sourceColumn: Rank
+
+		annotation SummarizationSetBy = Automatic
+
+	column Movie
+		dataType: string
+		lineageTag: b9eb1699-23fc-463b-a293-4f82c2cee012
+		summarizeBy: none
+		sourceColumn: Movie
+		sortByColumn: Score
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column Score
+		dataType: double
+		formatString: 0.0
+		lineageTag: bd212317-5b7e-46d3-9bee-e0b3fb6b23b4
+		summarizeBy: none
+		sourceColumn: Score
+
+		annotation SummarizationSetBy = User
+
+		annotation __PBI_SemanticLinks = [{"LinkTarget":{"TableName":"Movie Rankings","TableItemName":"Score (bins)","ObjectType":4},"LinkType":"UsedInGroup"}]
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: d6e186b0-c5c1-4912-a9e5-f34b83f08ad2
+		summarizeBy: sum
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column Actor
+		dataType: string
+		lineageTag: 22517481-7499-4560-964b-80b8f12e13c9
+		summarizeBy: none
+		sourceColumn: Actor
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Actor 2'
+		dataType: string
+		lineageTag: 13c9e2e8-5f44-46fe-89a7-97f34f92777a
+		summarizeBy: none
+		sourceColumn: Actor 2
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Actor 3'
+		dataType: string
+		lineageTag: 894701f7-ede3-410b-8123-78e8cb6e42cc
+		summarizeBy: none
+		sourceColumn: Actor 3
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Actor 4'
+		dataType: string
+		lineageTag: 1a20c866-5947-4ef3-8b13-af0204df8e35
+		summarizeBy: none
+		sourceColumn: Actor 4
+
+		annotation SummarizationSetBy = Automatic
+
+	column Director
+		dataType: string
+		lineageTag: be71a884-10f5-4e65-ac45-8962cd3a92cd
+		summarizeBy: none
+		sourceColumn: Director
+
+		annotation SummarizationSetBy = Automatic
+
+	column Genre1
+		dataType: string
+		lineageTag: afb2829f-613d-41ae-99d4-3db353d26e0a
+		summarizeBy: none
+		sourceColumn: Genre1
+
+		annotation SummarizationSetBy = Automatic
+
+	column Genre2
+		dataType: string
+		lineageTag: c380bd0c-d2a3-4334-be44-60d0688e6f78
+		summarizeBy: none
+		sourceColumn: Genre2
+
+		annotation SummarizationSetBy = Automatic
+
+	column Genre3
+		dataType: string
+		lineageTag: c0437c4e-19ae-4559-81e5-e70c793a2cc2
+		summarizeBy: none
+		sourceColumn: Genre3
+
+		annotation SummarizationSetBy = Automatic
+
+	column IMDb
+		dataType: double
+		lineageTag: 831027f8-2e5c-4bc1-82c0-c6a407e592aa
+		summarizeBy: none
+		sourceColumn: IMDb
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column RT
+		dataType: int64
+		formatString: 0
+		lineageTag: 4e60ce26-8164-4ecd-b76c-48877988fca1
+		summarizeBy: sum
+		sourceColumn: RT
+
+		annotation SummarizationSetBy = Automatic
+
+	column Critics
+		dataType: double
+		formatString: 0.0
+		lineageTag: 445533fd-f9db-4b11-bb67-aca7096e4212
+		summarizeBy: sum
+		sourceColumn: Critics
+
+		annotation SummarizationSetBy = Automatic
+
+	column All
+		dataType: double
+		lineageTag: 71cd1fde-61c3-4c6a-ae37-51e9740c9985
+		summarizeBy: sum
+		sourceColumn: All
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Date Watched'
+		dataType: dateTime
+		formatString: m/d/yy
+		lineageTag: 9ef1b914-ca75-4bb5-abb3-c5a93897623b
+		summarizeBy: none
+		sourceColumn: Date Watched
+
+		variation Variation
+			isDefault
+			relationship: 526cdb32-cd0b-4c5c-a678-77868ccdea7f
+			defaultHierarchy: LocalDateTable_32cda21b-f0aa-424f-8221-511364fe79cb.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	column 'Score (bins)' =
+			IF(
+				ISBLANK('Movie Rankings'[Score]),
+				BLANK(),
+				IF(
+					'Movie Rankings'[Score] >= 0,
+					ROUNDDOWN('Movie Rankings'[Score] / 0.5, 0) * 0.5,
+					ROUNDUP('Movie Rankings'[Score] / 0.5, 0) * 0.5
+				)
+			)
+		lineageTag: 82cdbb5a-0e10-4e94-841f-709afe22033f
+		summarizeBy: none
+
+		extendedProperty GroupingMetadata =
+				{
+				  "version": 0,
+				  "groupedColumns": [
+				    {
+				      "Column": {
+				        "Expression": {
+				          "SourceRef": {
+				            "Entity": "Movie Rankings"
+				          }
+				        },
+				        "Property": "Score"
+				      }
+				    }
+				  ],
+				  "binningMetadata": {
+				    "binSize": {
+				      "value": 0.5,
+				      "unit": 0
+				    }
+				  }
+				}
+
+		annotation GroupingDesignState = {"Version":0,"Sources":[{"Name":"m","Entity":"Movie Rankings"}],"GroupedColumns":[{"Column":{"Expression":{"SourceRef":{"Source":"m"}},"Property":"Score"}}],"BinItem":{"Expression":{"Floor":{"Expression":{"Column":{"Expression":{"SourceRef":{"Source":"m"}},"Property":"Score"}},"Size":0.5}}}}
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Runtime
+		dataType: int64
+		formatString: 0
+		lineageTag: e1d7725c-748e-42d9-b2b5-15c674679786
+		summarizeBy: sum
+		sourceColumn: Runtime
+
+		annotation SummarizationSetBy = Automatic
+
+	column Language
+		dataType: string
+		lineageTag: 9bfb2822-8c44-4205-9ed1-c6de16cf7562
+		summarizeBy: none
+		sourceColumn: Language
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Movie Watch Rank Column' = ```
+			
+			RANKX(
+			    ALL('Movie Rankings'),
+			    'Movie Rankings'[Date Watched],
+			    ,
+			    DESC,
+			    Skip
+			)
+			
+			```
+		formatString: 0
+		lineageTag: 744256d0-6824-43d5-90a6-9ed06ed9de91
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Watch Location'
+		dataType: string
+		lineageTag: 72eba578-63d2-4873-bce2-1ed902c86cff
+		summarizeBy: none
+		sourceColumn: Watch Location
+
+		annotation SummarizationSetBy = Automatic
+
+	column Letterboxd
+		dataType: double
+		lineageTag: 47159b34-3e82-4261-838b-9823f15f7f58
+		summarizeBy: sum
+		sourceColumn: Letterboxd
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'My IMDb'
+		dataType: int64
+		formatString: 0
+		lineageTag: 905a481d-2b0d-4827-ab31-d89ac98cde0c
+		summarizeBy: sum
+		sourceColumn: My IMDb
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'My LB'
+		dataType: double
+		lineageTag: 9a85cbe9-2909-4c4e-bf0c-ff68238720f3
+		summarizeBy: sum
+		sourceColumn: My LB
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Watched With'
+		dataType: string
+		lineageTag: d7912010-6ab0-4373-8059-617bcbc4c2b7
+		summarizeBy: none
+		sourceColumn: Watched With
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Times Watched'
+		dataType: int64
+		formatString: 0
+		lineageTag: aeecb831-4a2f-4384-a994-fb0a8cc3b02f
+		summarizeBy: sum
+		sourceColumn: Times Watched
+
+		annotation SummarizationSetBy = Automatic
+
+	column Series
+		dataType: string
+		lineageTag: 827e0612-6986-49da-a0b9-bd7ec5e10129
+		summarizeBy: none
+		sourceColumn: Series
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Series Order'
+		dataType: int64
+		formatString: 0
+		lineageTag: c2cc92ca-a13e-4409-bfa5-15213bd91c50
+		summarizeBy: sum
+		sourceColumn: Series Order
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Score vs Critics' = 'Movie Rankings'[Score] - 'Movie Rankings'[Critics]
+		formatString: 0.0
+		lineageTag: 61f47b54-22d5-4008-84f5-aee6f50577eb
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column WMS
+		dataType: double
+		formatString: 0.0
+		lineageTag: 88925151-f199-415d-b6f3-f78f37228f57
+		summarizeBy: sum
+		sourceColumn: WMS
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Movie Rankings-37636793-ce8c-4c19-ad24-e2794ef12836' = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\Owner\Desktop\Tyler\OneDrive\Projects\Movies\Movies Ranks.xlsm"), null, true),
+				    #"Movie Rankings_Sheet" = Source{[Item="Movie Rankings",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Movie Rankings_Sheet", [PromoteAllScalars=true]),
+				    #"Removed Columns" = Table.RemoveColumns(#"Promoted Headers",{"Year_1", "(Multiple Items)"}),
+				    #"Removed Blank Rows" = Table.SelectRows(#"Removed Columns", each not List.IsEmpty(List.RemoveMatchingItems(Record.FieldValues(_), {"", null}))),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Removed Blank Rows",{{"Rank", Int64.Type}, {"Movie", type any}, {"Score", type number}, {"Year", Int64.Type}, {"Actor", type text}, {"Actor 2", type text}, {"Actor 3", type text}, {"Actor 4", type text}, {"Director", type text}, {"Genre1", type text}, {"Genre2", type text}, {"Genre3", type text}, {"IMDb", type number}, {"RT", Int64.Type}, {"Letterboxd", type number}, {"Critics", type number}, {"All", type number}, {"My IMDb", Int64.Type}, {"My LB", type number}, {"Date Watched", type date}, {"Times Watched", Int64.Type}, {"Language", type text}, {"Runtime", Int64.Type}, {"Watched With", type text}, {"Watch Location", type text}, {"Series", type text}, {"Series Order", Int64.Type}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

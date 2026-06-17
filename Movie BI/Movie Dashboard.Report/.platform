@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Movie Dashboard"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "483a8108-4da1-4a67-b642-1f927b454623"
+  }
+}
