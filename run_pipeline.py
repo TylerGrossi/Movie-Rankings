@@ -20,6 +20,10 @@ SRC_DIR = PROJECT_ROOT / "src" / "movies"
 STEPS = [
     "enrich_ratings_api.py",
     "enrich_watchlist_api.py",
+    # Must run after both enrichments and before modelling: moves movies scored
+    # in Movies Ranks.xlsm out of the watchlist and into the ratings, so they
+    # train the model instead of being recommended back.
+    "reconcile.py",
     "predicted_score_model.py",
 ]
 

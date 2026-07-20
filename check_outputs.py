@@ -55,6 +55,33 @@ def check_file(path, min_rows, required_cols):
     return failures
 
 
+def check_watched_not_in_watchlist():
+    """Movies scored in Movies Ranks.xlsm must not still sit in the watchlist.
+
+    The workbook is the source of truth for what has been watched. IMDb's
+    export can lag it, leaving a rated movie in the watchlist — which both
+    loses a training row and recommends back a film already seen.
+    """
+    from reconcile import find_misplaced
+
+    if not (paths.RATINGS_ENRICHED_CSV.exists() and paths.WATCHLIST_ENRICHED_CSV.exists()):
+        return []  # missing-file failures are already reported above
+
+    ratings = pd.read_csv(paths.RATINGS_ENRICHED_CSV)
+    watchlist = pd.read_csv(paths.WATCHLIST_ENRICHED_CSV)
+    misplaced = find_misplaced(ratings, watchlist)
+
+    if not misplaced:
+        print("  PASS  watched/watchlist split  (no scored movies stuck in watchlist)")
+        return []
+
+    return [
+        f"MISPLACED: '{title}' is scored in Movies Ranks.xlsm but sits in "
+        f"Watchlist_Enriched.csv — should be in Ratings_Enriched.csv"
+        for _, title, _ in misplaced
+    ]
+
+
 def main() -> int:
     print("Checking pipeline outputs...\n")
     failures = []
@@ -67,6 +94,8 @@ def main() -> int:
 
     for path, min_rows, cols in CHECKS:
         failures.extend(check_file(path, min_rows, cols))
+
+    failures.extend(check_watched_not_in_watchlist())
 
     if not paths.MODEL_PKL.exists():
         failures.append(f"MISSING: {paths.MODEL_PKL} (run predicted_score_model.py)")
