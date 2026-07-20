@@ -1,9 +1,0 @@
-{
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
-  "name": "edd5072c72071f505ff9",
-  "displayName": "Actor Card",
-  "displayOption": "FitToPage",
-  "height": 900,
-  "width": 1600,
-  "visibility": "HiddenInViewMode"
-}

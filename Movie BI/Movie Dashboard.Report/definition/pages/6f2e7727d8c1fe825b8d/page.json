@@ -1,9 +1,0 @@
-{
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
-  "name": "6f2e7727d8c1fe825b8d",
-  "displayName": "Actors",
-  "displayOption": "FitToPage",
-  "height": 900,
-  "width": 1600,
-  "visibility": "HiddenInViewMode"
-}

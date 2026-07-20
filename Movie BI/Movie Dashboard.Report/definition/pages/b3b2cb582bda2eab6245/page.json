@@ -1,9 +1,0 @@
-{
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
-  "name": "b3b2cb582bda2eab6245",
-  "displayName": "Genres",
-  "displayOption": "FitToPage",
-  "height": 900,
-  "width": 1600,
-  "visibility": "HiddenInViewMode"
-}

@@ -1,9 +1,0 @@
-{
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
-  "name": "babb45a69dd6057916c0",
-  "displayName": "Directors",
-  "displayOption": "FitToPage",
-  "height": 900,
-  "width": 1600,
-  "visibility": "HiddenInViewMode"
-}
