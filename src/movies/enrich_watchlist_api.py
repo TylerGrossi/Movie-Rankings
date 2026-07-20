@@ -22,13 +22,14 @@ load_dotenv()
 
 OMDB_API_KEY = os.getenv("OMDB_API_KEY")
 TMDB_API_KEY = os.getenv("TMDB_API_KEY")
-INPUT_CSV = "imdb_watchlist.csv"
-OUTPUT_CSV = "Watchlist_Enriched.csv"
 
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+import paths
 
-INPUT_CSV = os.path.join(SCRIPT_DIR, INPUT_CSV)
-OUTPUT_CSV = os.path.join(SCRIPT_DIR, OUTPUT_CSV)
+paths.use_utf8_console()
+paths.ensure_output_dirs()
+
+INPUT_CSV = str(paths.IMDB_WATCHLIST_CSV)
+OUTPUT_CSV = str(paths.WATCHLIST_ENRICHED_CSV)
 
 # ============================================================
 # API FUNCTIONS (same as ratings script)

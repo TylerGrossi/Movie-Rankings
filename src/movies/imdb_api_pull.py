@@ -9,11 +9,14 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+import paths
+
 load_dotenv()
 
 def run_automated_export():
     chrome_options = Options()
-    download_dir = os.getcwd() 
+    paths.DATA_RAW.mkdir(parents=True, exist_ok=True)
+    download_dir = str(paths.DATA_RAW)
     prefs = {"download.default_directory": download_dir}
     chrome_options.add_experimental_option("prefs", prefs)
     

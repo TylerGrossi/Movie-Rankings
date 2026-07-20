@@ -8,43 +8,70 @@ The owner tracks IMDb ratings and a watchlist, enriches movie metadata via APIs,
 
 ## Repository map
 
-| Path | Role |
-|------|------|
-| `imdb_api_pull` | Selenium script to export `imdb_ratings.csv` and `imdb_watchlist.csv` from IMDb |
-| `enrich_ratings_api` | Enriches rated movies → `Ratings_Enriched.csv` |
-| `enrich_watchlist_api` | Enriches watchlist → `Watchlist_Enriched.csv` |
-| `predicted_score_model` | Trains XGBoost model, predicts watchlist scores → `Predicted_Scores.csv` |
-| `run_pipeline` | Runs enrichment + prediction in order; **preferred entry point** |
-| `Movies Ranks.xlsm` | Excel workbook: personal scores + director/actor/genre ranking tables |
-| `Movie BI/` | Power BI PBIP project (`Movie Dashboard.pbip`) |
-| `Old Models/` | Legacy notebooks — avoid unless explicitly asked |
+```text
+Movies/
+├── run_pipeline.py           # Preferred entry point — runs steps 1-3 in order
+├── check_outputs.py          # Smoke check: validates outputs exist and look sane
+├── requirements.txt          # Pinned dependencies
+├── src/movies/
+│   ├── paths.py              # Canonical file locations — import from here
+│   ├── imdb_api_pull.py      # Selenium IMDb export → data/raw/
+│   ├── enrich_ratings_api.py       # → data/processed/Ratings_Enriched.csv
+│   ├── enrich_watchlist_api.py     # → data/processed/Watchlist_Enriched.csv
+│   └── predicted_score_model.py    # XGBoost → Predicted_Scores.csv + model
+├── data/raw/                 # IMDb exports (tracked)
+├── data/processed/           # Enriched CSVs + predictions
+├── models/                   # Trained model artifact (gitignored)
+├── Movies Ranks.xlsm         # User-maintained rankings workbook — DO NOT MOVE
+├── Movie Dashboard.pbix      # Power BI dashboard (binary)
+└── Old Models/               # Legacy notebooks — avoid unless explicitly asked
+```
 
 ## How to run
 
-All Python scripts are **extensionless** files in the repo root. Always run from the project root:
+Scripts are normal `.py` files. Run from the project root:
 
 ```bash
-python run_pipeline
+python run_pipeline.py
+python check_outputs.py    # validate afterwards
 ```
 
 Or individual steps:
 
 ```bash
-python imdb_api_pull
-python enrich_ratings_api
-python enrich_watchlist_api
-python predicted_score_model
+python src/movies/imdb_api_pull.py          # optional: refresh raw IMDb data
+python src/movies/enrich_ratings_api.py
+python src/movies/enrich_watchlist_api.py
+python src/movies/predicted_score_model.py
 ```
 
 **Pipeline order matters:**
 
 ```text
-imdb_ratings.csv ──► enrich_ratings_api ──► Ratings_Enriched.csv ──┐
-                                                                    ├──► predicted_score_model ──► Predicted_Scores.csv
-imdb_watchlist.csv ► enrich_watchlist_api ► Watchlist_Enriched.csv ┘
+data/raw/imdb_ratings.csv ──► enrich_ratings_api ──► Ratings_Enriched.csv ──┐
+                                                                             ├──► predicted_score_model ──► Predicted_Scores.csv
+data/raw/imdb_watchlist.csv ► enrich_watchlist_api ► Watchlist_Enriched.csv ┘
 ```
 
 `Movies Ranks.xlsm` is required for ratings enrichment (`My_Score`) and for the prediction model (director/actor/genre pillar scores).
+
+## File paths — use `paths.py`
+
+All file locations live in [`src/movies/paths.py`](src/movies/paths.py). **Import from it rather than rebuilding paths from `__file__`.** A layout change should be a one-file edit.
+
+```python
+import paths
+
+paths.ensure_output_dirs()
+df = pd.read_csv(paths.RATINGS_ENRICHED_CSV)
+```
+
+Sibling import works because Python puts the script's own directory on `sys.path`. Scripts convert to `str(...)` at the top since the existing code passes strings around.
+
+Two paths are load-bearing and must not move:
+
+- **`Movies Ranks.xlsm`** stays at repo root — the `.pbix` reads it via a hardcoded absolute path.
+- **`data/processed/Predicted_Scores.csv`** stays at that exact path — Power BI fetches it from a GitHub raw URL, so the repo-relative path *is* part of the contract.
 
 ## Environment and secrets
 
@@ -62,59 +89,59 @@ OMDB_API_KEY = os.getenv("OMDB_API_KEY")
 
 ## Python conventions in this repo
 
-- Scripts use `SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))` and join paths so they work regardless of cwd — **preserve this pattern** when adding file I/O.
+- Plain scripts, no package machinery. Match that style — no unnecessary abstractions.
 - Enrichment scripts save progress incrementally; don't remove checkpoint/resume behavior without reason.
-- `predicted_score_model` writes `movie_score_predictor.pkl` via joblib.
-- Dependencies are not pinned in a `requirements.txt`; see root `README.md` for the pip install line.
+- **`My_Score` is never cached.** It comes from `Movies Ranks.xlsm`, not an API, and the owner revises it over time. `_refresh_my_scores()` re-applies it to every row at the end of each enrichment run, cached or not. Don't move it back inside the cache-miss branch — stale training labels silently degrade the model.
+- `predicted_score_model.py` writes the model via joblib to `models/`.
+- Dependencies are pinned in `requirements.txt`. Update it if you add an import.
 
 ## Data files — do not corrupt
 
 | File | Notes |
 |------|-------|
-| `imdb_*.csv` | Raw IMDb exports — overwritten by `imdb_api_pull` |
-| `*_Enriched.csv` | Generated — safe to regenerate via pipeline |
-| `Predicted_Scores.csv` | Generated — also consumed by Power BI via GitHub raw URL |
+| `data/raw/imdb_*.csv` | Raw IMDb exports — overwritten by `imdb_api_pull.py`. Tracked. |
+| `data/processed/*_Enriched.csv` | Generated, gitignored — safe to regenerate via pipeline |
+| `data/processed/Predicted_Scores.csv` | Generated but **tracked** — consumed by Power BI via GitHub raw URL |
 | `Movies Ranks.xlsm` | **User-maintained** — treat as sensitive input, not generated |
-| `movie_score_predictor.pkl` | Model artifact — regenerated by `predicted_score_model` |
+| `models/movie_score_predictor.pkl` | Model artifact, gitignored — regenerated by `predicted_score_model.py` |
 
-## Power BI (`Movie BI/`)
+## Power BI
 
-- Open `Movie BI/Movie Dashboard.pbip` in Power BI Desktop.
-- Semantic model tables use **hardcoded absolute paths** to `Movies Ranks.xlsm` on the owner's machine. If paths break after a move, update `File.Contents(...)` in `Movie Dashboard.SemanticModel/definition/tables/*.tmdl`.
-- `Movies to Watch` tables fetch `Predicted_Scores.csv` from GitHub raw — local pipeline output does not auto-sync to the dashboard.
-- Report definition is PBIR JSON under `Movie Dashboard.Report/definition/`. For new IBCS visuals, use the **pbir-report-builder** skill.
-- `.mjs` files are Node scaffolding scripts for page generation — not part of `run_pipeline`.
+The dashboard is `Movie Dashboard.pbix` — a **binary file agents cannot read or edit**. The previous PBIP project (`Movie BI/`, with diffable PBIR JSON and TMDL) was deleted on 2026-07-19; it is recoverable from git history at commit `8ee2338` if needed.
+
+For dashboard changes, the owner works in Power BI Desktop directly. If a PBIP export is restored later, the **pbir-report-builder** skill applies.
+
+After regenerating predictions, `Predicted_Scores.csv` must be **committed and pushed** for the dashboard to see them — the local file does not auto-sync.
 
 ## What agents should do
 
-- Run `python run_pipeline` (or the relevant single script) to verify Python changes.
-- Keep changes minimal and match existing style (plain scripts, no unnecessary abstractions).
-- Update `README.md` / this file if you add scripts, change pipeline order, or add new env vars.
-- Use relative/`SCRIPT_DIR` paths in new Python code.
+- Run `python run_pipeline.py`, then `python check_outputs.py` to verify Python changes.
+- Keep changes minimal and match existing style.
+- Import file locations from `paths.py`.
+- Update `README.md` / this file if you add scripts, change pipeline order, or add env vars.
 
 ## What agents should avoid
 
 - Committing `.env`, cookies, or API keys.
-- Renaming output CSV columns without updating `predicted_score_model` and Power BI TMDL queries.
-- Adding `.py` extensions to existing scripts unless the user asks — the project convention is extensionless.
-- Broad refactors across `Movie BI/` PBIR JSON without understanding PBIR structure.
+- Renaming output CSV columns without updating `predicted_score_model.py` and the Power BI queries.
+- Moving `Movies Ranks.xlsm` or `data/processed/Predicted_Scores.csv` (see above).
 - Deleting or overwriting `Movies Ranks.xlsm`.
+- Re-committing `models/` or the `*_Enriched.csv` files — they are deliberately gitignored to keep diffs readable.
 
 ## Common tasks
 
 | User request | Where to work |
 |--------------|---------------|
-| Fix API enrichment | `enrich_ratings_api`, `enrich_watchlist_api` |
-| Improve predictions | `predicted_score_model` |
-| Add pipeline step | `run_pipeline` + root `README.md` |
-| New dashboard page/visual | `Movie BI/` + pbir-report-builder skill |
-| Refresh IMDb data | `imdb_api_pull` |
-| Fix Power BI data refresh | `Movie BI/.../tables/*.tmdl` paths or GitHub CSV URL |
+| Fix API enrichment | `src/movies/enrich_ratings_api.py`, `enrich_watchlist_api.py` |
+| Improve predictions | `src/movies/predicted_score_model.py` |
+| Add pipeline step | `run_pipeline.py` + `README.md` |
+| Refresh IMDb data | `src/movies/imdb_api_pull.py` |
+| Change where files live | `src/movies/paths.py` (one place) |
 
 ## Testing changes
 
-There is no automated test suite. Validate by:
+No unit test suite. Validate with:
 
-1. Running the affected script(s) with `python <script>`.
-2. Checking output CSV row counts and key columns (`My_Score`, `Predicted Score`, `Star Percentage`).
-3. For BI changes, opening the PBIP project and refreshing queries in Power BI Desktop.
+1. `python check_outputs.py` — asserts files exist, have rows, and key columns (`My_Score`, `Predicted Score`, `Star Percentage`) are present and non-null. Exit 0 = pass.
+2. Running the affected script(s) directly.
+3. For BI changes, opening the `.pbix` in Power BI Desktop and refreshing.

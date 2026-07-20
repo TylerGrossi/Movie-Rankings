@@ -37,15 +37,16 @@ load_dotenv()
 OMDB_API_KEY = os.getenv("OMDB_API_KEY")
 TMDB_API_KEY = os.getenv("TMDB_API_KEY")
 
-INPUT_CSV = "imdb_ratings.csv"
-MOVIE_RANKS_FILE = "Movies Ranks.xlsm"
-OUTPUT_CSV = "Ratings_Enriched.csv"
 # ============================================================
 
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-INPUT_CSV = os.path.join(SCRIPT_DIR, INPUT_CSV)
-MOVIE_RANKS_FILE = os.path.join(SCRIPT_DIR, MOVIE_RANKS_FILE)
-OUTPUT_CSV = os.path.join(SCRIPT_DIR, OUTPUT_CSV)
+import paths
+
+paths.use_utf8_console()
+paths.ensure_output_dirs()
+
+INPUT_CSV = str(paths.IMDB_RATINGS_CSV)
+MOVIE_RANKS_FILE = str(paths.MOVIE_RANKS_XLSM)
+OUTPUT_CSV = str(paths.RATINGS_ENRICHED_CSV)
 
 # ============================================================
 # OMDb API FUNCTIONS
@@ -295,6 +296,54 @@ def load_movie_ranks(filepath: str) -> dict:
         return {}
 
 
+def _lookup_my_score(title: str, my_scores: dict):
+    """Return the personal score for a title, or None if there's no match."""
+    title_lower = str(title).strip().lower()
+    if title_lower in my_scores:
+        return my_scores[title_lower]
+    title_normalized = normalize_title(str(title))
+    if title_normalized in my_scores:
+        return my_scores[title_normalized]
+    return None
+
+
+def _refresh_my_scores(df, my_scores: dict):
+    """Re-apply My_Score from Movies Ranks.xlsm to every row.
+
+    My_Score comes from the local workbook, not an API, so there is no reason
+    to serve it from cache — and the owner revises these scores over time.
+    Caching it meant a movie enriched months ago kept a stale score forever.
+
+    Returns (changed, newly_filled) counts for the run summary.
+    """
+    changed = 0
+    newly_filled = 0
+
+    for i, row in df.iterrows():
+        score = _lookup_my_score(row["Title"], my_scores)
+        if score is None:
+            continue
+
+        old = row["My_Score"]
+        old_blank = pd.isna(old) or str(old).strip() == ""
+
+        # Compare as floats where possible so 8 vs "8.0" isn't a false change.
+        try:
+            same = (not old_blank) and float(old) == float(score)
+        except (TypeError, ValueError):
+            same = (not old_blank) and str(old).strip() == str(score).strip()
+
+        if old_blank:
+            newly_filled += 1
+        elif not same:
+            changed += 1
+            print(f"  ★ Updated: {row['Title']}  {old} → {score}")
+
+        df.at[i, "My_Score"] = score
+
+    return changed, newly_filled
+
+
 # ============================================================
 # MAIN ENRICHMENT FUNCTION
 # ============================================================
@@ -431,17 +480,8 @@ def enrich_ratings(input_file: str, omdb_key: str, tmdb_key: str, ranks_file: st
             tmdb_failures += 1
             print(f"  TMDB ✗ (no ID)")
         
-        # Match personal score
-        title_lower = title.strip().lower()
-        title_normalized = normalize_title(title)
-        
-        if title_lower in my_scores:
-            df.at[i, "My_Score"] = my_scores[title_lower]
-            print(f"  ★ Score: {my_scores[title_lower]}")
-        elif title_normalized in my_scores:
-            df.at[i, "My_Score"] = my_scores[title_normalized]
-            print(f"  ★ Score: {my_scores[title_normalized]}")
-        
+        # My_Score is refreshed for every row after the loop — see _refresh_my_scores.
+
         # Small delay to respect rate limits
         time.sleep(0.15)
         
@@ -450,14 +490,19 @@ def enrich_ratings(input_file: str, omdb_key: str, tmdb_key: str, ranks_file: st
             print(f"\n  [Saving progress... {idx + 1}/{total}]\n")
             _save_output(df, output_file)
     
+    # Refresh personal scores for EVERY row, cached or not.
+    updated, filled = _refresh_my_scores(df, my_scores)
+
     # Final save
     _save_output(df, output_file)
-    
+
     print(f"\n" + "="*50)
     print("SUMMARY")
     print("="*50)
     print(f"  Total movies: {len(df)}")
     print(f"  Cached (skipped): {skipped}")
+    print(f"  My_Score changed this run: {updated}")
+    print(f"  My_Score newly filled: {filled}")
     print(f"  OMDb failures: {omdb_failures}")
     print(f"  TMDB failures: {tmdb_failures}")
     print(f"  With RT scores: {(df['RT'] != '').sum()}")

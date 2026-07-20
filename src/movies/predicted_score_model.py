@@ -19,11 +19,7 @@ Usage:
 # CONFIGURE
 # ============================================================
 
-RATINGS_FILE = "Ratings_Enriched.csv"
-WATCHLIST_FILE = "Watchlist_Enriched.csv"
-OUTPUT_FILE = "Predicted_Scores.csv"
-MODEL_FILE = "movie_score_predictor.pkl"
-RANKS_FILE = "Movies Ranks.xlsm"  # Director/Actor/Genre scores (more accurate than computed)
+# File locations live in paths.py; see the CONFIGURE knobs below for tuning.
 
 # How much to apply percentile calibration (0 = raw only, 1 = full).
 # Lower values preserve more variance from raw predictions (less clustering at 9.00, 8.90, etc.).
@@ -68,12 +64,16 @@ except ImportError:
     HAS_XGBOOST = False
     print("Note: XGBoost not installed. Run: pip install xgboost")
 
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-RATINGS_FILE = os.path.join(SCRIPT_DIR, RATINGS_FILE)
-WATCHLIST_FILE = os.path.join(SCRIPT_DIR, WATCHLIST_FILE)
-OUTPUT_FILE = os.path.join(SCRIPT_DIR, OUTPUT_FILE)
-MODEL_FILE = os.path.join(SCRIPT_DIR, MODEL_FILE)
-RANKS_FILE = os.path.join(SCRIPT_DIR, RANKS_FILE)
+import paths
+
+paths.use_utf8_console()
+paths.ensure_output_dirs()
+
+RATINGS_FILE = str(paths.RATINGS_ENRICHED_CSV)
+WATCHLIST_FILE = str(paths.WATCHLIST_ENRICHED_CSV)
+OUTPUT_FILE = str(paths.PREDICTED_SCORES_CSV)
+MODEL_FILE = str(paths.MODEL_PKL)
+RANKS_FILE = str(paths.MOVIE_RANKS_XLSM)  # Director/Actor/Genre scores
 
 
 # ============================================================

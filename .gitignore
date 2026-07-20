@@ -1,2 +1,12 @@
 .env
 __pycache__/
+*.pyc
+
+# Generated artifacts — regenerate with `python run_pipeline.py`
+models/
+data/processed/Ratings_Enriched.csv
+data/processed/Watchlist_Enriched.csv
+
+# NOTE: data/processed/Predicted_Scores.csv is intentionally TRACKED.
+# The Power BI dashboard fetches it from a GitHub raw URL, so it must
+# stay committed and pushed for the dashboard to see fresh predictions.
