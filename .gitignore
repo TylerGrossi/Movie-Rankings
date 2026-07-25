@@ -4,9 +4,9 @@ __pycache__/
 
 # Generated artifacts — regenerate with `python run_pipeline.py`
 models/
-data/processed/Ratings_Enriched.csv
-data/processed/Watchlist_Enriched.csv
 
-# NOTE: data/processed/Predicted_Scores.csv is intentionally TRACKED.
-# The Power BI dashboard fetches it from a GitHub raw URL, so it must
-# stay committed and pushed for the dashboard to see fresh predictions.
+# NOTE: everything in data/processed/ is intentionally TRACKED.
+# Predicted_Scores.csv is fetched by the Power BI dashboard from a GitHub raw
+# URL, so it must stay committed and pushed for the dashboard to see fresh
+# predictions. The *_Enriched.csv files are tracked so a fresh clone can train
+# the model without re-running a full API enrichment pass.
