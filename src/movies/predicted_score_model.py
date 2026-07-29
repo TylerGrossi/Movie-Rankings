@@ -41,6 +41,7 @@ STAR_PROB_FLOOR = 0.02
 
 import os
 import re
+import unicodedata
 import pandas as pd
 import numpy as np
 import joblib
@@ -138,6 +139,79 @@ def load_ranks_from_excel(filepath=None):
     ranks['genre2'] = genre_scores
     ranks['genre3'] = genre_scores
     return ranks
+
+
+# ============================================================
+# NAME MATCHING (workbook <-> IMDb spellings)
+# ============================================================
+
+# Director and Actor scores are the only pillars typed by hand in the workbook
+# and then matched against names that arrive from IMDb/OMDb. The two sources
+# disagree constantly over accents ('Chloe Zhao' vs 'Chloé Zhao'), trailing
+# periods ('Robert Downey Jr' vs 'Robert Downey Jr.'), and middle initials
+# ('John Avildsen' vs 'John G. Avildsen'). A plain .map() misses all of those
+# and quietly scores the row at the dataset mean, throwing away a real rating.
+
+
+def _norm_name(name: str) -> str:
+    """Fold accents, punctuation, case, and spacing for name comparison."""
+    s = unicodedata.normalize('NFKD', str(name).strip())
+    s = ''.join(c for c in s if not unicodedata.combining(c))
+    s = re.sub(r"[.\-']", '', s.lower())
+    return re.sub(r'\s+', ' ', s).strip()
+
+
+def _drop_initials(norm: str) -> str:
+    """Strip single-letter tokens: 'john g avildsen' -> 'john avildsen'."""
+    return ' '.join(p for p in norm.split() if len(p) > 1)
+
+
+# Tried in order against the normalised name, loosest last.
+_NAME_VARIANTS = (
+    lambda n: n,                     # accents/case/punctuation only
+    lambda n: n.replace(' ', ''),    # 'D. J. Caruso' vs 'D.J. Caruso'
+    _drop_initials,                  # 'John G. Avildsen' vs 'John Avildsen'
+)
+
+
+def build_name_index(rank_map):
+    """Index a ranks dict by exact name plus progressively looser variants.
+
+    A variant key is kept only when it resolves to a single workbook entry, so
+    loosening never silently merges two different people.
+    """
+    exact = {str(k).strip(): v for k, v in rank_map.items()}
+    indexes = []
+    for variant in _NAME_VARIANTS:
+        buckets = {}
+        for key in exact:
+            v = variant(_norm_name(key))
+            if v:
+                buckets.setdefault(v, set()).add(key)
+        indexes.append(
+            {v: exact[next(iter(keys))] for v, keys in buckets.items() if len(keys) == 1}
+        )
+    return exact, indexes
+
+
+def map_names(series, rank_map, fallback):
+    """Map a name column to workbook scores, tolerating spelling variants."""
+    exact, indexes = build_name_index(rank_map)
+
+    def lookup(name):
+        if pd.isna(name):
+            return fallback
+        s = str(name).strip()
+        if s in exact:
+            return exact[s]
+        n = _norm_name(s)
+        for variant, index in zip(_NAME_VARIANTS, indexes):
+            hit = index.get(variant(n))
+            if hit is not None:
+                return hit
+        return fallback
+
+    return series.apply(lookup)
 
 
 # ============================================================
@@ -640,7 +714,8 @@ def prepare_features(df, training_stats=None, personal_scores=None,
     
     # Director score
     if 'Director' in df.columns and personal_scores and 'director' in personal_scores:
-        df['Director_Avg_Score'] = df['Director'].map(personal_scores['director']).fillna(overall_mean)
+        df['Director_Avg_Score'] = map_names(
+            df['Director'], personal_scores['director'], overall_mean)
     else:
         df['Director_Avg_Score'] = overall_mean
     
@@ -653,7 +728,7 @@ def prepare_features(df, training_stats=None, personal_scores=None,
     # Actor: lead + mean of supporting billed cast (2–4); same excel map for every slot
     act_map = (personal_scores or {}).get('actor')
     if 'Actor' in df.columns and act_map is not None:
-        df['Actor_Avg_Score'] = df['Actor'].map(act_map).fillna(overall_mean)
+        df['Actor_Avg_Score'] = map_names(df['Actor'], act_map, overall_mean)
     else:
         df['Actor_Avg_Score'] = overall_mean
 
@@ -661,7 +736,7 @@ def prepare_features(df, training_stats=None, personal_scores=None,
         supp = []
         for col in ('Actor 2', 'Actor 3', 'Actor 4'):
             if col in df.columns:
-                supp.append(df[col].map(act_map).fillna(overall_mean))
+                supp.append(map_names(df[col], act_map, overall_mean))
             else:
                 supp.append(pd.Series(overall_mean, index=df.index, dtype=float))
         df['Supporting_Cast_Avg_Score'] = pd.concat(supp, axis=1).mean(axis=1)

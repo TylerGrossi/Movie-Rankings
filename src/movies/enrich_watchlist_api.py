@@ -204,10 +204,28 @@ def parse_genres(genre_string):
     return genres[:3]
 
 
-def get_first_director(directors):
+# Directing duos that Movies Ranks.xlsm ranks as a single entry. Keyed by each
+# individual credit so either listing order — or a solo credit — collapses to the
+# same name the ranks sheet uses.
+DIRECTOR_GROUPS = {
+    "joel coen": "Coen Brothers",
+    "ethan coen": "Coen Brothers",
+    "anthony russo": "Russo Brothers",
+    "joe russo": "Russo Brothers",
+}
+
+
+def get_director(directors):
+    """Credited director, with known duos collapsed to their group name."""
     if pd.isna(directors) or directors == "":
         return ""
-    return directors.split(",")[0].strip()
+    names = [n.strip() for n in str(directors).split(",") if n.strip()]
+    if not names:
+        return ""
+    for name in names:
+        if name.lower() in DIRECTOR_GROUPS:
+            return DIRECTOR_GROUPS[name.lower()]
+    return names[0]
 
 
 # ============================================================
@@ -345,7 +363,7 @@ def _save_output(df, output_file):
     df["Genre1"] = df["Genres"].apply(lambda x: parse_genres(x)[0])
     df["Genre2"] = df["Genres"].apply(lambda x: parse_genres(x)[1])
     df["Genre3"] = df["Genres"].apply(lambda x: parse_genres(x)[2])
-    df["Director"] = df["Directors"].apply(get_first_director)
+    df["Director"] = df["Directors"].apply(get_director)
     
     output_df = pd.DataFrame({
         "Movie": df["Title"],
