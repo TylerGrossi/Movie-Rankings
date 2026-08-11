@@ -77,14 +77,32 @@ point cannot itself be hidden. Therefore:
 Net effect: the web report gains nothing visible. Deleting a visual's
 `mobile.json` is the *only* way to hide it on phone.
 
-### Why every page stops at y=540
-
-iPhone 15 Pro is 393×852 pt. Minus the status bar (59), the Power BI top bar
-(~44) and the page-nav footer plus home indicator (~78), about **671 pt** of
-device height remains. The phone canvas is ~324 units wide and scales to device
-width, so roughly **553 canvas units** are visible.
+### Why every page stops at y=640
 
 Nothing in Power BI mobile can be sticky — the phone canvas scrolls as one unit.
-Keeping every page inside 540 units is what makes the tab bar *look* fixed. The
-one long list per page scrolls **inside its own table** instead. `build_mobile.py`
-asserts this on every run; if a page overflows, the bar drops below the fold.
+Keeping every page inside one viewport is what makes the tab bar *look* fixed.
+The one long list per page scrolls **inside its own table** instead. Both
+`build_mobile.py` and `reflow_640.py` assert this; if a page overflows, the bar
+drops below the fold.
+
+**640 is measured, not calculated.** The first build used 540, derived from
+subtracting assumed Power BI chrome from the iPhone 15 Pro's 393×852 — that
+estimate was too conservative and left roughly a sixth of the screen empty below
+the bar. Don't re-derive this number from device specs; it depends on Power BI's
+own chrome, which the docs don't publish. Check it on a real phone and adjust
+the one constant.
+
+    y   0..34    header
+    y  38..566   content (one visual scrolls internally)
+    y 572..640   tab bar (5 transparent 64×68 tiles)
+
+Tab tiles have **transparent** backgrounds so the page colour shows through;
+only a faint top hairline marks the bar. `gen_icons.py` must save RGBA — calling
+`.convert("RGB")` before save silently reintroduces the opaque block.
+
+### Changing the layout after Desktop edits
+
+`reflow_640.py` is the worked example: it rewrites `position` and page height
+across every visual and touches nothing else, so filters, sorts and column
+widths survive. Copy that shape for future layout changes rather than reaching
+for `build_mobile.py --force`.

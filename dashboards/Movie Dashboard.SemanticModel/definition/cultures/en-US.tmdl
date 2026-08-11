@@ -1984,16 +1984,6 @@ cultureInfo en-US
 			            },
 			            "Weight": 0.476
 			          }
-			        },
-			        {
-			          "field": {
-			            "Type": "Noun",
-			            "State": "Suggested",
-			            "Source": {
-			              "Agent": "Thesaurus"
-			            },
-			            "Weight": 0.476
-			          }
 			        }
 			      ]
 			    },
@@ -5324,16 +5314,6 @@ cultureInfo en-US
 			            },
 			            "Weight": 0.9
 			          }
-			        },
-			        {
-			          "Pred": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
 			        }
 			      ]
 			    },
@@ -6422,16 +6402,6 @@ cultureInfo en-US
 			        },
 			        {
 			          "kind": {
-			            "Type": "Noun",
-			            "State": "Suggested",
-			            "Source": {
-			              "Agent": "Thesaurus"
-			            },
-			            "Weight": 0.476
-			          }
-			        },
-			        {
-			          "field": {
 			            "Type": "Noun",
 			            "State": "Suggested",
 			            "Source": {
@@ -7777,16 +7747,6 @@ cultureInfo en-US
 			        },
 			        {
 			          "kind": {
-			            "Type": "Noun",
-			            "State": "Suggested",
-			            "Source": {
-			              "Agent": "Thesaurus"
-			            },
-			            "Weight": 0.476
-			          }
-			        },
-			        {
-			          "field": {
 			            "Type": "Noun",
 			            "State": "Suggested",
 			            "Source": {
@@ -18685,7 +18645,7 @@ cultureInfo en-US
 			        }
 			      ]
 			    },
-			    "movie_rankings.films_watched": {
+			    "movie_ranking.films_watched": {
 			      "Definition": {
 			        "Binding": {
 			          "ConceptualEntity": "Movie Rankings",
@@ -18694,6 +18654,41 @@ cultureInfo en-US
 			      },
 			      "State": "Generated",
 			      "Terms": [
+			        {
+			          "films watched": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "movie watched": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "picture watched": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "flick watched": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.461
+			          }
+			        },
 			        {
 			          "Films": {
 			            "State": "Suggested",
@@ -18706,7 +18701,7 @@ cultureInfo en-US
 			        }
 			      ]
 			    },
-			    "movie_rankings.avg_score": {
+			    "movie_ranking.avg_score": {
 			      "Definition": {
 			        "Binding": {
 			          "ConceptualEntity": "Movie Rankings",
@@ -18716,13 +18711,108 @@ cultureInfo en-US
 			      "State": "Generated",
 			      "Terms": [
 			        {
-			          "Avg Score": {
+			          "avg score": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "average score": {
+			            "Type": "Noun",
 			            "State": "Suggested",
 			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
+			              "Agent": "Thesaurus"
 			            },
-			            "Weight": 0.9
+			            "Weight": 0.582
+			          }
+			        },
+			        {
+			          "avg notch": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "avg slash": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "avg groove": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "avg nick": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "avg cut": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "avg mark": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "avg total": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.461
+			          }
+			        },
+			        {
+			          "avg tally": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.461
+			          }
+			        },
+			        {
+			          "avg grade": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.461
 			          }
 			        },
 			        {
@@ -18737,16 +18827,63 @@ cultureInfo en-US
 			        }
 			      ]
 			    },
-			    "movie_rankings.hours_watched": {
+			    "movie_ranking.hours_watched": {
 			      "Definition": {
 			        "Binding": {
 			          "ConceptualEntity": "Movie Rankings",
 			          "ConceptualProperty": "Hours Watched"
 			        }
 			      },
-			      "State": "Generated"
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "hours watched": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "period watched": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "eras watched": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.475
+			          }
+			        },
+			        {
+			          "epoch watched": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.475
+			          }
+			        },
+			        {
+			          "age watched": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.461
+			          }
+			        }
+			      ]
 			    },
-			    "movie_rankings.avg_vs_critics": {
+			    "movie_ranking.avg_vs_critics": {
 			      "Definition": {
 			        "Binding": {
 			          "ConceptualEntity": "Movie Rankings",
@@ -18755,6 +18892,111 @@ cultureInfo en-US
 			      },
 			      "State": "Generated",
 			      "Terms": [
+			        {
+			          "avg vs critics": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "average vs critic": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.591
+			          }
+			        },
+			        {
+			          "avg vs detractor": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.508
+			          }
+			        },
+			        {
+			          "avg vs enemies": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.508
+			          }
+			        },
+			        {
+			          "avg vs criticizer": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.508
+			          }
+			        },
+			        {
+			          "avg vs faultfinder": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.508
+			          }
+			        },
+			        {
+			          "avg vs knocker": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.508
+			          }
+			        },
+			        {
+			          "avg vs decrier": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.508
+			          }
+			        },
+			        {
+			          "avg vs denigrator": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.508
+			          }
+			        },
+			        {
+			          "avg vs opponent": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.492
+			          }
+			        },
+			        {
+			          "avg vs censor": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.492
+			          }
+			        },
 			        {
 			          "vs Critics": {
 			            "State": "Suggested",
@@ -18767,7 +19009,7 @@ cultureInfo en-US
 			        }
 			      ]
 			    },
-			    "movies_to_watch.watchlist_count": {
+			    "movie_to_watch.watchlist_count": {
 			      "Definition": {
 			        "Binding": {
 			          "ConceptualEntity": "Movies to Watch",
@@ -18776,6 +19018,21 @@ cultureInfo en-US
 			      },
 			      "State": "Generated",
 			      "Terms": [
+			        {
+			          "watchlist count": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "watchlist amount": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.727
+			          }
+			        },
 			        {
 			          "Watchlist": {
 			            "State": "Suggested",
@@ -18788,7 +19045,7 @@ cultureInfo en-US
 			        }
 			      ]
 			    },
-			    "movies_to_watch.top_pick": {
+			    "movie_to_watch.top_pick": {
 			      "Definition": {
 			        "Binding": {
 			          "ConceptualEntity": "Movies to Watch",
@@ -18798,18 +19055,119 @@ cultureInfo en-US
 			      "State": "Generated",
 			      "Terms": [
 			        {
-			          "Top Pick": {
+			          "top pick": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "pick": {
+			            "State": "Generated",
+			            "Weight": 0.97
+			          }
+			        },
+			        {
+			          "best pick": {
+			            "Type": "Noun",
 			            "State": "Suggested",
 			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
+			              "Agent": "Thesaurus"
 			            },
-			            "Weight": 0.9
+			            "Weight": 0.582
+			          }
+			        },
+			        {
+			          "first pick": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.582
+			          }
+			        },
+			        {
+			          "leading pick": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.582
+			          }
+			        },
+			        {
+			          "maximum pick": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.582
+			          }
+			        },
+			        {
+			          "peak pick": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.582
+			          }
+			        },
+			        {
+			          "upper pick": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.582
+			          }
+			        },
+			        {
+			          "top preference": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.5
+			          }
+			        },
+			        {
+			          "preference": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.491
+			          }
+			        },
+			        {
+			          "top choice": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "top prize": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
 			          }
 			        }
 			      ]
 			    },
-			    "movies_to_watch.top_pick_score": {
+			    "movie_to_watch.top_pick_score": {
 			      "Definition": {
 			        "Binding": {
 			          "ConceptualEntity": "Movies to Watch",
@@ -18818,6 +19176,117 @@ cultureInfo en-US
 			      },
 			      "State": "Generated",
 			      "Terms": [
+			        {
+			          "top pick score": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "pick score": {
+			            "State": "Generated",
+			            "Weight": 0.97
+			          }
+			        },
+			        {
+			          "best pick score": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.591
+			          }
+			        },
+			        {
+			          "first pick score": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.591
+			          }
+			        },
+			        {
+			          "leading pick score": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.591
+			          }
+			        },
+			        {
+			          "maximum pick score": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.591
+			          }
+			        },
+			        {
+			          "peak pick score": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.591
+			          }
+			        },
+			        {
+			          "upper pick score": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.591
+			          }
+			        },
+			        {
+			          "top pick notch": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.492
+			          }
+			        },
+			        {
+			          "top pick slash": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.492
+			          }
+			        },
+			        {
+			          "top pick groove": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.492
+			          }
+			        },
+			        {
+			          "top pick nick": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.492
+			          }
+			        },
 			        {
 			          "Predicted": {
 			            "State": "Suggested",
@@ -18830,7 +19299,7 @@ cultureInfo en-US
 			        }
 			      ]
 			    },
-			    "genre_rankings.genre_avg": {
+			    "genre_ranking.genre_avg": {
 			      "Definition": {
 			        "Binding": {
 			          "ConceptualEntity": "Genre Rankings",
@@ -18839,6 +19308,21 @@ cultureInfo en-US
 			      },
 			      "State": "Generated",
 			      "Terms": [
+			        {
+			          "genre avg": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "genre average": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.727
+			          }
+			        },
 			        {
 			          "Avg": {
 			            "State": "Suggested",
@@ -18850,9 +19334,1554 @@ cultureInfo en-US
 			          }
 			        }
 			      ]
+			    },
+			    "movie_to_watch.critic": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Movies to Watch",
+			          "ConceptualProperty": "Critics"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "critic": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "detractor": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.491
+			          }
+			        },
+			        {
+			          "criticizer": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.491
+			          }
+			        },
+			        {
+			          "faultfinder": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.491
+			          }
+			        },
+			        {
+			          "knocker": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.491
+			          }
+			        },
+			        {
+			          "decrier": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.491
+			          }
+			        },
+			        {
+			          "denigrator": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.491
+			          }
+			        },
+			        {
+			          "opponent": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.476
+			          }
+			        },
+			        {
+			          "enemy": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.476
+			          }
+			        },
+			        {
+			          "censor": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.476
+			          }
+			        },
+			        {
+			          "reviewer": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.466
+			          }
+			        }
+			      ]
+			    },
+			    "select_column": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Select Columns"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "select column": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "select pilaster": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.5
+			          }
+			        },
+			        {
+			          "select pier": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.5
+			          }
+			        },
+			        {
+			          "select pillar": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "select post": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "select support": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "select stake": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "select pole": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "select buttress": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "select underpinning": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "select contribution": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.475
+			          }
+			        }
+			      ]
+			    },
+			    "select_column.select_column": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Select Columns",
+			          "ConceptualProperty": "Select Columns"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "select column": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "select column name": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "select pilaster": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.5
+			          }
+			        },
+			        {
+			          "select pier": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.5
+			          }
+			        },
+			        {
+			          "select pillar": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "select post": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "select support": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "select stake": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "select pole": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "select buttress": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "select underpinning": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "select contribution": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.475
+			          }
+			        }
+			      ],
+			      "NameType": "Name"
+			    },
+			    "select_column.select_columns_field": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Select Columns",
+			          "ConceptualProperty": "Select Columns Fields"
+			        }
+			      },
+			      "State": "Generated",
+			      "Visibility": {
+			        "Value": "Hidden"
+			      },
+			      "Terms": [
+			        {
+			          "select columns field": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "select column field": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.78
+			          }
+			        },
+			        {
+			          "field": {
+			            "State": "Generated",
+			            "Weight": 0.97
+			          }
+			        },
+			        {
+			          "columns field": {
+			            "State": "Generated",
+			            "Weight": 0.97
+			          }
+			        },
+			        {
+			          "column field": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.7566
+			          }
+			        },
+			        {
+			          "select column arena": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.508
+			          }
+			        },
+			        {
+			          "column arena": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.5
+			          }
+			        },
+			        {
+			          "select column turf": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.492
+			          }
+			        },
+			        {
+			          "select column ground": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.492
+			          }
+			        },
+			        {
+			          "select column pitch": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.492
+			          }
+			        },
+			        {
+			          "select column park": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.492
+			          }
+			        },
+			        {
+			          "arena": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.491
+			          }
+			        },
+			        {
+			          "column turf": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "column ground": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "column pitch": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        }
+			      ]
+			    },
+			    "select_column.select_columns_order": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Select Columns",
+			          "ConceptualProperty": "Select Columns Order"
+			        }
+			      },
+			      "State": "Generated",
+			      "Visibility": {
+			        "Value": "Hidden"
+			      },
+			      "Terms": [
+			        {
+			          "select columns order": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "select column order": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.78
+			          }
+			        },
+			        {
+			          "order": {
+			            "State": "Generated",
+			            "Weight": 0.97
+			          }
+			        },
+			        {
+			          "columns order": {
+			            "State": "Generated",
+			            "Weight": 0.97
+			          }
+			        },
+			        {
+			          "column order": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.7566
+			          }
+			        },
+			        {
+			          "select column instruction": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.508
+			          }
+			        },
+			        {
+			          "select column direction": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.508
+			          }
+			        },
+			        {
+			          "select column edict": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.508
+			          }
+			        },
+			        {
+			          "column instruction": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.5
+			          }
+			        },
+			        {
+			          "column direction": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.5
+			          }
+			        },
+			        {
+			          "column edict": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.5
+			          }
+			        },
+			        {
+			          "select column command": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.492
+			          }
+			        },
+			        {
+			          "select column directive": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.492
+			          }
+			        },
+			        {
+			          "select column demand": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.492
+			          }
+			        },
+			        {
+			          "select column mandate": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.492
+			          }
+			        }
+			      ]
 			    }
 			  },
 			  "Relationships": {
+			    "movie_to_watch_actors_has_movie_to_watch": {
+			      "Binding": {
+			        "ConceptualEntity": "Movies to Watch Actors"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "movie_to_watch_actors": {
+			          "Target": {
+			            "Entity": "movie_to_watch_actors"
+			          }
+			        },
+			        "movie_to_watch": {
+			          "Target": {
+			            "Entity": "movie_to_watch"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "movie_to_watch_actors"
+			            },
+			            "Object": {
+			              "Role": "movie_to_watch"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "movie_to_watch_actors_have_movie_to_watch"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "movie_to_watch"
+			            },
+			            "Object": {
+			              "Role": "movie_to_watch_actors"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "movie_to_watch_have_movie_to_watch_actors"
+			        }
+			      ]
+			    },
+			    "movie_actor_has_movie_ranking": {
+			      "Binding": {
+			        "ConceptualEntity": "Movie_Actors"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "movie_actor": {
+			          "Target": {
+			            "Entity": "movie_actor"
+			          }
+			        },
+			        "movie_ranking": {
+			          "Target": {
+			            "Entity": "movie_ranking"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "movie_actor"
+			            },
+			            "Object": {
+			              "Role": "movie_ranking"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "movie_actors_have_movie_ranking"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "movie_ranking"
+			            },
+			            "Object": {
+			              "Role": "movie_actor"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "movie_ranking_have_movie_actors"
+			        }
+			      ]
+			    },
+			    "movie_director_has_movie_ranking": {
+			      "Binding": {
+			        "ConceptualEntity": "Movie_Directors"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "movie_director": {
+			          "Target": {
+			            "Entity": "movie_director"
+			          }
+			        },
+			        "movie_ranking": {
+			          "Target": {
+			            "Entity": "movie_ranking"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "movie_director"
+			            },
+			            "Object": {
+			              "Role": "movie_ranking"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "movie_directors_have_movie_ranking"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "movie_ranking"
+			            },
+			            "Object": {
+			              "Role": "movie_director"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "movie_ranking_have_movie_directors"
+			        }
+			      ]
+			    },
+			    "movie_genre_has_movie_ranking": {
+			      "Binding": {
+			        "ConceptualEntity": "Movie_Genres"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "movie_genre": {
+			          "Target": {
+			            "Entity": "movie_genre"
+			          }
+			        },
+			        "movie_ranking": {
+			          "Target": {
+			            "Entity": "movie_ranking"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "movie_genre"
+			            },
+			            "Object": {
+			              "Role": "movie_ranking"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "movie_genres_have_movie_ranking"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "movie_ranking"
+			            },
+			            "Object": {
+			              "Role": "movie_genre"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "movie_ranking_have_movie_genres"
+			        }
+			      ]
+			    },
+			    "movie_ranking_has_movie_to_watch": {
+			      "Binding": {
+			        "ConceptualEntity": "Movie Rankings"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "movie_ranking": {
+			          "Target": {
+			            "Entity": "movie_ranking"
+			          }
+			        },
+			        "movie_to_watch": {
+			          "Target": {
+			            "Entity": "movie_to_watch"
+			          },
+			          "Nouns": [
+			            {
+			              "IM db": {
+			                "State": "Generated"
+			              }
+			            },
+			            {
+			              "db": {
+			                "State": "Generated"
+			              }
+			            }
+			          ]
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "movie_ranking"
+			            },
+			            "Object": {
+			              "Role": "movie_to_watch"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "movie_ranking_have_movie_to_watch"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "movie_to_watch"
+			            },
+			            "Object": {
+			              "Role": "movie_ranking"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "movie_to_watch_have_movie_ranking"
+			        }
+			      ]
+			    },
+			    "movie_ranking_has_actor_ranking": {
+			      "Binding": {
+			        "ConceptualEntity": "Movie Rankings"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "movie_ranking": {
+			          "Target": {
+			            "Entity": "movie_ranking"
+			          }
+			        },
+			        "actor_ranking": {
+			          "Target": {
+			            "Entity": "actor_ranking"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "movie_ranking"
+			            },
+			            "Object": {
+			              "Role": "actor_ranking"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "movie_ranking_have_actor_ranking"
+			        }
+			      ]
+			    },
+			    "select_column_has_select_column": {
+			      "Binding": {
+			        "ConceptualEntity": "Select Columns"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "select_column": {
+			          "Target": {
+			            "Entity": "select_column"
+			          }
+			        },
+			        "select_column.select_column": {
+			          "Target": {
+			            "Entity": "select_column.select_column"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "select_column"
+			            },
+			            "Object": {
+			              "Role": "select_column.select_column"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "select_columns_have_select_columns"
+			        },
+			        {
+			          "Name": {
+			            "Subject": {
+			              "Role": "select_column"
+			            },
+			            "Name": {
+			              "Role": "select_column.select_column"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "select_columns_are_names_IDs_of_select_columns"
+			        }
+			      ]
+			    },
+			    "movie_to_watch_has_critic": {
+			      "Binding": {
+			        "ConceptualEntity": "Movies to Watch"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "movie_to_watch": {
+			          "Target": {
+			            "Entity": "movie_to_watch"
+			          }
+			        },
+			        "movie_to_watch.critic": {
+			          "Target": {
+			            "Entity": "movie_to_watch.critic"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "movie_to_watch"
+			            },
+			            "Object": {
+			              "Role": "movie_to_watch.critic"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "movie_to_watch_have_critics"
+			        }
+			      ]
+			    },
+			    "genre_ranking_has_genre_avg": {
+			      "Binding": {
+			        "ConceptualEntity": "Genre Rankings"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "genre_ranking": {
+			          "Target": {
+			            "Entity": "genre_ranking"
+			          }
+			        },
+			        "genre_ranking.genre_avg": {
+			          "Target": {
+			            "Entity": "genre_ranking.genre_avg"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "genre_ranking"
+			            },
+			            "Object": {
+			              "Role": "genre_ranking.genre_avg"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "genre_ranking_have_genre_avg"
+			        }
+			      ]
+			    },
+			    "movie_to_watch_has_top_pick_score": {
+			      "Binding": {
+			        "ConceptualEntity": "Movies to Watch"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "movie_to_watch": {
+			          "Target": {
+			            "Entity": "movie_to_watch"
+			          }
+			        },
+			        "movie_to_watch.top_pick_score": {
+			          "Target": {
+			            "Entity": "movie_to_watch.top_pick_score"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "movie_to_watch"
+			            },
+			            "Object": {
+			              "Role": "movie_to_watch.top_pick_score"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "movie_to_watch_have_top_pick_score"
+			        },
+			        {
+			          "Adjective": {
+			            "Subject": {
+			              "Role": "movie_to_watch"
+			            },
+			            "Adjectives": [
+			              {
+			                "Predicted": {
+			                  "State": "Generated"
+			                }
+			              }
+			            ],
+			            "Measurement": {
+			              "Role": "movie_to_watch.top_pick_score"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "top_pick_score_indicates_how_Predicted_movie_to_watch_are"
+			        }
+			      ]
+			    },
+			    "movie_to_watch_has_top_pick": {
+			      "Binding": {
+			        "ConceptualEntity": "Movies to Watch"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "movie_to_watch": {
+			          "Target": {
+			            "Entity": "movie_to_watch"
+			          }
+			        },
+			        "movie_to_watch.top_pick": {
+			          "Target": {
+			            "Entity": "movie_to_watch.top_pick"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "movie_to_watch"
+			            },
+			            "Object": {
+			              "Role": "movie_to_watch.top_pick"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "movie_to_watch_have_top_pick"
+			        }
+			      ]
+			    },
+			    "movie_to_watch_has_watchlist_count": {
+			      "Binding": {
+			        "ConceptualEntity": "Movies to Watch"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "movie_to_watch": {
+			          "Target": {
+			            "Entity": "movie_to_watch"
+			          }
+			        },
+			        "movie_to_watch.watchlist_count": {
+			          "Target": {
+			            "Entity": "movie_to_watch.watchlist_count"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "movie_to_watch"
+			            },
+			            "Object": {
+			              "Role": "movie_to_watch.watchlist_count"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "movie_to_watch_have_watchlist_count"
+			        }
+			      ]
+			    },
+			    "movie_ranking_has_avg_vs_critics": {
+			      "Binding": {
+			        "ConceptualEntity": "Movie Rankings"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "movie_ranking": {
+			          "Target": {
+			            "Entity": "movie_ranking"
+			          }
+			        },
+			        "movie_ranking.avg_vs_critics": {
+			          "Target": {
+			            "Entity": "movie_ranking.avg_vs_critics"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "movie_ranking"
+			            },
+			            "Object": {
+			              "Role": "movie_ranking.avg_vs_critics"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "movie_ranking_have_avg_vs_critics"
+			        }
+			      ]
+			    },
+			    "movie_ranking_has_hours_watched": {
+			      "Binding": {
+			        "ConceptualEntity": "Movie Rankings"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "movie_ranking": {
+			          "Target": {
+			            "Entity": "movie_ranking"
+			          }
+			        },
+			        "movie_ranking.hours_watched": {
+			          "Target": {
+			            "Entity": "movie_ranking.hours_watched"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "movie_ranking"
+			            },
+			            "Object": {
+			              "Role": "movie_ranking.hours_watched"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "movie_ranking_have_hours_watched"
+			        }
+			      ]
+			    },
+			    "movie_ranking_has_avg_score": {
+			      "Binding": {
+			        "ConceptualEntity": "Movie Rankings"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "movie_ranking": {
+			          "Target": {
+			            "Entity": "movie_ranking"
+			          }
+			        },
+			        "movie_ranking.avg_score": {
+			          "Target": {
+			            "Entity": "movie_ranking.avg_score"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "movie_ranking"
+			            },
+			            "Object": {
+			              "Role": "movie_ranking.avg_score"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "movie_ranking_have_avg_score"
+			        }
+			      ]
+			    },
+			    "movie_ranking_has_films_watched": {
+			      "Binding": {
+			        "ConceptualEntity": "Movie Rankings"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "movie_ranking": {
+			          "Target": {
+			            "Entity": "movie_ranking"
+			          }
+			        },
+			        "movie_ranking.films_watched": {
+			          "Target": {
+			            "Entity": "movie_ranking.films_watched"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "movie_ranking"
+			            },
+			            "Object": {
+			              "Role": "movie_ranking.films_watched"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "movie_ranking_have_films_watched"
+			        }
+			      ]
+			    },
+			    "all_series_mapping_has_series_count": {
+			      "Binding": {
+			        "ConceptualEntity": "All Series Mapping"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "all_series_mapping": {
+			          "Target": {
+			            "Entity": "all_series_mapping"
+			          }
+			        },
+			        "all_series_mapping.series_count": {
+			          "Target": {
+			            "Entity": "all_series_mapping.series_count"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "all_series_mapping"
+			            },
+			            "Object": {
+			              "Role": "all_series_mapping.series_count"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "all_series_mapping_have_series_counts"
+			        }
+			      ]
+			    },
+			    "movie_to_watch_directors_has_created": {
+			      "Binding": {
+			        "ConceptualEntity": "Movies to Watch Directors"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "movie_to_watch_directors": {
+			          "Target": {
+			            "Entity": "movie_to_watch_directors"
+			          }
+			        },
+			        "movie_to_watch_directors.created": {
+			          "Target": {
+			            "Entity": "movie_to_watch_directors.created"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "movie_to_watch_directors"
+			            },
+			            "Object": {
+			              "Role": "movie_to_watch_directors.created"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "movie_to_watch_directors_have_created"
+			        }
+			      ]
+			    },
+			    "movie_to_watch_directors_has_star": {
+			      "Binding": {
+			        "ConceptualEntity": "Movies to Watch Directors"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "movie_to_watch_directors": {
+			          "Target": {
+			            "Entity": "movie_to_watch_directors"
+			          }
+			        },
+			        "movie_to_watch_directors.star": {
+			          "Target": {
+			            "Entity": "movie_to_watch_directors.star"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "movie_to_watch_directors"
+			            },
+			            "Object": {
+			              "Role": "movie_to_watch_directors.star"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "movie_to_watch_directors_have_stars"
+			        }
+			      ]
+			    },
+			    "movie_to_watch_directors_has_star_percentage": {
+			      "Binding": {
+			        "ConceptualEntity": "Movies to Watch Directors"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "movie_to_watch_directors": {
+			          "Target": {
+			            "Entity": "movie_to_watch_directors"
+			          }
+			        },
+			        "movie_to_watch_directors.star_percentage": {
+			          "Target": {
+			            "Entity": "movie_to_watch_directors.star_percentage"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "movie_to_watch_directors"
+			            },
+			            "Object": {
+			              "Role": "movie_to_watch_directors.star_percentage"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "movie_to_watch_directors_have_star_percentages"
+			        }
+			      ]
+			    },
+			    "movie_to_watch_directors_has_director_sort_score": {
+			      "Binding": {
+			        "ConceptualEntity": "Movies to Watch Directors"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "movie_to_watch_directors": {
+			          "Target": {
+			            "Entity": "movie_to_watch_directors"
+			          }
+			        },
+			        "movie_to_watch_directors.director_sort_score": {
+			          "Target": {
+			            "Entity": "movie_to_watch_directors.director_sort_score"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "movie_to_watch_directors"
+			            },
+			            "Object": {
+			              "Role": "movie_to_watch_directors.director_sort_score"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "movie_to_watch_directors_have_director_sort_scores"
+			        }
+			      ]
+			    },
+			    "movie_to_watch_genres_has_created": {
+			      "Binding": {
+			        "ConceptualEntity": "Movies to Watch Genres"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "movie_to_watch_genres": {
+			          "Target": {
+			            "Entity": "movie_to_watch_genres"
+			          }
+			        },
+			        "movie_to_watch_genres.created": {
+			          "Target": {
+			            "Entity": "movie_to_watch_genres.created"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "movie_to_watch_genres"
+			            },
+			            "Object": {
+			              "Role": "movie_to_watch_genres.created"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "movie_to_watch_genres_have_created"
+			        }
+			      ]
+			    },
+			    "movie_to_watch_genres_has_attribute": {
+			      "Binding": {
+			        "ConceptualEntity": "Movies to Watch Genres"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "movie_to_watch_genres": {
+			          "Target": {
+			            "Entity": "movie_to_watch_genres"
+			          }
+			        },
+			        "movie_to_watch_genres.attribute": {
+			          "Target": {
+			            "Entity": "movie_to_watch_genres.attribute"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "movie_to_watch_genres"
+			            },
+			            "Object": {
+			              "Role": "movie_to_watch_genres.attribute"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "movie_to_watch_genres_have_attributes"
+			        }
+			      ]
+			    },
+			    "movie_to_watch_genres_has_star": {
+			      "Binding": {
+			        "ConceptualEntity": "Movies to Watch Genres"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "movie_to_watch_genres": {
+			          "Target": {
+			            "Entity": "movie_to_watch_genres"
+			          }
+			        },
+			        "movie_to_watch_genres.star": {
+			          "Target": {
+			            "Entity": "movie_to_watch_genres.star"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "movie_to_watch_genres"
+			            },
+			            "Object": {
+			              "Role": "movie_to_watch_genres.star"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "movie_to_watch_genres_have_stars"
+			        }
+			      ]
+			    },
 			    "movie_to_watch_genres_has_star_percentage": {
 			      "Binding": {
 			        "ConceptualEntity": "Movies to Watch Genres"
@@ -28714,545 +30743,6 @@ cultureInfo en-US
 			          "State": "Generated",
 			          "Weight": 0.9,
 			          "ID": "movie_ranking_are_watched_on_date_watched"
-			        }
-			      ]
-			    },
-			    "movie_to_watch_genres_has_star": {
-			      "Binding": {
-			        "ConceptualEntity": "Movies to Watch Genres"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "movie_to_watch_genres": {
-			          "Target": {
-			            "Entity": "movie_to_watch_genres"
-			          }
-			        },
-			        "movie_to_watch_genres.star": {
-			          "Target": {
-			            "Entity": "movie_to_watch_genres.star"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "movie_to_watch_genres"
-			            },
-			            "Object": {
-			              "Role": "movie_to_watch_genres.star"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "movie_to_watch_genres_have_stars"
-			        }
-			      ]
-			    },
-			    "movie_to_watch_genres_has_attribute": {
-			      "Binding": {
-			        "ConceptualEntity": "Movies to Watch Genres"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "movie_to_watch_genres": {
-			          "Target": {
-			            "Entity": "movie_to_watch_genres"
-			          }
-			        },
-			        "movie_to_watch_genres.attribute": {
-			          "Target": {
-			            "Entity": "movie_to_watch_genres.attribute"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "movie_to_watch_genres"
-			            },
-			            "Object": {
-			              "Role": "movie_to_watch_genres.attribute"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "movie_to_watch_genres_have_attributes"
-			        }
-			      ]
-			    },
-			    "movie_to_watch_genres_has_created": {
-			      "Binding": {
-			        "ConceptualEntity": "Movies to Watch Genres"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "movie_to_watch_genres": {
-			          "Target": {
-			            "Entity": "movie_to_watch_genres"
-			          }
-			        },
-			        "movie_to_watch_genres.created": {
-			          "Target": {
-			            "Entity": "movie_to_watch_genres.created"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "movie_to_watch_genres"
-			            },
-			            "Object": {
-			              "Role": "movie_to_watch_genres.created"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "movie_to_watch_genres_have_created"
-			        }
-			      ]
-			    },
-			    "movie_to_watch_directors_has_director_sort_score": {
-			      "Binding": {
-			        "ConceptualEntity": "Movies to Watch Directors"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "movie_to_watch_directors": {
-			          "Target": {
-			            "Entity": "movie_to_watch_directors"
-			          }
-			        },
-			        "movie_to_watch_directors.director_sort_score": {
-			          "Target": {
-			            "Entity": "movie_to_watch_directors.director_sort_score"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "movie_to_watch_directors"
-			            },
-			            "Object": {
-			              "Role": "movie_to_watch_directors.director_sort_score"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "movie_to_watch_directors_have_director_sort_scores"
-			        }
-			      ]
-			    },
-			    "movie_to_watch_directors_has_star_percentage": {
-			      "Binding": {
-			        "ConceptualEntity": "Movies to Watch Directors"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "movie_to_watch_directors": {
-			          "Target": {
-			            "Entity": "movie_to_watch_directors"
-			          }
-			        },
-			        "movie_to_watch_directors.star_percentage": {
-			          "Target": {
-			            "Entity": "movie_to_watch_directors.star_percentage"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "movie_to_watch_directors"
-			            },
-			            "Object": {
-			              "Role": "movie_to_watch_directors.star_percentage"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "movie_to_watch_directors_have_star_percentages"
-			        }
-			      ]
-			    },
-			    "movie_to_watch_directors_has_star": {
-			      "Binding": {
-			        "ConceptualEntity": "Movies to Watch Directors"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "movie_to_watch_directors": {
-			          "Target": {
-			            "Entity": "movie_to_watch_directors"
-			          }
-			        },
-			        "movie_to_watch_directors.star": {
-			          "Target": {
-			            "Entity": "movie_to_watch_directors.star"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "movie_to_watch_directors"
-			            },
-			            "Object": {
-			              "Role": "movie_to_watch_directors.star"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "movie_to_watch_directors_have_stars"
-			        }
-			      ]
-			    },
-			    "movie_to_watch_directors_has_created": {
-			      "Binding": {
-			        "ConceptualEntity": "Movies to Watch Directors"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "movie_to_watch_directors": {
-			          "Target": {
-			            "Entity": "movie_to_watch_directors"
-			          }
-			        },
-			        "movie_to_watch_directors.created": {
-			          "Target": {
-			            "Entity": "movie_to_watch_directors.created"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "movie_to_watch_directors"
-			            },
-			            "Object": {
-			              "Role": "movie_to_watch_directors.created"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "movie_to_watch_directors_have_created"
-			        }
-			      ]
-			    },
-			    "all_series_mapping_has_series_count": {
-			      "Binding": {
-			        "ConceptualEntity": "All Series Mapping"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "all_series_mapping": {
-			          "Target": {
-			            "Entity": "all_series_mapping"
-			          }
-			        },
-			        "all_series_mapping.series_count": {
-			          "Target": {
-			            "Entity": "all_series_mapping.series_count"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "all_series_mapping"
-			            },
-			            "Object": {
-			              "Role": "all_series_mapping.series_count"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "all_series_mapping_have_series_counts"
-			        }
-			      ]
-			    },
-			    "movie_ranking_has_actor_ranking": {
-			      "Binding": {
-			        "ConceptualEntity": "Movie Rankings"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "movie_ranking": {
-			          "Target": {
-			            "Entity": "movie_ranking"
-			          }
-			        },
-			        "actor_ranking": {
-			          "Target": {
-			            "Entity": "actor_ranking"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "movie_ranking"
-			            },
-			            "Object": {
-			              "Role": "actor_ranking"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "movie_ranking_have_actor_ranking"
-			        }
-			      ]
-			    },
-			    "movie_ranking_has_movie_to_watch": {
-			      "Binding": {
-			        "ConceptualEntity": "Movie Rankings"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "movie_ranking": {
-			          "Target": {
-			            "Entity": "movie_ranking"
-			          }
-			        },
-			        "movie_to_watch": {
-			          "Target": {
-			            "Entity": "movie_to_watch"
-			          },
-			          "Nouns": [
-			            {
-			              "IM db": {
-			                "State": "Generated"
-			              }
-			            },
-			            {
-			              "db": {
-			                "State": "Generated"
-			              }
-			            }
-			          ]
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "movie_ranking"
-			            },
-			            "Object": {
-			              "Role": "movie_to_watch"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "movie_ranking_have_movie_to_watch"
-			        },
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "movie_to_watch"
-			            },
-			            "Object": {
-			              "Role": "movie_ranking"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "movie_to_watch_have_movie_ranking"
-			        }
-			      ]
-			    },
-			    "movie_genre_has_movie_ranking": {
-			      "Binding": {
-			        "ConceptualEntity": "Movie_Genres"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "movie_genre": {
-			          "Target": {
-			            "Entity": "movie_genre"
-			          }
-			        },
-			        "movie_ranking": {
-			          "Target": {
-			            "Entity": "movie_ranking"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "movie_genre"
-			            },
-			            "Object": {
-			              "Role": "movie_ranking"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "movie_genres_have_movie_ranking"
-			        },
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "movie_ranking"
-			            },
-			            "Object": {
-			              "Role": "movie_genre"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "movie_ranking_have_movie_genres"
-			        }
-			      ]
-			    },
-			    "movie_director_has_movie_ranking": {
-			      "Binding": {
-			        "ConceptualEntity": "Movie_Directors"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "movie_director": {
-			          "Target": {
-			            "Entity": "movie_director"
-			          }
-			        },
-			        "movie_ranking": {
-			          "Target": {
-			            "Entity": "movie_ranking"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "movie_director"
-			            },
-			            "Object": {
-			              "Role": "movie_ranking"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "movie_directors_have_movie_ranking"
-			        },
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "movie_ranking"
-			            },
-			            "Object": {
-			              "Role": "movie_director"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "movie_ranking_have_movie_directors"
-			        }
-			      ]
-			    },
-			    "movie_actor_has_movie_ranking": {
-			      "Binding": {
-			        "ConceptualEntity": "Movie_Actors"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "movie_actor": {
-			          "Target": {
-			            "Entity": "movie_actor"
-			          }
-			        },
-			        "movie_ranking": {
-			          "Target": {
-			            "Entity": "movie_ranking"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "movie_actor"
-			            },
-			            "Object": {
-			              "Role": "movie_ranking"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "movie_actors_have_movie_ranking"
-			        },
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "movie_ranking"
-			            },
-			            "Object": {
-			              "Role": "movie_actor"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "movie_ranking_have_movie_actors"
-			        }
-			      ]
-			    },
-			    "movie_to_watch_actors_has_movie_to_watch": {
-			      "Binding": {
-			        "ConceptualEntity": "Movies to Watch Actors"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "movie_to_watch_actors": {
-			          "Target": {
-			            "Entity": "movie_to_watch_actors"
-			          }
-			        },
-			        "movie_to_watch": {
-			          "Target": {
-			            "Entity": "movie_to_watch"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "movie_to_watch_actors"
-			            },
-			            "Object": {
-			              "Role": "movie_to_watch"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "movie_to_watch_actors_have_movie_to_watch"
-			        },
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "movie_to_watch"
-			            },
-			            "Object": {
-			              "Role": "movie_to_watch_actors"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "movie_to_watch_have_movie_to_watch_actors"
 			        }
 			      ]
 			    },

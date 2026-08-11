@@ -1,6 +1,6 @@
 """Generate the mobile tab-bar tiles for the Movie Dashboard.
 
-Each PNG is a COMPLETE 64x72pt bar slot: opaque bar background, line glyph,
+Each PNG is a COMPLETE bar slot: TRANSPARENT background, line glyph,
 baked text label, and (active variant) the cyan top indicator. Five tiles laid
 edge to edge form a seamless 320pt bar, so the bar costs 5 image visuals per
 page instead of a background + icons + buttons + indicators.
@@ -23,10 +23,10 @@ GLYPH = 26                      # glyph box, pt
 GLYPH_TOP = 11                  # pt from tile top
 LABEL_BASE = 47                 # pt from tile top to label ascender
 
-BAR_BG = (0x26, 0x2D, 0x3C, 255)
+BAR_BG = (0, 0, 0, 0)          # transparent — the page background shows through
 INACTIVE = (0xFF, 0xFF, 0xFF, 140)
 ACTIVE = (0x00, 0xDE, 0xFF, 255)
-HAIRLINE = (0xFF, 0xFF, 0xFF, 28)
+HAIRLINE = (0xFF, 0xFF, 0xFF, 22)   # faint divider so the bar still reads as a bar
 
 VB = 100                        # glyph viewbox
 STROKE = 8.0
@@ -133,7 +133,7 @@ def render(slug, label, glyph_fn, active):
 
     tile = tile.resize((SLOT_W * 4, SLOT_H * 4), Image.LANCZOS)   # 4x asset
     path = OUT / f"ic_{slug}_{'on' if active else 'off'}.png"
-    tile.convert("RGB").save(path, "PNG", optimize=True)
+    tile.save(path, "PNG", optimize=True)   # keep alpha
     return path
 
 

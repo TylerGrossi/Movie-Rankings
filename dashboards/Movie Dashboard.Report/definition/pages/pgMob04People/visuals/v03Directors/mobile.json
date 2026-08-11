@@ -4,12 +4,16 @@
     "x": 0,
     "y": 53,
     "z": 300,
-    "height": 190,
-    "width": 324,
+    "height": 240,
+    "width": 320,
     "tabOrder": 300
   },
   "objects": {
-    "columnHeaders": [],
+    "columnHeaders": [
+      {
+        "properties": {}
+      }
+    ],
     "values": [],
     "grid": [],
     "columnWidth": [

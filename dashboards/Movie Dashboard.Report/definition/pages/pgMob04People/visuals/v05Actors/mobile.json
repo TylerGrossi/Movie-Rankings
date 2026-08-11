@@ -2,14 +2,18 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainerMobileState/2.6.0/schema.json",
   "position": {
     "x": 0,
-    "y": 268,
+    "y": 318,
     "z": 400,
-    "height": 198,
-    "width": 324,
+    "height": 248,
+    "width": 320,
     "tabOrder": 400
   },
   "objects": {
-    "columnHeaders": [],
+    "columnHeaders": [
+      {
+        "properties": {}
+      }
+    ],
     "values": [],
     "grid": [],
     "columnWidth": [
@@ -32,7 +36,7 @@
           "value": {
             "expr": {
               "Literal": {
-                "Value": "129D"
+                "Value": "125D"
               }
             }
           }

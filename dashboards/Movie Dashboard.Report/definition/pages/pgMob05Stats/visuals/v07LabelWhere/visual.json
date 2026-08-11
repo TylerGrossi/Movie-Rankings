@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
-  "name": "v02LabelDist",
+  "name": "v07LabelWhere",
   "position": {
     "x": 14,
-    "y": 98,
-    "z": 150,
+    "y": 410,
+    "z": 260,
     "width": 240,
     "height": 15,
-    "tabOrder": 150
+    "tabOrder": 260
   },
   "visual": {
     "visualType": "actionButton",
@@ -30,7 +30,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'SCORE DISTRIBUTION'"
+                  "Value": "'WHERE YOU WATCH'"
                 }
               }
             },
