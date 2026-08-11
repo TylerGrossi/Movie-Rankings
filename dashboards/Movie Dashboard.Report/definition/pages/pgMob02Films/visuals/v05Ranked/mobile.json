@@ -1,0 +1,64 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainerMobileState/2.6.0/schema.json",
+  "position": {
+    "x": 0,
+    "y": 120,
+    "z": 400,
+    "height": 346,
+    "width": 324,
+    "tabOrder": 400
+  },
+  "objects": {
+    "columnHeaders": [
+      {
+        "properties": {}
+      }
+    ],
+    "values": [],
+    "grid": [],
+    "columnWidth": [
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "45D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Movie Rankings.Score"
+        }
+      },
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "45D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Movie Rankings.Critics"
+        }
+      },
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "175D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Movie Rankings.Movie"
+        }
+      }
+    ]
+  }
+}

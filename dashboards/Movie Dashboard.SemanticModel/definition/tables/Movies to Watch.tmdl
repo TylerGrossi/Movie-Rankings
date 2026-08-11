@@ -1,0 +1,260 @@
+table 'Movies to Watch'
+	lineageTag: e100cbe8-c667-4e71-8446-2761345468d3
+
+	measure 'Watchlist Count' = COUNTROWS('Movies to Watch')
+		formatString: 0
+		lineageTag: 441d6fe3-4df2-48b0-8bcf-54061751bea9
+
+	measure 'Top Pick' = CALCULATE(MAX('Movies to Watch'[Movie]), TOPN(1, ALLSELECTED('Movies to Watch'), 'Movies to Watch'[Predicted Score], DESC))
+		lineageTag: b18b70af-759d-4988-b3b0-c454ac8b3091
+
+	measure 'Top Pick Score' = MAXX(ALLSELECTED('Movies to Watch'), 'Movies to Watch'[Predicted Score])
+		formatString: 0.0
+		lineageTag: ab1896b1-ef58-4498-be7f-086a00971d43
+
+	column Movie
+		dataType: string
+		lineageTag: ac2127fd-607e-4ff7-befb-1bcc95c53173
+		summarizeBy: none
+		sourceColumn: Movie
+		sortByColumn: 'Predicted Score'
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column IMDb
+		dataType: double
+		lineageTag: a63484e7-94d6-4e1a-a674-2ac5884794da
+		summarizeBy: sum
+		sourceColumn: IMDb
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: b879011b-32e6-42ec-9600-88f3032f8716
+		summarizeBy: sum
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column Genre1
+		dataType: string
+		lineageTag: c3b38fa9-fc79-4179-8e91-2fc9f0cbf182
+		summarizeBy: none
+		sourceColumn: Genre1
+
+		annotation SummarizationSetBy = Automatic
+
+	column Genre2
+		dataType: string
+		lineageTag: c42a87d4-b61f-4790-8ed8-0ab2fe7f56da
+		summarizeBy: none
+		sourceColumn: Genre2
+
+		annotation SummarizationSetBy = Automatic
+
+	column Genre3
+		dataType: string
+		lineageTag: fc1717d1-ed33-4244-8c69-8d0456498a74
+		summarizeBy: none
+		sourceColumn: Genre3
+
+		annotation SummarizationSetBy = Automatic
+
+	column Director
+		dataType: string
+		lineageTag: c6681695-c0cb-4cb3-9fb5-20681ff274af
+		summarizeBy: none
+		sourceColumn: Director
+
+		annotation SummarizationSetBy = Automatic
+
+	column RT
+		dataType: double
+		formatString: 0
+		lineageTag: f6a011d5-6aca-4b10-9aa4-be6fc7536759
+		summarizeBy: sum
+		sourceColumn: RT
+
+		annotation SummarizationSetBy = Automatic
+
+	column Actor
+		dataType: string
+		lineageTag: 5ba0def0-6736-4f7d-8b3f-6f61d411061f
+		summarizeBy: none
+		sourceColumn: Actor
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Actor 2'
+		dataType: string
+		lineageTag: 58a37744-7f60-462b-8815-d2769fe989db
+		summarizeBy: none
+		sourceColumn: Actor 2
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Actor 3'
+		dataType: string
+		lineageTag: 3dc64a58-b4a9-4c36-9960-092637a8d6b6
+		summarizeBy: none
+		sourceColumn: Actor 3
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Predicted Score'
+		dataType: double
+		lineageTag: 04deb865-5da8-4077-8f8e-eb251f2aca0d
+		summarizeBy: none
+		sourceColumn: Predicted Score
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Runtime
+		dataType: int64
+		formatString: 0
+		lineageTag: 75f7683e-a983-4bff-a5ad-137a9c4a2b3d
+		summarizeBy: sum
+		sourceColumn: Runtime
+
+		annotation SummarizationSetBy = Automatic
+
+	column RankByPredictedScore = ```
+			
+			RANKX(
+			    ALL('Movies to Watch'),
+			    'Movies to Watch'[Predicted Score],
+			    ,
+			    DESC,
+			    Dense
+			)
+			
+			```
+		formatString: 0
+		lineageTag: ebd17d37-972c-4f77-a527-b823df8a0006
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Metascore
+		dataType: double
+		lineageTag: 0b90493a-84f2-44a4-85cb-3d15128d9d27
+		summarizeBy: sum
+		sourceColumn: Metascore
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Rated
+		dataType: string
+		lineageTag: 2255178e-9ed1-4094-a77d-4b8c667313aa
+		summarizeBy: none
+		sourceColumn: Rated
+
+		annotation SummarizationSetBy = Automatic
+
+	column Oscar_Wins
+		dataType: int64
+		formatString: 0
+		lineageTag: 1f5d7218-10d2-4194-92fd-6a6a9cc29794
+		summarizeBy: sum
+		sourceColumn: Oscar_Wins
+
+		annotation SummarizationSetBy = Automatic
+
+	column Total_Wins
+		dataType: int64
+		formatString: 0
+		lineageTag: 8260751b-3fe1-4805-b45a-b3887e0531f4
+		summarizeBy: sum
+		sourceColumn: Total_Wins
+
+		annotation SummarizationSetBy = Automatic
+
+	column Keywords
+		dataType: string
+		lineageTag: 1d80171d-dce3-4122-ac8d-b492f879f0c1
+		summarizeBy: none
+		sourceColumn: Keywords
+
+		annotation SummarizationSetBy = Automatic
+
+	column Raw_Predicted
+		dataType: double
+		lineageTag: 3f90cbc0-cbbf-4c3f-9029-8a23bb53a381
+		summarizeBy: sum
+		sourceColumn: Raw_Predicted
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Star Percentage'
+		dataType: double
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: f5979506-b4c8-448c-94cc-c2e6ac2260be
+		summarizeBy: sum
+		sourceColumn: Star Percentage
+
+		annotation SummarizationSetBy = Automatic
+
+	column Star
+		dataType: string
+		lineageTag: e5f12de8-a2aa-4730-b1f1-990acf55f56c
+		summarizeBy: none
+		sourceColumn: Star
+
+		annotation SummarizationSetBy = Automatic
+
+	column Created
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 9328dedc-7d59-4bd0-95d0-18e7d82e5893
+		summarizeBy: none
+		sourceColumn: Created
+
+		variation Variation
+			isDefault
+			relationship: f9e830c7-a3d4-4441-ae3c-324e72fc3631
+			defaultHierarchy: LocalDateTable_374a73b4-7b51-4c72-81a3-c037accbe691.'Date Hierarchy'
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Critics = ( 'Movies to Watch'[IMDb] + ('Movies to Watch'[RT] / 10) ) / 2
+		lineageTag: c0d9c06b-1fda-49c0-b940-cf1bded885e6
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition 'Movies to Watch' = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(Web.Contents("https://raw.githubusercontent.com/TylerGrossi/Movie-Rankings/refs/heads/main/data/processed/Predicted_Scores.csv"),[Delimiter=",", Columns=22, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers1" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Promoted Headers1",{{"Movie", type text}, {"Predicted Score", type number}, {"Year", Int64.Type}, {"Runtime", Int64.Type}, {"Actor", type text}, {"Actor 2", type text}, {"Actor 3", type text}, {"Director", type text}, {"Genre1", type text}, {"Genre2", type text}, {"Genre3", type text}, {"IMDb", type number}, {"RT", type number}, {"Raw_Predicted", type number}, {"Total_Wins", Int64.Type}, {"Oscar_Wins", Int64.Type}, {"Metascore", type number}}),
+				    #"Removed Duplicates" = Table.Distinct(#"Changed Type1", {"Movie"}),
+				    #"Sorted Rows" = Table.Sort(#"Removed Duplicates",{{"Predicted Score", Order.Descending}}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Sorted Rows",{{"Star Percentage", Percentage.Type}}),
+				    #"Divided Column" = Table.TransformColumns(#"Changed Type", {{"Star Percentage", each _ / 100, Percentage.Type}})
+				in
+				    #"Divided Column"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

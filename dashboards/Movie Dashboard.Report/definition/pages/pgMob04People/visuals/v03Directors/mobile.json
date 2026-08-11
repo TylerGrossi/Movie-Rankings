@@ -1,0 +1,74 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainerMobileState/2.6.0/schema.json",
+  "position": {
+    "x": 0,
+    "y": 53,
+    "z": 300,
+    "height": 190,
+    "width": 324,
+    "tabOrder": 300
+  },
+  "objects": {
+    "columnHeaders": [],
+    "values": [],
+    "grid": [],
+    "columnWidth": [
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "38D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Director Rankings.Rank"
+        }
+      },
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "31D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Director Rankings.Average"
+        }
+      },
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "46D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Director Rankings.Rating"
+        }
+      },
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "134D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Director Rankings.Director"
+        }
+      }
+    ]
+  }
+}

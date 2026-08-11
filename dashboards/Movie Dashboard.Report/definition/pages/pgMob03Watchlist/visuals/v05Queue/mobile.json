@@ -1,0 +1,78 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainerMobileState/2.6.0/schema.json",
+  "position": {
+    "x": 0,
+    "y": 169,
+    "z": 400,
+    "height": 297,
+    "width": 324,
+    "tabOrder": 400
+  },
+  "objects": {
+    "columnHeaders": [
+      {
+        "properties": {}
+      }
+    ],
+    "values": [],
+    "grid": [],
+    "columnWidth": [
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "37D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Movies to Watch.Star"
+        }
+      },
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "37D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Movies to Watch.Predicted Score"
+        }
+      },
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "37D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Movies to Watch.Year"
+        }
+      },
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "192D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Movies to Watch.Movie"
+        }
+      }
+    ]
+  }
+}

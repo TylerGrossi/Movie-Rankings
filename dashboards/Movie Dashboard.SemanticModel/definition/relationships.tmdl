@@ -1,0 +1,121 @@
+relationship 62ce2e76-3734-4e2b-8fa8-4202c8bd83c2
+	crossFilteringBehavior: bothDirections
+	fromColumn: Movie_Actors.Movie
+	toColumn: 'Movie Rankings'.Movie
+
+relationship 2c701f3b-f37b-478e-bded-1ddb4b6ad26b
+	crossFilteringBehavior: bothDirections
+	fromColumn: Movie_Genres.Movie
+	toColumn: 'Movie Rankings'.Movie
+
+relationship abcdff17-5291-4122-86fd-7bb00de5327a
+	crossFilteringBehavior: bothDirections
+	fromColumn: Movie_Directors.Movie
+	toColumn: 'Movie Rankings'.Movie
+
+relationship 526cdb32-cd0b-4c5c-a678-77868ccdea7f
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Movie Rankings'.'Date Watched'
+	toColumn: LocalDateTable_32cda21b-f0aa-424f-8221-511364fe79cb.Date
+
+relationship 8b670510-ba8c-4434-8efa-d83cae0c0a0d
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Movie_Genres.'Date Watched'
+	toColumn: LocalDateTable_50666fc8-0b6e-4afa-8cf0-fb636a0d9557.Date
+
+relationship b4ee418a-0ae7-4c45-9ebc-68c74755b104
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Movie_Directors.'Date Watched'
+	toColumn: LocalDateTable_31b55af8-f03b-4e45-878f-f37b08540fd7.Date
+
+relationship 708b83ef-669d-4270-057b-6899cc4786ca
+	crossFilteringBehavior: bothDirections
+	fromColumn: 'Movies to Watch Actors'.Movie
+	toColumn: 'Movies to Watch'.Movie
+
+relationship AutoDetected_d69a3f7d-a1a4-49af-b0ff-3695a8e48871
+	fromColumn: 'Movies to Watch Actors'.Movie
+	toColumn: 'Movies to Watch Directors'.Movie
+
+relationship AutoDetected_d105af74-8f2a-45b2-b3d0-7f92fa0fe3c3
+	isActive: false
+	fromColumn: 'Movies to Watch Genres'.Movie
+	toColumn: 'Movies to Watch Directors'.Movie
+
+relationship 9960035a-ed27-3d48-9053-c7cc1f7b8395
+	crossFilteringBehavior: bothDirections
+	fromColumn: 'Movies to Watch Genres'.Movie
+	toColumn: 'Movies to Watch'.Movie
+
+relationship AutoDetected_2bfba198-b239-4d60-aa8d-f5f0392cfc9d
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: 'Actor Rankings'.Rank
+	toColumn: 'Movie Rankings'.Rank
+
+relationship AutoDetected_1b08d6f9-fb83-4adb-97be-09067cf56a0b
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: 'Actor Rankings'.Rank
+	toColumn: 'Genre Rankings'.Rank
+
+relationship AutoDetected_236674b0-8ea6-49cd-abd6-87cbc3b7ab40
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: 'Actor Rankings'.Rank
+	toColumn: 'Director Rankings'.Rank
+
+relationship 7173ea97-eeeb-c740-7afd-43b28390bb35
+	fromColumn: 'Movie Rankings'.IMDb
+	toColumn: 'Movies to Watch'.Movie
+
+relationship AutoDetected_fe9cfe4e-6c88-4a18-8a04-472ff45d0d50
+	isActive: false
+	fromColumn: 'Movie Rankings'.Director
+	toColumn: 'Director Rankings'.Director
+
+relationship AutoDetected_b86f865d-c062-4498-a986-9740027cd0d3
+	isActive: false
+	fromColumn: Movie_Genres.Director
+	toColumn: 'Director Rankings'.Director
+
+relationship AutoDetected_eabaab7e-f57d-49fb-94b1-eb9af1d82461
+	isActive: false
+	fromColumn: Movie_Directors.Director
+	toColumn: 'Director Rankings'.Director
+
+relationship AutoDetected_c4d2415f-acfe-4678-b3ca-bbe6043eefd5
+	isActive: false
+	fromColumn: Movie_Actors.Director
+	toColumn: 'Director Rankings'.Director
+
+relationship AutoDetected_3593104a-8535-4c98-8570-0750f744695e
+	isActive: false
+	fromColumn: 'Movies to Watch'.Director
+	toColumn: 'Director Rankings'.Director
+
+relationship AutoDetected_a216c18c-bac9-4149-afd1-90de4054bde4
+	isActive: false
+	fromColumn: 'Movies to Watch Actors'.Director
+	toColumn: 'Director Rankings'.Director
+
+relationship AutoDetected_3d84eeaf-9fc0-4b00-a18c-47deafac7370
+	isActive: false
+	fromColumn: 'Movies to Watch Genres'.Director
+	toColumn: 'Director Rankings'.Director
+
+relationship AutoDetected_765343c8-8b86-48f1-b389-9357b7bc6c09
+	isActive: false
+	fromColumn: 'Movies to Watch Directors'.Director
+	toColumn: 'Director Rankings'.Director
+
+relationship f9e830c7-a3d4-4441-ae3c-324e72fc3631
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Movies to Watch'.Created
+	toColumn: LocalDateTable_374a73b4-7b51-4c72-81a3-c037accbe691.Date
+
+relationship 27bec247-35c0-4906-a2d6-8fdee31f9815
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'All Series Mapping'.'Date Watched'
+	toColumn: LocalDateTable_2d87a973-7204-4565-9a1b-942161a0bcc6.Date
+

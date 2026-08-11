@@ -23,7 +23,7 @@ Movies/
 ├── data/processed/           # Enriched CSVs + predictions (tracked)
 ├── models/                   # Trained model artifact (gitignored)
 ├── Movies Ranks.xlsm         # User-maintained rankings workbook — DO NOT MOVE
-├── Movie Dashboard.pbix      # Power BI dashboard (binary)
+├── dashboards/               # Power BI — .pbix (binary) + .pbip (agent-editable)
 └── Old Models/               # Legacy notebooks — avoid unless explicitly asked
 ```
 
@@ -107,9 +107,14 @@ OMDB_API_KEY = os.getenv("OMDB_API_KEY")
 
 ## Power BI
 
-The dashboard is `Movie Dashboard.pbix` — a **binary file agents cannot read or edit**. The previous PBIP project (`Movie BI/`, with diffable PBIR JSON and TMDL) was deleted on 2026-07-19; it is recoverable from git history at commit `8ee2338` if needed.
+Everything Power BI lives in [`dashboards/`](dashboards/) — see [its README](dashboards/README.md).
 
-For dashboard changes, the owner works in Power BI Desktop directly. If a PBIP export is restored later, the **pbir-report-builder** skill applies.
+- `dashboards/Movie Dashboard.pbix` — the binary. **Agents cannot read or edit it.**
+- `dashboards/Movie Dashboard.pbip` — PBIP export with diffable PBIR JSON + TMDL. **This is what agents edit**, via the **pbir-report-builder** skill.
+
+**Power BI Desktop must be closed before writing to the PBIP.** Desktop holds file locks and overwrites agent changes on save.
+
+An older PBIP (`Movie BI/` at repo root) was deleted on 2026-07-19; it survives in git history at commit `8ee2338` and is useful for reference.
 
 After regenerating predictions, `Predicted_Scores.csv` must be **committed and pushed** for the dashboard to see them — the local file does not auto-sync.
 

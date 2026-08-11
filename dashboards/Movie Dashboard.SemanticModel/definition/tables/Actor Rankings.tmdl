@@ -1,0 +1,242 @@
+table 'Actor Rankings'
+	lineageTag: 3b0491d5-ec93-4554-9f0c-3225e91cb974
+
+	measure 'Top 5 Movies by Actor' = ```
+			
+			VAR SelectedActor = SELECTEDVALUE('Actor Rankings'[Best Actors])
+			VAR ActorMovies =
+			    FILTER(
+			        'Movie_Actors',
+			        'Movie_Actors'[Actors] = SelectedActor
+			    )
+			VAR Top5 =
+			    TOPN(
+			        5,
+			        ADDCOLUMNS(
+			            ActorMovies,
+			            "MovieScore", 
+			            CALCULATE(MAX('Movie Rankings'[Score]))
+			        ),
+			        [MovieScore],
+			        DESC
+			    )
+			RETURN
+			CONCATENATEX(
+			    Top5,
+			    'Movie_Actors'[Movie],
+			    ", "
+			)
+			
+			```
+		lineageTag: c69a2762-d6d1-417f-8cf1-f04b7884b93e
+
+	column Rank
+		dataType: int64
+		formatString: 0
+		lineageTag: ce126a89-9578-4bfd-ba27-968a28de069e
+		summarizeBy: none
+		sourceColumn: Rank
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Best Actors'
+		dataType: string
+		lineageTag: 3f9cf9ee-689e-4469-9b98-e452fec30451
+		summarizeBy: none
+		sourceColumn: Best Actors
+		sortByColumn: +Rating
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column Score
+		dataType: double
+		formatString: 0.0
+		lineageTag: ac11ce89-c1b3-4606-9f14-8be0dc63de62
+		summarizeBy: sum
+		sourceColumn: Score
+
+		annotation SummarizationSetBy = Automatic
+
+	column Movies
+		dataType: int64
+		formatString: 0
+		lineageTag: 3728eab7-7a3c-4f8a-addb-e8179e8222b5
+		summarizeBy: sum
+		sourceColumn: Movies
+
+		annotation SummarizationSetBy = Automatic
+
+	column Rating
+		dataType: double
+		formatString: 0.0
+		lineageTag: 44e6e146-fa4f-41a7-83c6-e2873b29f061
+		summarizeBy: sum
+		sourceColumn: Rating
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Top Movie' = ```
+			
+			CALCULATE(
+			    MAX(Movie_Actors[Movie]),
+			    FILTER(
+			        Movie_Actors,
+			        Movie_Actors[Actors] = 'Actor Rankings'[Best Actors] &&
+			        RANKX(
+			            FILTER(Movie_Actors, Movie_Actors[Actors] = 'Actor Rankings'[Best Actors]),
+			            Movie_Actors[Score],
+			            ,
+			            DESC,
+			            DENSE
+			        ) = 1
+			    )
+			)
+			
+			```
+		lineageTag: ce41c934-2bbc-4250-9408-da06b2cd06a9
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Top Movie 2' = ```
+			
+			CALCULATE(
+			    MAX(Movie_Actors[Movie]),
+			    FILTER(
+			        Movie_Actors,
+			        Movie_Actors[Actors] = 'Actor Rankings'[Best Actors] &&
+			        RANKX(
+			            FILTER(Movie_Actors, Movie_Actors[Actors] = 'Actor Rankings'[Best Actors]),
+			            Movie_Actors[Score],
+			            ,
+			            DESC,
+			            DENSE
+			        ) = 2
+			    )
+			)
+			
+			```
+		lineageTag: f85566ae-31cd-47c8-bbb8-31fe213bebca
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Top Movie 3' = ```
+			
+			CALCULATE(
+			    MAX(Movie_Actors[Movie]),
+			    FILTER(
+			        Movie_Actors,
+			        Movie_Actors[Actors] = 'Actor Rankings'[Best Actors] &&
+			        RANKX(
+			            FILTER(Movie_Actors, Movie_Actors[Actors] = 'Actor Rankings'[Best Actors]),
+			            Movie_Actors[Score],
+			            ,
+			            DESC,
+			            DENSE
+			        ) = 3
+			    )
+			)
+			
+			```
+		lineageTag: ca96cf4b-acbc-41d5-b502-cd589a709750
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Total
+		dataType: double
+		lineageTag: 078ca34a-8d5e-40ba-a3d2-6d242bc609bc
+		summarizeBy: sum
+		sourceColumn: Total
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Average
+		dataType: double
+		formatString: 0.0
+		lineageTag: e92dedfd-7f56-4d9f-9864-4fda36d163f3
+		summarizeBy: sum
+		sourceColumn: Average
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+	column '+Movie %'
+		dataType: double
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 0fb596e3-5767-4041-bbf3-08febaebf1a0
+		summarizeBy: sum
+		sourceColumn: +Movie %
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+	column +Average
+		dataType: double
+		lineageTag: 5b074549-c810-4e39-ab04-a0dd7dbca986
+		summarizeBy: sum
+		sourceColumn: +Average
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column +Rating
+		dataType: double
+		formatString: 0.0
+		lineageTag: 725445fa-8b02-470e-894e-b35ef14d5407
+		summarizeBy: sum
+		sourceColumn: +Rating
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+	column +Movies
+		dataType: int64
+		formatString: 0
+		lineageTag: 765589c1-f7dc-4eed-bde9-4d689ce1e357
+		summarizeBy: sum
+		sourceColumn: +Movies
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+	column +Score
+		dataType: string
+		lineageTag: a150c39e-7112-4b9d-8e05-3b52f668d971
+		summarizeBy: none
+		sourceColumn: +Score
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Actor Rankings' = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\Owner\Desktop\Tyler\OneDrive\Projects\Movies\Movies Ranks.xlsm"), null, true),
+				    #"Actor Rankings_Sheet" = Source{[Item="Actor Rankings",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Actor Rankings_Sheet", [PromoteAllScalars=true]),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Promoted Headers",{{"#", Int64.Type}, {"Best Actors", type text}, {"Score", type number}, {"Movies", Int64.Type}, {"Rating", type number},  {"Total Movies", type text}}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Changed Type1",{{"#", "Rank"}}),
+				    #"Removed Blank Rows" = Table.SelectRows(#"Renamed Columns", each not List.IsEmpty(List.RemoveMatchingItems(Record.FieldValues(_), {"", null}))),
+				    #"Removed Other Columns1" = Table.SelectColumns(#"Removed Blank Rows",{"+Movie %", "+Average", "+Rating", "+Movies", "+Score", "Total", "Average", "Rating", "Movies", "Score", "Best Actors", "Rank"})
+				in
+				    #"Removed Other Columns1"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

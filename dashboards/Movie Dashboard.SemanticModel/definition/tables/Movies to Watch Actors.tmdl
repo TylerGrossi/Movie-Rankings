@@ -1,0 +1,220 @@
+table 'Movies to Watch Actors'
+	lineageTag: ed1f6f1a-3411-4f1b-bb0f-f389a4b2705a
+
+	column Movie
+		dataType: string
+		lineageTag: 31e08747-0089-41c6-9aae-f26639f4e22d
+		summarizeBy: none
+		sourceColumn: Movie
+
+		annotation SummarizationSetBy = Automatic
+
+	column IMDb
+		dataType: double
+		lineageTag: 4a16b923-d440-4d15-8a37-5f74e3598484
+		summarizeBy: sum
+		sourceColumn: IMDb
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: 0dc44a3c-a275-4016-adbc-c9489ff6bde7
+		summarizeBy: sum
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column Genre1
+		dataType: string
+		lineageTag: 8a170833-31ef-4607-b1cb-481275f86490
+		summarizeBy: none
+		sourceColumn: Genre1
+
+		annotation SummarizationSetBy = Automatic
+
+	column Genre2
+		dataType: string
+		lineageTag: 4f78f221-31eb-40ce-80bb-438b691e57b4
+		summarizeBy: none
+		sourceColumn: Genre2
+
+		annotation SummarizationSetBy = Automatic
+
+	column Genre3
+		dataType: string
+		lineageTag: f00e4cbb-949e-441c-a0f2-c41b5f717591
+		summarizeBy: none
+		sourceColumn: Genre3
+
+		annotation SummarizationSetBy = Automatic
+
+	column Director
+		dataType: string
+		lineageTag: f8ffa9ff-a935-4b30-8e2e-4b86fc74e057
+		summarizeBy: none
+		sourceColumn: Director
+
+		annotation SummarizationSetBy = Automatic
+
+	column RT
+		dataType: double
+		formatString: 0
+		lineageTag: 28baa189-9030-463a-a11b-178a00f6ce6b
+		summarizeBy: sum
+		sourceColumn: RT
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Predicted Score'
+		dataType: double
+		lineageTag: 3bb73930-79c0-4a09-9f52-b7cfbf1f0109
+		summarizeBy: sum
+		sourceColumn: Predicted Score
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Runtime
+		dataType: int64
+		formatString: 0
+		lineageTag: 6f8518c3-b183-4f1e-a1b3-f3f646f98cfe
+		summarizeBy: sum
+		sourceColumn: Runtime
+
+		annotation SummarizationSetBy = Automatic
+
+	column Metascore
+		dataType: double
+		lineageTag: 7a3650bc-a508-4db8-97ce-aecb9c5454a3
+		summarizeBy: sum
+		sourceColumn: Metascore
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Rated
+		dataType: string
+		lineageTag: 4d87768d-894e-49d2-ace8-600a4d8402b9
+		summarizeBy: none
+		sourceColumn: Rated
+
+		annotation SummarizationSetBy = Automatic
+
+	column Oscar_Wins
+		dataType: int64
+		formatString: 0
+		lineageTag: de1884ce-0682-4fa0-afe6-5e4f341fb846
+		summarizeBy: sum
+		sourceColumn: Oscar_Wins
+
+		annotation SummarizationSetBy = Automatic
+
+	column Total_Wins
+		dataType: int64
+		formatString: 0
+		lineageTag: cb21278f-3b25-4178-9900-a6026904da5c
+		summarizeBy: sum
+		sourceColumn: Total_Wins
+
+		annotation SummarizationSetBy = Automatic
+
+	column Keywords
+		dataType: string
+		lineageTag: 7b1276ee-dd91-43f0-82a5-c00f34c17baa
+		summarizeBy: none
+		sourceColumn: Keywords
+
+		annotation SummarizationSetBy = Automatic
+
+	column Raw_Predicted
+		dataType: double
+		lineageTag: 8db27e67-4ae7-4fc3-9516-b7bb77c413e7
+		summarizeBy: sum
+		sourceColumn: Raw_Predicted
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Actors
+		dataType: string
+		lineageTag: 3fd9161a-db71-4bd7-86ef-023e5be3d55e
+		summarizeBy: none
+		sourceColumn: Actors
+		sortByColumn: 'Actor Sort Score'
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Actor Sort Score'
+		dataType: string
+		lineageTag: fa56d30e-c62a-4fef-b83c-113ba28dd916
+		summarizeBy: none
+		sourceColumn: Actor Sort Score
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Star Percentage'
+		dataType: string
+		lineageTag: 1434a469-a900-4e92-a45e-00344d16dcbf
+		summarizeBy: none
+		sourceColumn: Star Percentage
+
+		annotation SummarizationSetBy = Automatic
+
+	column Star
+		dataType: string
+		lineageTag: b80064b8-61ff-48e2-88c2-188cbfee8675
+		summarizeBy: none
+		sourceColumn: Star
+
+		annotation SummarizationSetBy = Automatic
+
+	column Attribute
+		dataType: string
+		lineageTag: b32fe4f0-8080-48be-bb3e-ce1fadfa003b
+		summarizeBy: none
+		sourceColumn: Attribute
+
+		annotation SummarizationSetBy = Automatic
+
+	column Created
+		dataType: string
+		lineageTag: 4bdf6636-6899-4c5c-9979-12f86d5e47ee
+		summarizeBy: none
+		sourceColumn: Created
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Movies to Watch Actors' = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(Web.Contents("https://raw.githubusercontent.com/TylerGrossi/Movie-Rankings/refs/heads/main/data/processed/Predicted_Scores.csv"),[Delimiter=",", Columns=22, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers1" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Promoted Headers1",{{"Movie", type text}, {"Predicted Score", type number}, {"Year", Int64.Type}, {"Runtime", Int64.Type}, {"Actor", type text}, {"Actor 2", type text}, {"Actor 3", type text}, {"Director", type text}, {"Genre1", type text}, {"Genre2", type text}, {"Genre3", type text}, {"IMDb", type number}, {"RT", type number}, {"Raw_Predicted", type number}, {"Total_Wins", Int64.Type}, {"Oscar_Wins", Int64.Type}, {"Metascore", type number}}),
+				    #"Unpivoted Only Selected Columns" = Table.Unpivot(#"Changed Type1", {"Actor", "Actor 2", "Actor 3"}, "Attribute", "Value"),
+				    #"Renamed Columns" = Table.RenameColumns(#"Unpivoted Only Selected Columns",{{"Value", "Actors"}}),
+				    #"Trimmed Text" = Table.TransformColumns(#"Renamed Columns",{{"Actors", Text.Trim, type text}}),
+				
+				    // New steps below
+				    ExcelSource = Excel.Workbook(File.Contents("C:\Users\Owner\Desktop\Tyler\OneDrive\Projects\Movies\Movies Ranks.xlsm"), null, true),
+				    ActorRankings = ExcelSource{[Item="Actor Rankings",Kind="Sheet"]}[Data],
+				    #"AR Promoted Headers" = Table.PromoteHeaders(ActorRankings, [PromoteAllScalars=true]),
+				    #"AR Selected Columns" = Table.SelectColumns(#"AR Promoted Headers", {"Best Actors", "+Rating"}),
+				    #"Merged" = Table.NestedJoin(#"Trimmed Text", "Actors", #"AR Selected Columns", "Best Actors", "ActorRankings", JoinKind.LeftOuter),
+				    #"Expanded" = Table.ExpandTableColumn(#"Merged", "ActorRankings", {"+Rating"}, {"Actor Sort Score"})
+				in
+				    #"Expanded"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

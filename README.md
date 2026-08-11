@@ -16,7 +16,7 @@ data/raw/                data/processed/             data/processed/
 1. **Pull** — Download your latest IMDb ratings and watchlist (`imdb_api_pull.py`).
 2. **Enrich** — Add RT scores, cast, keywords, box office, and more from OMDb and TMDB.
 3. **Predict** — Train on your rated movies and score your watchlist (`Predicted Score`, `Star Percentage`).
-4. **Visualize** — Open `Movie Dashboard.pbix` in Power BI Desktop.
+4. **Visualize** — Open `dashboards/Movie Dashboard.pbix` in Power BI Desktop.
 
 ## Quick start
 
@@ -104,7 +104,7 @@ Movies/
 ├── data/processed/            # Enriched CSVs + predictions (tracked)
 ├── models/                    # Trained model (gitignored)
 ├── Movies Ranks.xlsm          # Personal rankings workbook
-├── Movie Dashboard.pbix       # Power BI dashboard
+├── dashboards/                # Power BI: .pbix + .pbip project
 └── Old Models/                # Legacy notebooks
 ```
 
