@@ -1,6 +1,14 @@
 table 'All Series Mapping'
 	lineageTag: c162f333-e379-49ca-990d-56774ddcc088
 
+	measure 'Series Films' = COUNTROWS('All Series Mapping')
+		formatString: 0
+		lineageTag: 934c2b6b-ff79-49df-b9a7-7997cabe6373
+
+	measure 'Series Avg' = AVERAGE('All Series Mapping'[Score])
+		formatString: 0.0
+		lineageTag: adb8b069-6c09-4651-865d-d2cb8c4b557b
+
 	column Rank
 		formatString: 0
 		lineageTag: dea9f049-a59f-4b0b-a586-cea10428cc1e

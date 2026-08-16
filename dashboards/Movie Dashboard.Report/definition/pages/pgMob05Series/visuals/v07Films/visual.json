@@ -1,0 +1,334 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "name": "v07Films",
+  "position": {
+    "x": 0,
+    "y": 327,
+    "z": 400,
+    "height": 239,
+    "width": 320,
+    "tabOrder": 400
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "All Series Mapping"
+                    }
+                  },
+                  "Property": "Series Order"
+                }
+              },
+              "queryRef": "All Series Mapping.Series Order",
+              "nativeQueryRef": "Series Order",
+              "displayName": "#"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "All Series Mapping"
+                    }
+                  },
+                  "Property": "Movie"
+                }
+              },
+              "queryRef": "All Series Mapping.Movie",
+              "nativeQueryRef": "Movie"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "All Series Mapping"
+                    }
+                  },
+                  "Property": "Score"
+                }
+              },
+              "queryRef": "All Series Mapping.Score",
+              "nativeQueryRef": "Score"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "All Series Mapping"
+                    }
+                  },
+                  "Property": "Year"
+                }
+              },
+              "queryRef": "All Series Mapping.Year",
+              "nativeQueryRef": "Year"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "All Series Mapping"
+                  }
+                },
+                "Property": "Series Order"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "objects": {
+      "columnHeaders": [
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            },
+            "autoSizeColumnWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#8A93A6'"
+                    }
+                  }
+                }
+              }
+            },
+            "backColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#262D3C'"
+                    }
+                  }
+                }
+              }
+            },
+            "wordWrap": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "values": [
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "backColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#31394C'"
+                    }
+                  }
+                }
+              }
+            },
+            "backColorSecondary": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#262D3C'"
+                    }
+                  }
+                }
+              }
+            },
+            "wordWrap": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "grid": [
+        {
+          "properties": {
+            "rowPadding": {
+              "expr": {
+                "Literal": {
+                  "Value": "2D"
+                }
+              }
+            },
+            "gridVertical": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "28D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "All Series Mapping.Series Order"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "171.3953488372093D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "All Series Mapping.Movie"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "52D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "All Series Mapping.Score"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "52D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "All Series Mapping.Year"
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "visualHeader": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

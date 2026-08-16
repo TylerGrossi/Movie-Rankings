@@ -2,10 +2,10 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainerMobileState/2.6.0/schema.json",
   "position": {
     "x": 0,
-    "y": 120,
+    "y": 207,
     "z": 400,
-    "height": 446,
-    "width": 324,
+    "height": 359,
+    "width": 320,
     "tabOrder": 400
   },
   "objects": {
@@ -16,49 +16,6 @@
     ],
     "values": [],
     "grid": [],
-    "columnWidth": [
-      {
-        "properties": {
-          "value": {
-            "expr": {
-              "Literal": {
-                "Value": "45D"
-              }
-            }
-          }
-        },
-        "selector": {
-          "metadata": "Movie Rankings.Score"
-        }
-      },
-      {
-        "properties": {
-          "value": {
-            "expr": {
-              "Literal": {
-                "Value": "45D"
-              }
-            }
-          }
-        },
-        "selector": {
-          "metadata": "Movie Rankings.Critics"
-        }
-      },
-      {
-        "properties": {
-          "value": {
-            "expr": {
-              "Literal": {
-                "Value": "176D"
-              }
-            }
-          }
-        },
-        "selector": {
-          "metadata": "Movie Rankings.Movie"
-        }
-      }
-    ]
+    "columnWidth": []
   }
 }

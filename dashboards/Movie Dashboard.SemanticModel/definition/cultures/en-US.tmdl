@@ -5314,6 +5314,16 @@ cultureInfo en-US
 			            },
 			            "Weight": 0.9
 			          }
+			        },
+			        {
+			          "Pred": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
 			        }
 			      ]
 			    },
@@ -15678,6 +15688,16 @@ cultureInfo en-US
 			            },
 			            "Weight": 0.485
 			          }
+			        },
+			        {
+			          "#": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
 			        }
 			      ]
 			    },
@@ -18814,16 +18834,6 @@ cultureInfo en-US
 			            },
 			            "Weight": 0.461
 			          }
-			        },
-			        {
-			          "Your Avg": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
 			        }
 			      ]
 			    },
@@ -18995,16 +19005,6 @@ cultureInfo en-US
 			              "Agent": "Thesaurus"
 			            },
 			            "Weight": 0.492
-			          }
-			        },
-			        {
-			          "vs Critics": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
 			          }
 			        }
 			      ]
@@ -19321,16 +19321,6 @@ cultureInfo en-US
 			              "Agent": "Thesaurus"
 			            },
 			            "Weight": 0.727
-			          }
-			        },
-			        {
-			          "Avg": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
 			          }
 			        }
 			      ]
@@ -19974,6 +19964,48 @@ cultureInfo en-US
 			              "Agent": "Thesaurus"
 			            },
 			            "Weight": 0.492
+			          }
+			        }
+			      ]
+			    },
+			    "all_series_mapping.series_films": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "All Series Mapping",
+			          "ConceptualProperty": "Series Films"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Films": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "all_series_mapping.series_avg": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "All Series Mapping",
+			          "ConceptualProperty": "Series Avg"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Avg": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
 			          }
 			        }
 			      ]

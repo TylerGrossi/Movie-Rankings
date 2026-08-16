@@ -26,22 +26,6 @@
         }
       }
     ],
-    "label": [],
-    "referenceLabelLayout": [
-      {
-        "properties": {
-          "position": {
-            "expr": {
-              "Literal": {
-                "Value": "'below'"
-              }
-            }
-          }
-        },
-        "selector": {
-          "id": "default"
-        }
-      }
-    ]
+    "label": []
   }
 }

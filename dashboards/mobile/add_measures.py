@@ -24,6 +24,10 @@ MEASURES = {
     "Genre Rankings": [
         ("Genre Avg", "AVERAGE('Genre Rankings'[Average])", "0.0"),
     ],
+    "All Series Mapping": [
+        ("Series Films", "COUNTROWS('All Series Mapping')", "0"),
+        ("Series Avg", "AVERAGE('All Series Mapping'[Score])", "0.0"),
+    ],
     "Movies to Watch": [
         ("Watchlist Count", "COUNTROWS('Movies to Watch')", "0"),
         ("Top Pick", "CALCULATE(MAX('Movies to Watch'[Movie]), TOPN(1, ALLSELECTED('Movies to Watch'), "

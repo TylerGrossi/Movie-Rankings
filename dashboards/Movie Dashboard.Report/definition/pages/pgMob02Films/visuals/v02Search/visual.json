@@ -3,14 +3,15 @@
   "name": "v02Search",
   "position": {
     "x": 0,
-    "y": 36,
+    "y": 51,
     "z": 200,
-    "height": 38,
     "width": 320,
+    "height": 36,
     "tabOrder": 200
   },
   "visual": {
     "visualType": "slicer",
+    "drillFilterOtherVisuals": true,
     "query": {
       "queryState": {
         "Values": {
@@ -32,23 +33,6 @@
             }
           ]
         }
-      },
-      "sortDefinition": {
-        "sort": [
-          {
-            "field": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "Movie Rankings"
-                  }
-                },
-                "Property": "Movie"
-              }
-            },
-            "direction": "Descending"
-          }
-        ]
       }
     },
     "objects": {
@@ -125,6 +109,19 @@
             }
           }
         }
+      ],
+      "selection": [
+        {
+          "properties": {
+            "selectAllCheckboxEnabled": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
       ]
     },
     "visualContainerObjects": {
@@ -180,8 +177,7 @@
           }
         }
       ]
-    },
-    "drillFilterOtherVisuals": true
+    }
   },
   "filterConfig": {
     "filters": [

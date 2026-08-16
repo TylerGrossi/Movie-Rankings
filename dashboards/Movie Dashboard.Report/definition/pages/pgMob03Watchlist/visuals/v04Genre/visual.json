@@ -3,14 +3,15 @@
   "name": "v04Genre",
   "position": {
     "x": 0,
-    "y": 127,
+    "y": 144,
     "z": 300,
-    "height": 38,
     "width": 320,
+    "height": 36,
     "tabOrder": 300
   },
   "visual": {
     "visualType": "slicer",
+    "drillFilterOtherVisuals": true,
     "query": {
       "queryState": {
         "Values": {
@@ -108,6 +109,19 @@
             }
           }
         }
+      ],
+      "selection": [
+        {
+          "properties": {
+            "selectAllCheckboxEnabled": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
       ]
     },
     "visualContainerObjects": {
@@ -163,8 +177,7 @@
           }
         }
       ]
-    },
-    "drillFilterOtherVisuals": true
+    }
   },
   "filterConfig": {
     "filters": [

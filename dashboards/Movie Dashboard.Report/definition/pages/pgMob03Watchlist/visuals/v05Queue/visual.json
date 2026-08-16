@@ -3,14 +3,15 @@
   "name": "v05Queue",
   "position": {
     "x": 0,
-    "y": 169,
+    "y": 186,
     "z": 400,
-    "height": 397,
     "width": 320,
+    "height": 380,
     "tabOrder": 400
   },
   "visual": {
     "visualType": "tableEx",
+    "drillFilterOtherVisuals": true,
     "query": {
       "queryState": {
         "Values": {
@@ -55,8 +56,8 @@
                 }
               },
               "queryRef": "Movies to Watch.Predicted Score",
-              "nativeQueryRef": "P-Score",
-              "displayName": "P-Score"
+              "nativeQueryRef": "Predicted Score",
+              "displayName": "Pred"
             },
             {
               "field": {
@@ -66,12 +67,11 @@
                       "Entity": "Movies to Watch"
                     }
                   },
-                  "Property": "Star Percentage"
+                  "Property": "Star"
                 }
               },
-              "queryRef": "Sum(Movies to Watch.Star Percentage)",
-              "nativeQueryRef": "Star %",
-              "displayName": "Star %"
+              "queryRef": "Movies to Watch.Star",
+              "nativeQueryRef": "Star"
             }
           ]
         }
@@ -223,7 +223,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "157.4418604651163D"
+                  "Value": "150D"
                 }
               }
             }
@@ -251,13 +251,27 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "55.50252780586451D"
+                  "Value": "60D"
                 }
               }
             }
           },
           "selector": {
             "metadata": "Movies to Watch.Predicted Score"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "48D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Movies to Watch.Star"
           }
         }
       ]
@@ -315,67 +329,6 @@
           }
         }
       ]
-    },
-    "drillFilterOtherVisuals": true
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "6e5cc54b0ed00703843d",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "Movies to Watch"
-              }
-            },
-            "Property": "Movie"
-          }
-        },
-        "type": "Categorical"
-      },
-      {
-        "name": "75a42399570d5c5348c0",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "Movies to Watch"
-              }
-            },
-            "Property": "Year"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "c3bfea8d90022b008c91",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "Movies to Watch"
-              }
-            },
-            "Property": "Predicted Score"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "9c58ed039bac46387598",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "Movies to Watch"
-              }
-            },
-            "Property": "Star Percentage"
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
+    }
   }
 }

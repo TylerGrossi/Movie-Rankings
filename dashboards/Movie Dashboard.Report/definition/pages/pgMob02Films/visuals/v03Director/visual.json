@@ -3,14 +3,15 @@
   "name": "v03Director",
   "position": {
     "x": 0,
-    "y": 78,
+    "y": 108,
     "z": 210,
-    "height": 38,
     "width": 157,
+    "height": 36,
     "tabOrder": 210
   },
   "visual": {
     "visualType": "slicer",
+    "drillFilterOtherVisuals": true,
     "query": {
       "queryState": {
         "Values": {
@@ -32,23 +33,6 @@
             }
           ]
         }
-      },
-      "sortDefinition": {
-        "sort": [
-          {
-            "field": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "Movie_Directors"
-                  }
-                },
-                "Property": "Director"
-              }
-            },
-            "direction": "Descending"
-          }
-        ]
       }
     },
     "objects": {
@@ -125,6 +109,19 @@
             }
           }
         }
+      ],
+      "selection": [
+        {
+          "properties": {
+            "selectAllCheckboxEnabled": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
       ]
     },
     "visualContainerObjects": {
@@ -180,8 +177,7 @@
           }
         }
       ]
-    },
-    "drillFilterOtherVisuals": true
+    }
   },
   "filterConfig": {
     "filters": [

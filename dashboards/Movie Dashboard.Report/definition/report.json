@@ -40,7 +40,7 @@
           "expanded": {
             "expr": {
               "Literal": {
-                "Value": "true"
+                "Value": "false"
               }
             }
           }
@@ -95,13 +95,13 @@
           "type": "Image"
         },
         {
-          "name": "ic_stats_off.png",
-          "path": "ic_stats_off.png",
+          "name": "ic_series_off.png",
+          "path": "ic_series_off.png",
           "type": "Image"
         },
         {
-          "name": "ic_stats_on.png",
-          "path": "ic_stats_on.png",
+          "name": "ic_series_on.png",
+          "path": "ic_series_on.png",
           "type": "Image"
         },
         {

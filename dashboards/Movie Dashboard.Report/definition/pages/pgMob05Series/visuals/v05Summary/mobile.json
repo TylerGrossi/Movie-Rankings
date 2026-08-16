@@ -1,0 +1,37 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainerMobileState/2.6.0/schema.json",
+  "position": {
+    "x": 0,
+    "y": 112,
+    "z": 300,
+    "height": 190,
+    "width": 320,
+    "tabOrder": 300
+  },
+  "objects": {
+    "columnHeaders": [
+      {
+        "properties": {}
+      }
+    ],
+    "values": [],
+    "grid": [],
+    "columnWidth": [
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "177D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "All Series Mapping.Series"
+        }
+      }
+    ],
+    "total": []
+  }
+}

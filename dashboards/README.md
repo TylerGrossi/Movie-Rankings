@@ -100,6 +100,22 @@ Tab tiles have **transparent** backgrounds so the page colour shows through;
 only a faint top hairline marks the bar. `gen_icons.py` must save RGBA — calling
 `.convert("RGB")` before save silently reintroduces the opaque block.
 
+### Cross-page slicer sync is NOT expressible in PBIR
+
+Checked against the published schemas: `report`, `page` and `visualContainer`
+have no sync-group field at any version. Filters are therefore **per page** —
+a Director chosen on Films does not carry to Watchlist or Series.
+
+If you want synced slicers, set them up in Power BI Desktop
+(**View → Sync slicers**) and verify they survive a save/reload. Do not try to
+hand-write it into the JSON.
+
+Because of that, **Films is the filter hub**: FILM / DIRECTOR / ACTOR / GENRE,
+each labelled and each with a Select All checkbox
+(`selection.selectAllCheckboxEnabled` — a property Desktop already uses
+elsewhere in this report, not invented). Genre filters on `Movie_Genres[Genre]`,
+not `Genre1`, so it matches any of a film's three genre slots.
+
 ### Changing the layout after Desktop edits
 
 `reflow_640.py` is the worked example: it rewrites `position` and page height

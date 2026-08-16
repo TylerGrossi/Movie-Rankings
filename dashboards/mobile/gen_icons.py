@@ -97,12 +97,21 @@ def stats(d, c, scale):
         st([(x, top), (x, 84)], c, w=11)
 
 
+def series(d, c, scale):
+    """2x2 grid — a collection/library, deliberately unlike the filmstrip so the
+    Films and Series tabs never read as the same icon at 26pt."""
+    st = mk_stroker(d, scale)
+    for x0, y0 in ((16, 18), (54, 18), (16, 52), (54, 52)):
+        st([(x0, y0), (x0 + 30, y0), (x0 + 30, y0 + 30), (x0, y0 + 30)],
+           c, w=7, closed=True)
+
+
 TABS = [
     ("home", "Home", home),
     ("films", "Films", films),
     ("watchlist", "Watchlist", watchlist),
     ("people", "People", people),
-    ("stats", "Stats", stats),
+    ("series", "Series", series),
 ]
 
 
