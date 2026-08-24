@@ -780,6 +780,77 @@
             }
           ]
         }
+      },
+      {
+        "name": "f6ebde986cbbc7ee84e3",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "All Series Mapping"
+              }
+            },
+            "Property": "Movie"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "14bd4a6c7ae2d54e7e65",
+        "field": {
+          "Aggregation": {
+            "Expression": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "All Series Mapping"
+                  }
+                },
+                "Property": "Movie"
+              }
+            },
+            "Function": 5
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "a744eb3785b55a235a65",
+        "field": {
+          "Aggregation": {
+            "Expression": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "All Series Mapping"
+                  }
+                },
+                "Property": "Critics"
+              }
+            },
+            "Function": 1
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "95cff398c422f7623124",
+        "field": {
+          "Aggregation": {
+            "Expression": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "All Series Mapping"
+                  }
+                },
+                "Property": "Score"
+              }
+            },
+            "Function": 1
+          }
+        },
+        "type": "Advanced"
       }
     ]
   }

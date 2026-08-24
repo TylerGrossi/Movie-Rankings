@@ -5,13 +5,12 @@
     "x": 0,
     "y": 165,
     "z": 230,
-    "width": 320,
     "height": 36,
+    "width": 320,
     "tabOrder": 230
   },
   "visual": {
     "visualType": "slicer",
-    "drillFilterOtherVisuals": true,
     "query": {
       "queryState": {
         "Values": {
@@ -33,6 +32,23 @@
             }
           ]
         }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Movie_Genres"
+                  }
+                },
+                "Property": "Genre"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
       }
     },
     "objects": {
@@ -177,6 +193,7 @@
           }
         }
       ]
-    }
+    },
+    "drillFilterOtherVisuals": true
   }
 }

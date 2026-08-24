@@ -5,13 +5,12 @@
     "x": 0,
     "y": 51,
     "z": 200,
-    "width": 320,
     "height": 36,
+    "width": 320,
     "tabOrder": 200
   },
   "visual": {
     "visualType": "slicer",
-    "drillFilterOtherVisuals": true,
     "query": {
       "queryState": {
         "Values": {
@@ -33,6 +32,23 @@
             }
           ]
         }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Movie Rankings"
+                  }
+                },
+                "Property": "Movie"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
       }
     },
     "objects": {
@@ -177,7 +193,8 @@
           }
         }
       ]
-    }
+    },
+    "drillFilterOtherVisuals": true
   },
   "filterConfig": {
     "filters": [

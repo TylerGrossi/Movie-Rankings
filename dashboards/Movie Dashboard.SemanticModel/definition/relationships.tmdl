@@ -114,7 +114,7 @@ relationship f9e830c7-a3d4-4441-ae3c-324e72fc3631
 	fromColumn: 'Movies to Watch'.Created
 	toColumn: LocalDateTable_374a73b4-7b51-4c72-81a3-c037accbe691.Date
 
-relationship 27bec247-35c0-4906-a2d6-8fdee31f9815
+relationship 746c0c08-507b-4b75-b819-e03da759e490
 	joinOnDateBehavior: datePartOnly
 	fromColumn: 'All Series Mapping'.'Date Watched'
 	toColumn: LocalDateTable_2d87a973-7204-4565-9a1b-942161a0bcc6.Date

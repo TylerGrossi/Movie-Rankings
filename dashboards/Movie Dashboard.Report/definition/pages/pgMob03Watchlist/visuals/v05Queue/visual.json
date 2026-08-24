@@ -5,13 +5,12 @@
     "x": 0,
     "y": 186,
     "z": 400,
-    "width": 320,
     "height": 380,
+    "width": 320,
     "tabOrder": 400
   },
   "visual": {
     "visualType": "tableEx",
-    "drillFilterOtherVisuals": true,
     "query": {
       "queryState": {
         "Values": {
@@ -56,8 +55,8 @@
                 }
               },
               "queryRef": "Movies to Watch.Predicted Score",
-              "nativeQueryRef": "Predicted Score",
-              "displayName": "Pred"
+              "nativeQueryRef": "P-Score",
+              "displayName": "P-Score"
             },
             {
               "field": {
@@ -329,6 +328,7 @@
           }
         }
       ]
-    }
+    },
+    "drillFilterOtherVisuals": true
   }
 }

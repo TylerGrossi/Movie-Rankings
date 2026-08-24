@@ -2,10 +2,10 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainerMobileState/2.6.0/schema.json",
   "position": {
     "x": 0,
-    "y": 207,
+    "y": 226,
     "z": 400,
-    "height": 359,
-    "width": 320,
+    "height": 339,
+    "width": 324,
     "tabOrder": 400
   },
   "objects": {
@@ -16,6 +16,21 @@
     ],
     "values": [],
     "grid": [],
-    "columnWidth": []
+    "columnWidth": [
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "41D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Movie Rankings.Rank"
+        }
+      }
+    ]
   }
 }

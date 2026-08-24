@@ -5314,16 +5314,6 @@ cultureInfo en-US
 			            },
 			            "Weight": 0.9
 			          }
-			        },
-			        {
-			          "Pred": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
 			        }
 			      ]
 			    },
@@ -19978,6 +19968,41 @@ cultureInfo en-US
 			      "State": "Generated",
 			      "Terms": [
 			        {
+			          "series films": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "series movie": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "series picture": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "series flick": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.461
+			          }
+			        },
+			        {
 			          "Films": {
 			            "State": "Suggested",
 			            "Source": {
@@ -19999,6 +20024,21 @@ cultureInfo en-US
 			      "State": "Generated",
 			      "Terms": [
 			        {
+			          "series avg": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "series average": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.727
+			          }
+			        },
+			        {
 			          "Avg": {
 			            "State": "Suggested",
 			            "Source": {
@@ -20012,98 +20052,6 @@ cultureInfo en-US
 			    }
 			  },
 			  "Relationships": {
-			    "movie_to_watch_actors_has_movie_to_watch": {
-			      "Binding": {
-			        "ConceptualEntity": "Movies to Watch Actors"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "movie_to_watch_actors": {
-			          "Target": {
-			            "Entity": "movie_to_watch_actors"
-			          }
-			        },
-			        "movie_to_watch": {
-			          "Target": {
-			            "Entity": "movie_to_watch"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "movie_to_watch_actors"
-			            },
-			            "Object": {
-			              "Role": "movie_to_watch"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "movie_to_watch_actors_have_movie_to_watch"
-			        },
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "movie_to_watch"
-			            },
-			            "Object": {
-			              "Role": "movie_to_watch_actors"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "movie_to_watch_have_movie_to_watch_actors"
-			        }
-			      ]
-			    },
-			    "movie_actor_has_movie_ranking": {
-			      "Binding": {
-			        "ConceptualEntity": "Movie_Actors"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "movie_actor": {
-			          "Target": {
-			            "Entity": "movie_actor"
-			          }
-			        },
-			        "movie_ranking": {
-			          "Target": {
-			            "Entity": "movie_ranking"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "movie_actor"
-			            },
-			            "Object": {
-			              "Role": "movie_ranking"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "movie_actors_have_movie_ranking"
-			        },
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "movie_ranking"
-			            },
-			            "Object": {
-			              "Role": "movie_actor"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "movie_ranking_have_movie_actors"
-			        }
-			      ]
-			    },
 			    "movie_director_has_movie_ranking": {
 			      "Binding": {
 			        "ConceptualEntity": "Movie_Directors"
@@ -20284,6 +20232,72 @@ cultureInfo en-US
 			          "State": "Generated",
 			          "Weight": 0.99,
 			          "ID": "movie_ranking_have_actor_ranking"
+			        }
+			      ]
+			    },
+			    "all_series_mapping_has_series_avg": {
+			      "Binding": {
+			        "ConceptualEntity": "All Series Mapping"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "all_series_mapping": {
+			          "Target": {
+			            "Entity": "all_series_mapping"
+			          }
+			        },
+			        "all_series_mapping.series_avg": {
+			          "Target": {
+			            "Entity": "all_series_mapping.series_avg"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "all_series_mapping"
+			            },
+			            "Object": {
+			              "Role": "all_series_mapping.series_avg"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "all_series_mapping_have_series_avg"
+			        }
+			      ]
+			    },
+			    "all_series_mapping_has_series_films": {
+			      "Binding": {
+			        "ConceptualEntity": "All Series Mapping"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "all_series_mapping": {
+			          "Target": {
+			            "Entity": "all_series_mapping"
+			          }
+			        },
+			        "all_series_mapping.series_films": {
+			          "Target": {
+			            "Entity": "all_series_mapping.series_films"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "all_series_mapping"
+			            },
+			            "Object": {
+			              "Role": "all_series_mapping.series_films"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "all_series_mapping_have_series_films"
 			        }
 			      ]
 			    },
@@ -30775,6 +30789,98 @@ cultureInfo en-US
 			          "State": "Generated",
 			          "Weight": 0.9,
 			          "ID": "movie_ranking_are_watched_on_date_watched"
+			        }
+			      ]
+			    },
+			    "movie_actor_has_movie_ranking": {
+			      "Binding": {
+			        "ConceptualEntity": "Movie_Actors"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "movie_actor": {
+			          "Target": {
+			            "Entity": "movie_actor"
+			          }
+			        },
+			        "movie_ranking": {
+			          "Target": {
+			            "Entity": "movie_ranking"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "movie_actor"
+			            },
+			            "Object": {
+			              "Role": "movie_ranking"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "movie_actors_have_movie_ranking"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "movie_ranking"
+			            },
+			            "Object": {
+			              "Role": "movie_actor"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "movie_ranking_have_movie_actors"
+			        }
+			      ]
+			    },
+			    "movie_to_watch_actors_has_movie_to_watch": {
+			      "Binding": {
+			        "ConceptualEntity": "Movies to Watch Actors"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "movie_to_watch_actors": {
+			          "Target": {
+			            "Entity": "movie_to_watch_actors"
+			          }
+			        },
+			        "movie_to_watch": {
+			          "Target": {
+			            "Entity": "movie_to_watch"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "movie_to_watch_actors"
+			            },
+			            "Object": {
+			              "Role": "movie_to_watch"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "movie_to_watch_actors_have_movie_to_watch"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "movie_to_watch"
+			            },
+			            "Object": {
+			              "Role": "movie_to_watch_actors"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "movie_to_watch_have_movie_to_watch_actors"
 			        }
 			      ]
 			    },

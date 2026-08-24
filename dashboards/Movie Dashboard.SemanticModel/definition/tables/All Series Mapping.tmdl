@@ -155,7 +155,7 @@ table 'All Series Mapping'
 
 		variation Variation
 			isDefault
-			relationship: 27bec247-35c0-4906-a2d6-8fdee31f9815
+			relationship: 746c0c08-507b-4b75-b819-e03da759e490
 			defaultHierarchy: LocalDateTable_2d87a973-7204-4565-9a1b-942161a0bcc6.'Date Hierarchy'
 
 		annotation SummarizationSetBy = Automatic
@@ -313,7 +313,7 @@ table 'All Series Mapping'
 				    "Black Panther: Wakanda Forever", "Ms. Marvel", "Thor: Love and Thunder", "Ironheart",
 				    "Werewolf by Night", "Ant-Man and the Wasp: Quantumania", "Guardians of the Galaxy Vol. 3",
 				    "The Marvels", "Loki Season 2", "Deadpool & Wolverine", "Daredevil: Born Again",
-				    "Thunderbolts*", "The Fantastic Four: First Steps"
+				    "Thunderbolts*", "The Fantastic Four: First Steps", "Spider-Man: Brand New Day"
 				}
 				RETURN
 				UNION(
@@ -433,6 +433,7 @@ table 'All Series Mapping'
 				            "Daredevil: Born Again", 47,
 				            "Thunderbolts*", 49,
 				            "The Fantastic Four: First Steps", 50,
+				            "Spider-Man: Brand New Day", 54,
 				            0
 				        ),
 				        "Series Count", COUNTROWS(FILTER('Movie Rankings', 'Movie Rankings'[Movie] IN MCUMovies)),

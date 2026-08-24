@@ -5,7 +5,7 @@
     "y": 186,
     "z": 400,
     "height": 380,
-    "width": 320,
+    "width": 324,
     "tabOrder": 400
   },
   "objects": {
@@ -14,8 +14,77 @@
         "properties": {}
       }
     ],
-    "values": [],
+    "values": [
+      {
+        "properties": {
+          "fontSize": {
+            "expr": {
+              "Literal": {
+                "Value": "8D"
+              }
+            }
+          }
+        }
+      }
+    ],
     "grid": [],
-    "columnWidth": []
+    "columnWidth": [
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "43D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Movies to Watch.Star"
+        }
+      },
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "58D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Movies to Watch.Predicted Score"
+        }
+      },
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "41D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Movies to Watch.Year"
+        }
+      },
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "159D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Movies to Watch.Movie"
+        }
+      }
+    ]
   }
 }

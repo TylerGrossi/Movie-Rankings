@@ -4,8 +4,8 @@
     "x": 0,
     "y": 318,
     "z": 400,
-    "height": 248,
-    "width": 320,
+    "height": 227,
+    "width": 324,
     "tabOrder": 400
   },
   "objects": {
@@ -43,6 +43,20 @@
         },
         "selector": {
           "metadata": "Actor Rankings.Best Actors"
+        }
+      },
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "44.07137205546219D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Actor Rankings.Rank"
         }
       }
     ]

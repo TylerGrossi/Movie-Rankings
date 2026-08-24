@@ -5,7 +5,68 @@
     "y": 156,
     "z": 400,
     "height": 227,
-    "width": 320,
+    "width": 324,
     "tabOrder": 400
+  },
+  "objects": {
+    "columnHeaders": [],
+    "values": [
+      {
+        "properties": {
+          "fontSize": {
+            "expr": {
+              "Literal": {
+                "Value": "8D"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "grid": [],
+    "columnWidth": [
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "61D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Movie Rankings.Date Watched"
+        }
+      },
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "49D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Movie Rankings.Score"
+        }
+      },
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "193D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Movie Rankings.Movie"
+        }
+      }
+    ]
   }
 }

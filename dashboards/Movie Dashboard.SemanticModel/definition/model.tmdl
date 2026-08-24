@@ -29,8 +29,8 @@ ref table 'Genre Rankings'
 ref table 'Director Rankings'
 ref table 'All Series Mapping'
 ref table LocalDateTable_374a73b4-7b51-4c72-81a3-c037accbe691
-ref table LocalDateTable_2d87a973-7204-4565-9a1b-942161a0bcc6
 ref table 'Select Columns'
+ref table LocalDateTable_2d87a973-7204-4565-9a1b-942161a0bcc6
 
 ref cultureInfo en-US
 

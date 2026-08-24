@@ -4,8 +4,8 @@
     "x": 0,
     "y": 112,
     "z": 300,
-    "height": 190,
-    "width": 320,
+    "height": 133,
+    "width": 324,
     "tabOrder": 300
   },
   "objects": {
@@ -22,7 +22,7 @@
           "value": {
             "expr": {
               "Literal": {
-                "Value": "177D"
+                "Value": "181D"
               }
             }
           }
